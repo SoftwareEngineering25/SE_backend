@@ -1,0 +1,98 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+
+/* 메인 넓이 수정 */
+.honeyboardModify-mainContainer {
+  width: 1100px;
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  margin: 0 auto;
+  height: 1000px;
+}
+main{
+  margin-top: 100px;
+  margin-bottom: 30px;
+}
+
+/* 나만의 레시피 제목 */
+.honeyboardModify-text1{
+  margin-bottom: 30px;
+  margin-right: 10px;
+  text-align: center;
+  color: #317FF0;
+  font-size: 35px;
+  margin-bottom: 0;
+  font-weight: bold;
+}
+.honeyboardModify-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.honeyboardModify-text2{
+  font-size: 35px;
+  color: #EBAA39;
+  font-weight: bold;
+}
+
+.honeyboardModify-warning{
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.honeyboardModify-warningText:last-child{
+  margin-bottom: 0;
+}
+.honeyboardModify-write {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.honeyboardModify-writeButton {
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #EBAA39;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  right: 120px;
+  margin-top: 40px;
+}
+
+.honeyboardModify-cancelButton {
+  width: 100px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: #EBAA39;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  margin-bottom: 50px;
+
+}
+
+.honeyboardModify-inputContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid lightgray; /* 밑줄 추가 */
+  padding-bottom: 5px;
+}
+
+.honeyboardModify-titleInput {
+  width: 1100px; /* 너비 조정 */
+  height: 40px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: grey;
+}

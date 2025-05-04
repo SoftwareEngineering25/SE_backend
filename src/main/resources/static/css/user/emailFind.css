@@ -1,0 +1,110 @@
+/* 공통 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+  margin: 0;
+  padding: 0;
+  height: 600px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.emailfind-container {
+  background-color: white;
+  border-radius: 5px;
+  max-width: 400px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.emailfind-title {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.emailfind-leftTitle{
+  color: #317FF0;
+}
+
+.emailfind-rightTitle{
+  color: #ebaa39;
+}
+
+.emailfind-form{
+  margin-top: 100px;
+}
+
+
+
+.emailfind-input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.emailfind-finishButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #ebaa39;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 120px;
+}
+
+.emailfind-label{
+  font-weight: 600;
+}
+
+.emailfind-checkbox {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.emailfind-checkboxInput {
+  margin-right: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+/* 새로 추가된 부분 */
+.input-withButton {
+  position: relative;
+  margin: 8px 0;
+}
+
+.input-withButton .emailfind-input {
+  padding-right: 100px; /* 버튼이 들어갈 공간을 확보 */
+}
+
+.input-withButton .emailfind-eventButton{
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #ebaa39;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  width: 80px;
+}
+
+

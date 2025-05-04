@@ -1,0 +1,68 @@
+/* 공통 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+  margin: 0;
+  padding: 0;
+  height: 600px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.emailfindfinish-container {
+  background-color: white;
+  border-radius: 5px;
+  max-width: 400px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.emailfindfinish-title {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.emailfindfinish-leftTitle{
+  color: #317FF0;
+}
+
+.emailfindfinish-rightTitle{
+  color: #ebaa39;
+}
+
+.emailfindfinish-box {
+  display: flex; /* Flexbox 사용 */
+  flex-direction: column; /* 수직 정렬 */
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  text-align: center;
+  margin-top: 100px;
+  border-radius: 5px;
+  background-color: whitesmoke;
+  height: 150px;
+  padding: 20px; /* 여백 추가 */
+}
+
+.emailfindfinish-finishButton {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  gap: 20px; /* 버튼 간 간격 설정 */
+}
+
+.emailfindfinish-loginButton, .emailfindfinish-pwButton {
+  width: 20%;
+  padding: 10px;
+  background-color: #ebaa39;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 120px;
+}

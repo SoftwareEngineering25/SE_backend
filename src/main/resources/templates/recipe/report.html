@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/recipe/Report.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <title>DR - 신고창 페이지</title>
+</head>
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="report-mainContainer">
+        <div class="report-mainBox">
+            <!-- 제목 부분 -->
+            <h1 class="report-text1">레시피/댓글 신고</h1>
+            <!-- 신고사유창 -->
+            <div class="report-outbox">
+                <form th:action="@{/recipe/reportOk}" method="post">
+                    <label for="obscene">
+                        <input type="radio" name="reason" value="음란물" id="obscene"> <span class="report-text">음란물 내용을 포함하고 있습니다.</span>
+                    </label><br>
+
+                    <label for="spam">
+                        <input type="radio" name="reason" value="스팸 및 광고" id="spam"> <span class="report-text">스팸 및 광고 내용을 포함하고 있습니다.</span>
+                    </label><br>
+
+                    <label for="abusive">
+                        <input type="radio" name="reason" value="욕설 및 비방" id="abusive"> <span class="report-text">욕설 및 비방하는 내용을 포함하고 있습니다.</span>
+                    </label><br>
+
+                    <label for="falseInfo">
+                        <input type="radio" name="reason" value="허위 광고" id="falseInfo"> <span class="report-text">허위 정보 내용을 포함하고 있습니다.</span>
+                    </label><br>
+
+                    <!-- 기타 체크박스 및 입력 필드 -->
+                    <label for="other"><input type="radio" name="reason" value="기타" id="other" > <span class="report-text">기타</span></label>
+                    <input type="text" name="otherReasonText" class="report-inputText" placeholder="신고 내용을 작성해주세요">
+            </div>
+
+            <!-- 신고 주의사항 -->
+            <div class="report-text2">
+                <p> • 허위 신고는 법적으로 처벌받을 수 있으며, 이에 대한 책임은 신고자에게 있습니다.</p>
+                <p> • 허위 신고를 할 경우, 계정 정지 및 법적 조치를 취할 수 있습니다. 신중하게 신고해주시기 바랍니다.</p>
+            </div>
+
+            <input type="hidden" name="recipeNumber" th:value="${recipeNumber}">
+            <input type="hidden" name="replyNumber" th:value="${replyNumber}">
+
+            <!-- 신고 버튼 -->
+            <div class="report-button">
+                <a th:href="@{/recipe/chatBotDetailPage(recipeNumber=${recipeNumber})}">
+                    <button class="back-button" type="button">취소</button>
+                </a>
+                <button class="right-button" type="submit">신고</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/recipe/Report.js}" defer></script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+img {
+    display: block;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* 전체 화면 높이를 차지하도록 설정 */
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1100px;
+    min-height: 90vh;
+    margin: 0 auto;
+    position: relative;
+}
+
+.nangjangbot-block {
+    height: 50px;
+    background-color: white;
+}
+
+#nangjangbot-sideBar {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    width: 350px;
+    height: 900px;
+    border-radius: 10px;
+    background-color: #eeeeee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: left 0.5s;
+    z-index: 5;
+}
+
+#nangjangbot-closeBtn {
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+    float: right;
+    cursor: pointer;
+}
+
+#nangjangbot-newChatBtn {
+    width: 30px;
+    cursor: pointer;
+}
+
+#nangjangbot-newChatContainer {
+    width: 40px;
+    height: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 3px 0 0 10px;
+}
+
+#nangjangbot-newChat {
+    font-size: 11px;
+    font-weight: bold;
+    color: #404040;
+}
+
+#nangjangbot-sideMenu {
+    margin: 30px 0;
+}
+
+#nangjangbot-sideMenu div {
+    display: flex;
+    align-items: center;
+    margin: 5px;
+    padding: 10px;
+    font-size: 13px;
+    letter-spacing: -0.5px;
+    border-radius: 30px;
+}
+
+#nangjangbot-sideMenu div:hover,
+.nangjangbot-lastChat:hover {
+    background-color: rgb(184, 184, 184);
+}
+
+.nanajangbot-menuImg {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+}
+
+#nangjangbot-sideBarTitle {
+    margin: 20px 0 10px 10px;
+    font-size: 20px;
+    font-weight: bold;
+}
+#nangjangbot-chatListContainer{
+    width: 100%;
+    height: 550px;
+    overflow: hidden;
+}
+.nangjangbot-lastChat {
+    width: 320px;
+    height: 30px;
+    margin: 5px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.nangjangbot-lastChatTitle {
+    display: block; /* 블록 요소로 설정 */
+    width: 210px; /* 최대 너비 설정 */
+    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 텍스트를 '...'로 표시 */
+    margin-right: 10px;
+}
+
+.nangjangbot-lastChatDate {
+    font-size: 10px;
+}
+
+.nangjangbot-lastChat button {
+    display: block;
+}
+
+
+.nangjangbot-imgFrame:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 1);
+}
+
+.nangjangbot-imgFrame {
+    position: relative;
+    border: none;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.nangjangbot-imgFrame img {
+    width: 100%;
+    height: 100%;
+}
+
+#loading-spinner {
+    display: none;
+    position: fixed;
+    top: 425px;
+    font-size: 20px;
+    width: 700px;
+    height: 75px;
+    background-color: #eeeeee;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 5px;
+}
+
+#nangjangbot-notice {
+    transform: translate(21%, 300%);
+    font-size: 14px;
+    color: red;
+}
+
+#nangjangbot-ingredients img {
+    width: 40px;
+    animation: wave 1s infinite alternate;
+}
+
+#nangjangbot-ingredients {
+    display: flex;
+    justify-content: space-between;
+}
+
+@keyframes wave {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+#nangjangbot-ingredients img:nth-child(1) {
+    animation-delay: 0s;
+}
+
+#nangjangbot-ingredients img:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+#nangjangbot-ingredients img:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+#nangjangbot-ingredients img:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+#nangjangbot-ingredients img:nth-child(5) {
+    animation-delay: 0.4s;
+}
+
+#nangjangbot-ingredients img:nth-child(6) {
+    animation-delay: 0.5s;
+}
+
+#nangjangbot-ingredients img:nth-child(7) {
+    animation-delay: 0.6s;
+}
+
+#nangjangbot-ingredients img:nth-child(8) {
+    animation-delay: 0.7s;
+}
+
+#nangjangbot-ingredients img:nth-child(9) {
+    animation-delay: 0.8s;
+}
+
+#nangjangbot-ingredients img:nth-child(10) {
+    animation-delay: 0.9s;
+}
+
+#nangjangbot-ingredients img:nth-child(11) {
+    animation-delay: 1s;
+}
+
+#nangjangbot-ingredients img:nth-child(12) {
+    animation-delay: 1.1s;
+}
+
+.nangjangbot-pageTitle {
+    font-size: 35px;
+    font-weight: bold;
+    margin: 100px 0 30px 0;
+    color: #317FF0;
+}
+
+.nangjangbot-pageTitle span {
+    color: #EBAA39;
+}
+
+#nangjangbot-text {
+    font-size: 40px;
+    margin: 100px 0 50px 0;
+    letter-spacing: -3px;
+    color: #323232;
+}
+
+#nangjangbot-chating {
+    display: flex;
+    align-items: center;
+    margin: 50px 0;
+}
+
+#nangjangbot-sendMsg {
+    width: 700px;
+    height: 30px;
+    padding: 15px;
+    outline: none;
+    border: 2px solid black;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#nangjangbot-sendBtn,
+#nangjangbot-btnContainer {
+    width: 65px;
+    height: 65px;
+    margin-left: 10px;
+    border: 2px solid black;
+    border-radius: 35px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#nangjangbot-btnContainer {
+    margin-right: 10px;
+}
+
+#nangjangbot-sendBtn img,
+#nangjangbot-listBtn {
+    width: 45px;
+    border-radius: 26px;
+    transition: transform 0.2s;
+}
+
+#nangjangbot-sendBtn:hover,
+#nangjangbot-sendBtn:hover img,
+#nangjangbot-listBtn:hover,
+#nangjangbot-btnContainer:hover {
+    transform: scale(1.05);
+    /* 10% 커짐 */
+}
+
+#nangjangbot-conversationContainer {
+    width: 1000px;
+    /*max-height: 100vh;*/
+}
+
+.nangjangbot-myMsg {
+    padding: 10px;
+    max-width: 50vh;
+    width: fit-content;
+    height: auto;
+    background-color: lightgray;
+    border-radius: 5px;
+    word-wrap: break-word;
+    margin: 20px 20px 10px auto;
+}
+
+
+.nangjangbot-mascot {
+    width: 40px;
+    margin: 50px 5px 5px 30px;
+}
+
+.botMsgBox {
+    padding: 0 10px 10px 10px;
+    max-width: 50vh;
+    width: auto;
+    height: auto;
+    word-wrap: break-word;
+    margin: 0 auto 20px 20px;
+}
+
+.nangjangbot-block,
+.nangjangbot-chatBotMsg {
+    display: none;
+}
+
+#nangjangbot-tip {
+    position: fixed;
+    right: 0px;
+    top: 900px;
+    margin-right: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: 29px;
+    cursor: pointer;
+}
+
+#nangjangbot-tipText {
+    position: fixed;
+    right: 45px;
+    top: 600px;
+    width: 230px;
+    height: 220px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: #888888;
+    color: white;
+    font-size: 13px;
+    letter-spacing: -0.3px;
+    display: none;
+}
+
+#nangjangbot-tip:hover + #nangjangbot-tipText {
+    display: block; /* 호버 시 block으로 변경 */
+}

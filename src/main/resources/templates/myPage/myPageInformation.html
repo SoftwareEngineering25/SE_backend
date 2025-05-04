@@ -1,0 +1,97 @@
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DR - 내정보</title>
+        <link rel="stylesheet" th:href="@{/css/myPage/myPageInformation.css}">
+        <script defer th:src="@{/js/myPage/myPageInformation.js}"></script>
+        <!-- 헤더 / 푸터 -->
+        <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+        <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+        <!-- 네비바 폰트 -->
+        <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+        <!-- 제이쿼리 -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script defer th:src="@{/js/fragment/header.js}"></script>
+    </head>
+
+    <body>
+    <!-- 헤더 -->
+    <header th:replace="~{/fragment/header :: header}"></header>
+        <main>
+            <!-- 내 정보 타이틀-->
+            <div class="myPage-informationTitle">
+                <span style="color: #317FF0;">내</span>
+                <span style="color: #EBAA39;">정보</span>
+            </div>
+
+            <!-- 마이페이지 -->
+            <div class="myPage-containerBox">
+                <div class="myPage-lengthBar">
+                    <div id="myPage-informationPage">&nbsp;마이페이지</div>
+                    <div id="myPage-informationSecond"><a th:href="@{/myPage/myPageInformation}">내 정보</a></div>
+                    <div><a th:href="@{/myPage/myPageSteamedList}">&nbsp;찜목록</a></div>
+                    <div><a th:href="@{/myPage/myPageMyRecipe}">&nbsp;내가 쓴 레시피</a></div>
+                    <div><a th:href="@{/myPage/myPageMyPost}">&nbsp;내가 쓴 게시글</a></div>
+                    <div><a th:href="@{/myPage/myPageMyComplaint}">&nbsp;신고 받은 글</a></div>
+                    <div><a th:href="@{/myPage/myPageChecked}">&nbsp;출석 체크</a></div>
+                    <div id="myPage-informationeighth" ><a th:href="@{/myPage/myPageMyPoint}">&nbsp포인트내역</a></div>
+                </div>
+                <!-- 마이페이지 이미지 사진 -->
+                <div class="myPage-pictureImage">
+                    <div class="myPage-profile">
+
+                        <img th:src="@{/image/photo/{photoName}(photoName=${userInfo.photo})}" class="profileImage" th:if="${session.userNumber != null && session.profilePic == null}"
+                             alt="프로필 이미지" width="150" height="150">
+
+                        <img th:src="${userInfo.profilePic}" class="profileImage" th:if="${session.userNumber != null && session.profilePic != null}"
+                             alt="프로필 이미지" width="150" height="150" >
+
+                        <input type="file" id="imageUpload" style="display: none;">
+                        <!-- 이미지 업로드 버튼 (수레바퀴 이미지) -->
+                        <div th:classappend="${session.profilePic == null} ? 'visible' : 'hidden'">
+                            <!-- 프로필 이미지가 없을 때만 업로드 아이콘을 표시 -->
+                            <img th:src="@{/image/sawtooth.png}" alt="이미지 변경" id="uploadIcon" style="width: 20px; height: 20px; cursor: pointer; margin-top: 10px;">
+                        </div>
+                    </div>
+                </div>
+                <!-- 마이페이지 내 정보 -->
+                <div class="myPage-informationText">
+                    <div class="myPage-informationTop"></div>
+                    <div class="myPage-informationName">
+                        <div class="myPage-informationLeft">닉네임</div>
+                        <div class="myPage-informationRight" id="nicknameDisplay" th:text="${userInfo.userNickName}">정승환</div>
+                        <input type="text" id="nicknameInput" style="display: none;" th:value="${userInfo.userNickName}">
+                        <div class="myPage-nickNameChange">닉네임 변경</div>
+                        <div id="nicknameError" style="color: red; display: none;">2자 이상 5자 이내의 한글, 영문, 숫자만 허용됩니다.</div>
+                    </div>
+                    <div class="myPage-informationId">
+                        <div class="mypage-informationIdLeft">이메일</div>
+                        <div class="myPge-informationEmail" th:text="${userInfo.userEmail}"></div>
+                        <div class="myPage-informationPhone">휴대폰번호</div>
+                        <div class="myPage-informationNumber" th:text="${userInfo.userPhone}">010-4828-2574</div>
+                    </div>
+                    <div class="myPage-informationScore">
+                        <div class="myPage-informationMyScore">내 환경기여 점수</div>
+                        <div class="myPage-informationScoreNumber" th:text="${userInfo.environmentScore} +'점'">154점</div>
+                        <div class="myPage-informationRank">내 환경기여 랭킹</div>
+                        <div class="myPage-informationRankNumber" th:text="${userInfo.environmentRank + '등'}">1등</div>
+                    </div>
+                    <div class="myPage-informationPoint">
+                        <div class="myPage-informationPointText">포인트</div>
+                        <div class="myPage-informationPointNumber" th:text="${userInfo.totalPoints} + 'point'"> 2300 point</div>
+                    </div>
+                </div>
+            </div>
+            <a th:href="@{/myPage/myPageCaution}">
+                <div class="myPage-outGo">회원탈퇴</div>
+            </a>
+            <div class="myPage-completeWrite" id="completeWriteBtn">수정완료</div>
+        </main>
+    <!-- 푸터 -->
+    <footer th:replace="~{/fragment/footer :: footer}"></footer>
+    </body>
+
+    </html>

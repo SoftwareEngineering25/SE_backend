@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레시피/게시판 관리</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link rel="stylesheet" th:href="@{/css/manager/manageComment.css}">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" th:src="@{/image/logo.png}">
+</a>
+<div id="manager-dashBoardBox">
+
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="manage-member">
+        <div id="manage-memberTop">
+            <p id="manage-memberBold">댓글 관리</p>
+            <button id="memberOut">삭제</button>
+        </div>
+        <div id="manage-memberList">
+            <ul id="manage-memberUl">
+                <li id="manage-memberTitle">
+                    <input id="title-check" type="checkbox" value="전체선택">
+                    <span id="title-num">No.</span>
+                    <span id="title-comment">댓글내용</span>
+                    <span id="title-name">작성자</span>
+                    <span id="title-phone">전화번호</span>
+                    <span id="title-date">작성일</span>
+                </li>
+
+                <li th:if="${reply != null}">
+                    <a th:href="${reply.boardNumber == null ?
+        (reply.recipeType == '나만의레시피' ?
+            '/recipe/myDetailPage?recipeNumber=' + reply.recipeNumber :
+            '/recipe/chatBotDetailPage?recipeNumber=' + reply.recipeNumber)
+        :
+        (reply.boardType == '자유게시판' ?
+            '/board/freeBoardDetail?boardNumber=' + reply.boardNumber :
+            '/board/honeyBoardDetail?boardNumber=' + reply.boardNumber)
+    }">
+                        <input type="checkbox" class="con-check" th:value="${reply.replyNumber}">
+                        <span class="con-num" th:text="${reply.replyNumber}"></span>
+                        <span class="con-title" th:text="${reply.replyText}"></span>
+                        <span class="con-name" th:text="${reply.userNickName}"></span>
+                        <span class="con-phone" th:text="${reply.userPhone}"></span>
+                        <span class="con-date" th:text="${reply.replyWriteDate}"></span>
+                    </a>
+                </li>
+
+                <li th:each="item : ${replyList}" th:if="${reply == null}">
+                    <a th:href="${item.boardNumber == null ?
+        (item.recipeType == '나만의레시피' ?
+            '/recipe/myDetailPage?recipeNumber=' + item.recipeNumber :
+            '/recipe/chatBotDetailPage?recipeNumber=' + item.recipeNumber)
+        :
+        (item.boardType == '자유게시판' ?
+            '/board/freeBoardDetail?boardNumber=' + item.boardNumber :
+            '/board/honeyBoardDetail?boardNumber=' + item.boardNumber)
+    }">
+                        <input type="checkbox" class="con-check" th:value="${item.replyNumber}">
+                        <span class="con-num" th:text="${item.replyNumber}"></span>
+                        <span class="con-title" th:text="${item.replyText}"></span>
+                        <span class="con-name" th:text="${item.userNickName}"></span>
+                        <span class="con-phone" th:text="${item.userPhone}"></span>
+                        <span class="con-date" th:text="${item.replyWriteDate}"></span>
+                    </a>
+                </li>
+
+
+            </ul>
+            <div id="pagination"></div>
+
+        </div>
+    </div>
+    <form class="manager-search-form" th:action="@{/manager/replySearch}" method="get">
+        <input type="text" id="manager-input" name="replyNumber" placeholder="댓글 번호"/>
+        <button class="manager-search">검색</button>
+    </form>
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+<script th:src="@{/js/manager/manageComment.js}"></script>
+</body>
+
+</html>

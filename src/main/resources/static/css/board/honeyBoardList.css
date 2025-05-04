@@ -1,0 +1,199 @@
+/* 공통 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+  margin: 0;
+  padding: 0;
+  height: 1100px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.honeyboardlist-container {
+  background-color: white;
+  border-radius: 5px;
+  width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.honeyboardlist-title {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.honeyboardlist-leftTitle {
+  color: #317FF0;
+}
+
+.honeyboardlist-rightTitle {
+  color: #ebaa39;
+}
+
+.honeyboardlist-smallTitle {
+  color: rgba(0, 0, 0, 0.35);
+  font-size: 25px;
+}
+
+.honeyboardlist-rightButton{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 260px;
+  height: 37px;
+  margin-left: 880px;
+}
+
+.honeyboardlist-firstButton, .honeyboardlist-secondButton, .honeyboardlist-thirdButton{
+  width: 90px;
+  height: 37px;
+  border: none;
+  cursor: pointer;
+  border: 1px solid lightgray;
+}
+
+/* 버튼이 클릭될때마다 배경색깔과 텍스트 색깔이 바뀌는거 설정 */
+.honeyboardlist-rightButton button.active {
+  background-color: #EBAA39;
+  color: white;
+}
+
+/* 각 게시판의 제목, 이름, 추천수, 날짜 열 스타일 */
+.honeyboardlist-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.honeyboardlist-row.header {
+  font-weight: bold;
+  background-color: #f4f4f4;
+}
+
+.honeyboardlist-titleColumn {
+  width: 55%;
+  text-align: left;
+  padding-left: 10px;
+}
+
+.honeyboardlist-nameColumn,
+.honeyboardlist-voteColumn,
+.honeyboardlist-dateColumn {
+  width: 15%;
+  text-align: center;
+}
+
+/* 페이지 네비게이션 스타일 */
+#honeyboardlist-pages {
+  display: flex;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.honeyboardlist-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* 글 작성 버튼 스타일 */
+.honeyboardlist-writeButton {
+  width: 30%;
+  padding: 10px;
+  background-color: #ebaa39;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 100px;
+}
+
+#pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#pagination .paginationjs-pages {
+  display: flex;
+}
+
+#pagination .paginationjs-pages li {
+  list-style: none;
+  margin-right: 8px; /* 숫자 박스 간 간격 */
+  border-right: 1px solid #aaa; /* 기본 페이지 번호의 오른쪽 경계선 */
+}
+
+#pagination .paginationjs-pages li:last-child {
+  border-right: none; /* 마지막 페이지에는 오른쪽 경계선 제거 */
+  margin-right: 0; /* 마지막 페이지에도 오른쪽 여백 제거 */
+}
+
+#pagination .paginationjs-pages li a {
+  min-width: 30px;
+  height: 30px;
+  line-height: 30px;
+  display: block;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination .paginationjs-pages li a:hover {
+  background: #eee;
+}
+
+#pagination .paginationjs-pages li.active {
+  border-right: none; /* active 상태에서 오른쪽 경계선 없애기 */
+}
+
+#pagination .paginationjs-pages li.active a {
+  background: #317FF0; /* active 상태일 때 배경색 */
+  color: #fff; /* active 상태일 때 텍스트 색상 */
+}
+
+#pagination .paginationjs-pages li.disabled a {
+  opacity: 0.5;
+}
+
+/* >> 버튼 스타일 */
+#pagination .paginationjs-pages li.paginationjs-next {
+  border-right: 1px solid #aaa; /* >> 버튼에 오른쪽 경계선 추가 */
+}
+
+#pagination .paginationjs-go-input input[type="text"],
+#pagination .paginationjs-go-button input[type="button"] {
+  background: #317FF0; /* 버튼 배경색 */
+  color: #fff;
+  border: none; /* 버튼 보더 제거 */
+  border-radius: 5px;
+  padding: 0 8px;
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#pagination .paginationjs-go-button input[type="button"]:hover,
+#pagination .paginationjs-go-input input[type="text"]:hover {
+  background-color: #286bbd;
+}

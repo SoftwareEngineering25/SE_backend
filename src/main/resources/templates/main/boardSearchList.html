@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 검색 결과</title>
+    <link rel="stylesheet" th:href="@{/css/main/boardSearchList.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <script defer th:src="@{/js/board/freeBoardList.js}"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="freeboardlist-container">
+
+        <div class="freeboardlist-title">
+            <span class="freeboardlist-leftTitle">검색</span>
+            <span class="freeboardlist-rightTitle">결과</span>
+        </div>
+
+        <br>
+        <br><br><br>
+
+        <div class="freeboardlist-rightButton">
+            <button class="freeboardlist-firstButton" onclick="location.href='/board/freeBoardList'">자유 게시판</button>
+            <button class="freeboardlist-firstButton" onclick="location.href='/board/honeyBoardList'">꿀팁 게시판</button>
+        </div>
+        <br>
+
+        <div class="freeboardlist-row header" th:unless="${searchResult.isEmpty()}">
+            <div class="freeboardlist-titleColumn">제목</div>
+            <div class="freeboardlist-nameColumn">닉네임</div>
+            <div class="freeboardlist-voteColumn">추천 수</div>
+            <div class="freeboardlist-dateColumn">날짜</div>
+        </div>
+
+        <div id="freeboardlist-page">
+            <div th:each="result : ${searchResult}">
+                <a th:if="${result.boardType == '자유게시판'}"
+                   th:href="@{/board/freeBoardDetail(boardNumber=${result.boardNumber})}">
+                    <div class="freeboardlist-row">
+                        <div class="freeboardlist-titleColumn" th:text="${result.boardTitle}"></div>
+                        <div class="freeboardlist-nameColumn" th:text="${result.userNickName}"></div>
+                        <div class="freeboardlist-voteColumn" th:text="${result.goodCount}"></div>
+                        <div class="freeboardlist-dateColumn" th:text="${result.boardWriteDate}"></div>
+                    </div>
+                </a>
+                <a th:if="${result.boardType == '꿀팁게시판'}"
+                   th:href="@{/board/honeyBoardDetail(boardNumber=${result.boardNumber})}">
+                    <div class="freeboardlist-row">
+                        <div class="freeboardlist-titleColumn" th:text="${result.boardTitle}"></div>
+                        <div class="freeboardlist-nameColumn" th:text="${result.userNickName}"></div>
+                        <div class="freeboardlist-voteColumn" th:text="${result.goodCount}"></div>
+                        <div class="freeboardlist-dateColumn" th:text="${result.boardWriteDate}"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 검색 결과 -->
+        <div class="resultContainer" th:if="${searchResult.isEmpty()}">
+            <img th:src="@{/image/resultIsNull.png}" alt="검색결과 없음">
+            <div class="resultIsNull">검색 결과가 존재하지 않습니다.</div>
+        </div>
+        <div id="pagination" th:unless="${searchResult.isEmpty()}"></div>
+
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

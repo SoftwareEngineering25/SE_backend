@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 꿀팁게시판 글 수정</title>
+
+    <link rel="stylesheet" th:href="@{/css/board/honeyBoardModify.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css"/>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="honeyboardModify-mainContainer">
+        <div class="honeyboardModify-mainBox">
+            <div class="honeyboardModify-title">
+                <span class="honeyboardModify-text1">꿀팁게시판</span>
+                <span class="honeyboardModify-text2">글 수정</span>
+            </div>
+
+            <div class="honeyboardModify-inputContainer">
+                <input type="hidden" id="boardNumberHidden" th:value="${boardNumber}">
+                <input type="text" class="honeyboardModify-titleInput" id="boardTitle"
+                       th:value="${boardTitle}" placeholder="제목을 입력하세요" required>
+            </div>
+
+            <!-- Toast UI Editor Section -->
+            <div id="contsEditor"><input type="hidden" id="boardTextHidden" th:utext="${boardText}"></div>
+
+            <!-- 수정 및 취소 버튼을 각각 폼 안에 넣기 -->
+            <form id="honeyBoardModifyForm" th:action="@{/board/updateHoneyBoard}" method="post">
+                <input type="hidden" name="boardNumber" th:value="${boardNumber}">
+                <input type="hidden" name="boardTitle" id="hiddenBoardTitle">
+                <input type="hidden" name="boardText" id="hiddenBoardText">
+                <input type="hidden" name="photoLocal" th:value="${photoLocal}">
+                <input type="hidden" name="photoOriginal" th:value="${photoOriginal}">
+                <div class="honeyboardModify-write">
+                    <button type="button" class="honeyboardModify-writeButton" id="updateButton">수정</button>
+                </div>
+            </form>
+
+            <form th:action="@{/board/honeyBoardList}" method="get">
+                <div class="honeyboardModify-write">
+                    <button type="submit" class="honeyboardModify-cancelButton">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+
+<!-- Toast UI Editor JavaScript -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    const editor = new toastui.Editor({
+        el: document.querySelector('#contsEditor'),
+        previewStyle: 'vertical',
+        initialEditType: 'wysiwyg',
+        height: '500px',
+        placeholder: '내용을 입력해 주세요.',
+        hooks: {
+            addImageBlobHook: async (blob, callback) => {
+                console.log("이미지가 업로드 되었습니다.");
+
+                const formData = new FormData();
+                formData.append('image', blob);
+
+                try {
+                    const response = await fetch('/board/tui-editor/image-upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    console.log('Response:', data);
+
+                    if (!response.ok) {
+                        throw new Error('이미지 업로드 실패: ' + data.error);
+                    }
+
+                    callback(URL.createObjectURL(blob), '이미지');
+                    document.querySelector('input[name="photoLocal"]').value = data.photoLocal;
+                    document.querySelector('input[name="photoOriginal"]').value = data.photoOriginal;
+
+                } catch (error) {
+                    console.error('이미지 업로드 실패:', error);
+                    alert('이미지 업로드에 실패했습니다.');
+                }
+            }
+        }
+    });
+
+    window.onload = function() {
+        const title = document.getElementById('boardTitle').value;
+        const content = document.getElementById('boardTextHidden').value;
+
+        document.getElementById('boardTitle').value = title;
+        editor.setHTML(content);
+    };
+
+    // 수정 버튼 클릭 시 유효성 검사 및 확인
+    document.getElementById('updateButton').addEventListener('click', function (event) {
+        // 제목과 에디터 내용 가져오기
+        const title = document.getElementById('boardTitle').value.trim();
+        const content = editor.getHTML().trim();
+
+        // 입력값 유효성 검사
+        if (title === "" || content === "") { // 제목이나 내용 중 하나라도 비어 있으면
+            alert("변경할 내용을 입력해주세요.");
+            return;
+        }
+
+        // 수정 확인 알림
+        if (confirm("정말 수정하시겠습니까?")) {
+            // 제목과 에디터 내용을 hidden 필드에 저장
+            document.getElementById('hiddenBoardTitle').value = title;
+            document.getElementById('hiddenBoardText').value = content;
+
+            // 폼 제출
+            document.getElementById('honeyBoardModifyForm').submit();
+        }
+    });
+</script>
+</body>
+</html>

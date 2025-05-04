@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/recipe/chatBotDetailPage.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <title>DR - 챗봇 레시피 상세페이지</title>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="chatBotDetailPage-mainContainer">
+        <div class="chatBotDetailPage-mainBox">
+            <div class="chatBotDetailPage-infobox">
+                <div class="chatBotDetailPage-infoFirst">
+                    <div class="chatBotDetailPage-infoInBox1">
+                        <img th:src="@{/image/photo/} + ${chatBotRecipeDetail.photoLocal}" th:if="${chatBotRecipeDetail.photoLocal != null && chatBotRecipeDetail.profilePic == null}" alt="User Image">
+                        <img th:src="${chatBotRecipeDetail.profilePic}" th:if="${chatBotRecipeDetail.photoLocal == null && chatBotRecipeDetail.profilePic != null}" alt="User Image">
+                    </div>
+                    <div class="chatBotDetailPage-infoInBox2">
+                        <p class="chatBotDetailPage-writeName" th:text="${chatBotRecipeDetail.userNickName}"></p>
+                        <p class="chatBotDetailPage-foodTitle" th:text="${chatBotRecipeDetail.recipeTitle}"></p>
+                        <p class="chatBotDetailPage-date" th:text="${chatBotRecipeDetail.recipeWriteDate}"></p>
+                    </div>
+                </div>
+
+                <div class="chatBotDetailPage-infoSecond">
+                    <div class="chatBotDetailPage-secondButton">
+                        <div class="chatBotDetailPage-heartbox">
+                            <div class="chatBotDetailPage-buttonImg">
+                                <img id="heartImage1" th:src="@{/image/heartColor.png}" alt="좋아요" style="display: none;">
+                            </div>
+
+                            <div class="chatBotDetailPage-buttonImg">
+                                <img id="heartImage2" th:src="@{/image/heartGray.png}" alt="싫어요">
+                            </div>
+                            <a th:href="@{/recipe/report(recipeNumber=${chatBotRecipeDetail.recipeNumber})}">
+                                <button class="chatBotDetailPage-buttonTwo">신고</button>
+                            </a>
+                        </div>
+                        <div class="chatBotDetailPage-firstButton" th:if="${userNickName != null and userNickName == chatBotRecipeDetail.userNickName}">
+                            <form th:action="@{/recipe/chatBotRecipeModify}" method="get">
+                                <input type="hidden" name="recipeNumber4" id="recipeNumber4"
+                                       th:value="${chatBotRecipeDetail.recipeNumber}">
+                                <input type="hidden" name="recipeTitle" th:value="${chatBotRecipeDetail.recipeTitle}">
+                                <input type="hidden" name="recipeText" th:value="${chatBotRecipeDetail.recipeText}">
+                                <button id="updateButton" class="chatBotDetailPage-buttonOne">수정</button>
+                            </form>
+
+                            <form th:action="@{/recipe/deleteChatBotRecipe}" method="post" onsubmit="return confirmDelete()">
+                                <input type="hidden" name="recipeNumber5" id="recipeNumber5"
+                                       th:value="${chatBotRecipeDetail.recipeNumber}">
+                                <button id="deleteButton" class="chatBotDetailPage-buttonOne">삭제</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatBotDetailPage-writetext">
+                <p class="chatBotDetailPage-texts" th:utext="${chatBotRecipeDetail.recipeText}"></p>
+                <div class="chatBotDetailPage-recommendImg">
+                    <input type="hidden" name="recipeNumber" id="recipeNumber" th:value="${chatBotRecipeDetail.recipeNumber}">
+                    <img src="/image/recommend.png" id="recommendImg" class="recommend-inactive" alt="추천"
+                         th:src="@{/image/recommend.png}">
+                    <p id="recommendCount" th:text="'추천수: ' + ${chatBotRecipeDetail.goodCount}"></p>
+                </div>
+                <br><br>
+            </div>
+
+            <div class="chatBotDetailPage-commentSection">
+                <div class="chatBotDetailPage-commentInput">
+                    <form th:action="@{/recipe/chatBotDetailPage}" method="post">
+                        <input type="hidden" name="recipeNumber" th:value="${chatBotRecipeDetail.recipeNumber}"/>
+                        <textarea id="commentTextArea" placeholder="댓글을 입력하세요" rows="3" name="replyText"></textarea>
+                        <input type="hidden" name="userNumber" th:value="${session.userNumber}"/>
+                        <div class="chatBotDetailPage-commentActions">
+                            <button type="submit" class="chatBotDetailPage-addBtn" onclick="submitComment()">등록</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div th:each="chatBotRecipeComments : ${chatBotRecipeComments}">
+                    <div class="chatBotDetailPage-comment" id="comment${recipeComments.replyNumber}">
+                        <div class="chatBotDetailPage-commentUserImg">
+                            <img th:src="@{/image/photo/} + ${chatBotRecipeComments.photoLocal}" th:if="${chatBotRecipeComments.photoLocal != null && chatBotRecipeComments.profilePic == null}" alt="User Image">
+                            <img th:src="${chatBotRecipeComments.profilePic}" th:if="${chatBotRecipeComments.photoLocal == null && chatBotRecipeComments.profilePic != null}" alt="User Image">
+                        </div>
+
+                        <div class="chatBotDetailPage-commentContent">
+                            <input type="hidden" name="replyNumber" th:value="${chatBotRecipeComments.replyNumber}">
+                            <div class="chatBotDetailPage-commentHeader">
+                                <span class="chatBotDetailPage-commentUsername"
+                                      th:text="${chatBotRecipeComments.userNickName}"></span>
+                                <a th:href="@{/recipe/report(recipeNumber=${chatBotRecipeDetail.recipeNumber}, replyNumber=${chatBotRecipeComments.replyNumber})}">
+                                    <button class="chatBotDetailPage-reportBtn">신고</button>
+                                </a>
+                            </div>
+                          <div class="chatBotDetailPage-commentText" id="commentText${recipeComments.replyNumber}"
+                               th:text="${chatBotRecipeComments.replyText}"></div>
+                            <div class="chatBotDetailPage-commentTime"
+                                 th:text="${chatBotRecipeComments.replyModifyDate != null ? chatBotRecipeComments.replyModifyDate + '(수정됨)' : chatBotRecipeComments.replyWriteDate}"></div>
+                            <!-- 본인 댓글에 대한 수정/삭제 버튼 -->
+                            <div class="chatBotDetailPage-buttonGroup"
+                                 th:if="${userNickName != null and userNickName == chatBotRecipeComments.userNickName}">
+                                <button type="button" class="chatBotDetailPage-editBtn"
+                                        th:attr="data-reply-number=${chatBotRecipeComments.replyNumber}">수정
+                                </button>
+                                <button type="button" class="chatBotDetailPage-deleteBtn"
+                                        th:attr="data-reply-number=${chatBotRecipeComments.replyNumber}">삭제
+                                </button>
+                            </div>
+
+                            <!-- 댓글 수정 입력창, 기본적으로 숨김 상태 -->
+                            <div class="chatBotDetailPage-commentInput" style="display:none;"
+                                 id="editInput${recipeComments.replyNumber}">
+                                <textarea id="editTextarea${recipeComments.replyNumber}" rows="3"></textarea>
+                                <div class="chatBotDetailPage-commentActions">
+                                    <button class="chatBotDetailPage-saveBtn">저장</button>
+                                    <button class="chatBotDetailPage-cancelBtn">취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--        댓글 리스트 반복문 끝-->
+                <div id="pagination"></div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{/fragment/footer :: footer}"></footer>
+</main>
+<script th:src="@{/js/recipe/chatBotDetailPage.js}"></script>
+</body>
+</html>

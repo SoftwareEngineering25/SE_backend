@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/recipe/myRecipeModify.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <title>DR - 나만의 레시피 수정</title>
+</head>
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="myRecipeModify-mainContainer">
+        <div class="myRecipeModify-mainBox">
+            <div class="myRecipeModify-title">
+                <span class="myRecipeModify-text1">나만의 레시피</span>
+                <span class="myRecipeModify-text2">수정</span>
+            </div>
+
+            <div class="myRecipeModify-inputContainer">
+                <input type="hidden" id="recipeNumberHidden" th:value="${recipeNumber}">
+                <input type="text" class="myRecipeModify-titleInput" id="recipeTitle"
+                       th:value="${recipeTitle}" placeholder="제목을 입력하세요">
+            </div>
+
+            <div id="contsEditor"><input type="hidden" id="recipeTextHidden" th:utext="${recipeText}"></div>
+
+            <form id="myRecipeModifyForm" th:action="@{/recipe/saveMyRecipeUpdate}" method="post">
+                <input type="hidden" name="recipeNumber" th:value="${recipeNumber}">
+                <input type="hidden" name="recipeTitle" id="hiddenrecipeTitle">
+                <input type="hidden" name="recipeText" id="hiddenrecipeText">
+                <input type="hidden" name="photoLocal" th:value="${photoLocal}">
+                <input type="hidden" name="photoOriginal" th:value="${photoOriginal}">
+
+                <div class="myRecipeModify-write">
+                    <button type="button" class="myRecipeModify-writeButton" id="updateButton">수정</button>
+                </div>
+            </form>
+
+            <form th:action="@{/recipe/myRecipeList}" method="get">
+                <div class="myRecipeModify-write">
+                    <button type="submit" class="myRecipeModify-cancelButton">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    const editor = new toastui.Editor({
+        el: document.querySelector('#contsEditor'),
+        previewStyle: 'vertical',
+        initialEditType: 'wysiwyg',
+        height: '500px',
+        placeholder: '내용을 입력해 주세요.',
+        hooks: {
+            addImageBlobHook: async (blob, callback) => {
+                const formData = new FormData();
+                formData.append('image', blob);
+
+                try {
+                    const response = await fetch('/tui-editor/image-upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error('이미지 업로드 실패: ' + data.error);
+                    }
+
+                    // 클라이언트에서 받은 파일 정보로 콜백 호출
+                    callback(URL.createObjectURL(blob), '이미지'); // 이미지를 에디터에 추가
+
+                    // 업로드된 이미지의 경로를 hidden 필드에 추가
+                    document.querySelector('input[name="photoLocal"]').value = data.photoLocal;
+                    document.querySelector('input[name="photoOriginal"]').value = data.photoOriginal;
+
+                } catch (error) {
+                    alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+                    console.error('이미지 업로드 실패:', error);
+                }
+            }
+        }
+    });
+    // 페이지 로드 시 데이터 설정
+    window.onload = function() {
+        const title = document.getElementById('recipeTitle').value;
+        const content = document.getElementById('recipeTextHidden').value;
+
+        // 입력 필드와 에디터에 값 설정
+        document.getElementById('recipeTitle').value = title;
+        editor.setHTML(content);
+    };
+
+    document.getElementById('updateButton').addEventListener('click', function (event) {
+        // 제목과 에디터 내용을 hidden 필드에 저장
+        document.getElementById('hiddenrecipeTitle').value = document.getElementById('recipeTitle').value;
+        document.getElementById('hiddenrecipeText').value = editor.getHTML();
+
+        // 폼 제출
+        document.getElementById('myRecipeModifyForm').submit();
+    });
+</script>
+</body>
+</html>

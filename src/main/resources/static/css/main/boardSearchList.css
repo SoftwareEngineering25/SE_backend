@@ -1,0 +1,155 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Noto Sans KR', sans-serif;
+    overflow-x: hidden;
+}
+
+main {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.freeboardlist-container {
+    background-color: white;
+    border-radius: 5px;
+    width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.freeboardlist-title {
+    text-align: center;
+    margin-top: 100px;
+    margin-bottom: 30px;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.freeboardlist-leftTitle {
+    color: #317FF0;
+}
+
+.freeboardlist-rightTitle {
+    color: #ebaa39;
+}
+
+.freeboardlist-rightButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 260px;
+    height: 37px;
+    margin-left: 880px;
+}
+
+.freeboardlist-firstButton, .freeboardlist-secondButton, .freeboardlist-thirdButton{
+    width: 90px;
+    height: 37px;
+    border: none;
+    cursor: pointer;
+    border: 1px solid lightgray;
+}
+
+/* 버튼이 클릭될때마다 배경색깔과 텍스트 색깔이 바뀌는거 설정 */
+.freeboardlist-rightButton button.active {
+    background-color: #EBAA39;
+    color: white;
+}
+
+
+
+.freeboardlist-smallTitle {
+    color: rgba(0, 0, 0, 0.35);
+    font-size: 25px;
+}
+
+/* 각 게시판의 제목, 이름, 추천수, 날짜 열 스타일 */
+.freeboardlist-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.freeboardlist-row.header {
+    font-weight: bold;
+    background-color: #f4f4f4;
+}
+
+.freeboardlist-titleColumn {
+    width: 55%;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.freeboardlist-nameColumn,
+.freeboardlist-voteColumn,
+.freeboardlist-dateColumn {
+    width: 15%;
+    text-align: center;
+}
+
+/* 페이지 네비게이션 스타일 */
+#freeboardlist-pages {
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    /* margin-top: 20px; */
+}
+
+.freeboardlist-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 글 작성 버튼 스타일 */
+.freeboardlist-writeButton {
+    width: 30%;
+    padding: 10px;
+    background-color: #ebaa39;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 100px;
+}
+
+#pagination {
+    margin: 50px;
+    position: relative;
+    left: 37%;
+}
+
+.resultContainer {
+    width: 100%;
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultContainer img {
+    display: block;
+    width: 350px;
+    margin: 30px;
+}
+
+.resultIsNull {
+    font-size: 40px;
+    color: #808080;
+}

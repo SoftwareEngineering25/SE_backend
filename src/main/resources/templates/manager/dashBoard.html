@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대시보드</title>
+    <link rel="stylesheet" th:href="@{/css/manager/dashBoard.css}">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" th:src="@{/image/logo.png}">
+</a>
+
+<div id="manager-dashBoardBox">
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="dashBoard-contentBox">
+        <div id="dashBoard-top">
+            <div class="dashBoard-top-box">
+                <a th:href="@{/manager/manageUser}">
+                    <span>총 회원수</span>
+                    <span th:text="${dashBoard.userAll}"></span>
+                </a>
+            </div>
+            <div class="dashBoard-top-box">
+                <a th:href="@{/manager/manageReport}">
+                    <span>새로운 신고</span>
+                    <span th:text="${dashBoard.numAll}"></span>
+                    <br><br><br>
+                    &nbsp;&nbsp;&nbsp;<span class="dashBoard-light">게시판 신고</span><span class="dashBoard-light"
+                                                                                       th:text="${dashBoard.boardNum}"></span>
+                    <br><br>
+                    &nbsp;&nbsp;&nbsp;<span class="dashBoard-light">레시피 신고 </span><span class="dashBoard-light"
+                                                                                        th:text="${dashBoard.recipeNum}"></span>
+                    <br><br>
+                    &nbsp;&nbsp;&nbsp;<span class="dashBoard-light">댓글 신고 </span><span class="dashBoard-light"
+                                                                                       th:text="${dashBoard.replyNum}"></span>
+                </a>
+            </div>
+
+            <div class="dashBoard-top-box">
+                <div class="dashBoard-calender">
+                    <img id="dashBoard-calImg" th:src="@{/image/calendar.png}">
+                    <span class="dashBoard-date" th:text="${dashBoard.today}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashBoard-bottom">
+            <div th:each="manager : ${manager}" class="dashBoard-member">
+                <img th:src="@{/image/basicProfile.png}" alt="Profile Image">
+                <span th:text="${manager.managerName}"></span>
+                <span th:text="${manager.managerEmail}"></span>
+                <span th:text="${manager.managerSort}"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+
+<script th:src="@{/js/manager/dashBoard.js}"></script>
+</body>
+
+</html>

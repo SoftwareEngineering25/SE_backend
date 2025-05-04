@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/board/honeyBoardDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <title>DR - 꿀팁게시판 상세페이지</title>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="honeyBoardDetail-mainContainer">
+        <div class="honeyBoardDetail-mainBox">
+            <div class="honeyBoardDetail-infobox">
+                <div class="honeyBoardDetail-infoFirst">
+                    <div class="honeyBoardDetail-infoInBox1">
+                        <img th:src="@{/image/photo/} + ${honeyBoardDetail.photoLocal}" th:if="${honeyBoardDetail.photoLocal != null && honeyBoardDetail.profilePic == null}" alt="User Image">
+                        <img th:src="${honeyBoardDetail.profilePic}" th:if="${honeyBoardDetail.photoLocal == null && honeyBoardDetail.profilePic != null}" alt="User Image">
+                    </div>
+                    <div class="honeyBoardDetail-infoInBox2">
+                        <p class="honeyBoardDetail-writeName" th:text="${honeyBoardDetail.userNickName}">작성자</p>
+                        <p class="honeyBoardDetail-foodTitle" th:text="${honeyBoardDetail.boardTitle}">제목</p>
+                        <p class="honeyBoardDetail-date" th:text="${honeyBoardDetail.boardWriteDate}">날짜</p>
+                        <input type="hidden" name="userNumber2" th:value="${honeyBoardDetail.userNumber}"/>
+                    </div>
+                </div>
+
+                <div class="honeyBoardDetail-infoSecond">
+                    <!-- 신고 버튼: 모든 사용자에게 표시 -->
+                    <div class="honeyBoardDetail-secondButton">
+                        <a th:href="@{/board/boardReport(boardNumber=${honeyBoardDetail.boardNumber})}">
+                            <button class="honeyBoardDetail-buttonTwo">신고</button>
+                        </a>
+                    </div>
+                    <br><br>
+                    <!-- 수정 및 삭제 버튼: 작성자에게만 표시 -->
+                    <div class="honeyBoardDetail-firstButton"
+                         th:if="${userNickName != null and userNickName == honeyBoardDetail.userNickName}">
+                        <br><br>
+                        <!-- 수정 및 삭제 버튼: 작성자에게만 표시 -->
+                        <form th:action="@{/board/honeyBoardModify}" method="get">
+                            <input type="hidden" name="boardNumber3" id="boardNumber3"
+                                   th:value="${honeyBoardDetail.boardNumber}">
+                            <input type="hidden" name="boardTitle" th:value="${honeyBoardDetail.boardTitle}">
+                            <input type="hidden" name="boardText" th:value="${honeyBoardDetail.boardText}">
+                            <button id="updateButton" class="honeyBoardDetail-buttonOne">수정</button>
+                        </form>
+
+
+                        <form th:action="@{/board/deleteHoneyBoard}" method="post" onsubmit="return confirmDelete()">
+                            <input type="hidden" name="boardNumber2" id="boardNumber2"
+                                   th:value="${honeyBoardDetail.boardNumber}">
+                            <button id="deleteButton" class="honeyBoardDetail-buttonOne">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="honeyBoardDetail-writetext">
+                <p class="honeyBoardDetail-texts" th:utext="${honeyBoardDetail.boardText}">글 내용</p>
+
+                <div class="honeyBoardDetail-recommendImg">
+                    <input type="hidden" id="boardNumber" name="boardNumber" th:value="${honeyBoardDetail.boardNumber}">
+                    <img src="/image/recommend.png" id="recommendImg" class="recommend-inactive" alt="recommend"
+                         th:src="@{/image/recommend.png}">
+                    <p id="recommendCount" th:text="'추천수: ' + ${honeyBoardDetail.goodCount}"></p>
+                </div>
+            </div>
+
+            <div class="honeyBoardDetail-commentSection">
+                <div class="honeyBoardDetail-commentInput">
+                    <form th:action="@{/board/honeyBoardDetail}" method="post">
+                        <input type="hidden" name="boardNumber" th:value="${honeyBoardDetail.boardNumber}"/>
+                        <textarea id="commentTextArea" placeholder="댓글을 입력하세요..." rows="3" name="replyText"></textarea>
+                        <input type="hidden" name="userNumber" th:value="${session.userNumber}"/>
+                        <div class="honeyBoardDetail-commentActions">
+                            <button type="submit" class="honeyBoardDetail-addBtn" onclick="submitComment()">등록</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- 댓글 리스트 반복문 시작 -->
+                <div th:each="honeyBoardComments : ${honeyBoardComments}">
+                    <div class="honeyBoardDetail-comment" id="comment${honeyBoardComments.replyNumber}">
+                        <div class="honeyBoardDetail-commentUserImg">
+                            <img th:src="@{/image/photo/} + ${honeyBoardComments.photoLocal}" th:if="${honeyBoardComments.photoLocal != null && honeyBoardComments.profilePic == null}" alt="User Image">
+                            <img th:src="${honeyBoardComments.profilePic}" th:if="${honeyBoardComments.photoLocal == null && honeyBoardComments.profilePic != null}" alt="User Image">
+                        </div>
+
+                        <div class="honeyBoardDetail-commentContent">
+                            <input type="hidden" name="replyNumber" th:value="${honeyBoardComments.replyNumber}">
+                            <div class="honeyBoardDetail-commentHeader">
+                                <span class="honeyBoardDetail-commentUsername"
+                                      th:text="${honeyBoardComments.userNickName}">작성자</span>
+                                <a th:href="@{/board/boardReport(boardNumber=${honeyBoardDetail.boardNumber}, replyNumber=${honeyBoardComments.replyNumber})}">
+                                    <button class="honeyBoardDetail-reportBtn">신고</button>
+                                </a>
+
+                            </div>
+                            <!-- 수정된 날짜가 있으면 수정된 날짜를 보이고, 없으면 작성 날짜만 보이도록 처리 -->
+                            <div class="honeyBoardDetail-commentDate"
+                                 th:text="${honeyBoardComments.replyModifyDate != null ? honeyBoardComments.replyModifyDate + '(수정됨)' : honeyBoardComments.replyWriteDate}">
+                                작성 날짜
+                            </div>
+                            <br><br>
+                            <div class="honeyBoardDetail-commentText" id="commentText${honeyBoardComments.replyNumber}"
+                                 th:text="${honeyBoardComments.replyText}">댓글 내용
+                            </div>
+
+                            <div class="honeyBoardDetail-buttonGroup"
+                                 th:if="${userNickName != null and userNickName == honeyBoardComments.userNickName}">
+                                <button type="button" class="honeyBoardDetail-editBtn"
+                                        th:attr="data-reply-number=${honeyBoardComments.replyNumber}">수정
+                                </button>
+                                <button type="button" class="honeyBoardDetail-deleteBtn"
+                                        th:attr="data-reply-number=${honeyBoardComments.replyNumber}">삭제
+                                </button>
+                            </div>
+
+                            <div class="honeyBoardDetail-commentInput" style="display:none;"
+                                 id="editInput${honeyBoardComments.replyNumber}">
+                                <textarea id="editTextarea${honeyBoardComments.replyNumber}" rows="3"></textarea>
+                                <div class="honeyBoardDetail-commentActions">
+                                    <button class="honeyBoardDetail-saveBtn">저장</button>
+                                    <button class="honeyBoardDetail-cancelBtn">취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 댓글 리스트 반복문 끝 -->
+            </div>
+        </div>
+        <div id="pagination"></div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/board/honeyBoardDetail.js}" defer></script>
+</body>
+
+</html>

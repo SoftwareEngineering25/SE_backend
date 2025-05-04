@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 로그인</title>
+  <link rel="stylesheet" th:href="@{/css/manager/managerLogin.css}" >
+</head>
+
+
+<body>
+<img class="manager-logoImg" th:src="@{/image/logo.png}" alt="로고">
+<div id="manager-loginBox">
+  <div id="manager-logo">
+    <span id="manager-loginBlue">관리자</span>
+    <span id="manager-loginOrange">로그인</span>
+  </div>
+  <br><br>
+  <form id="manager-form" th:action="@{/manager/managerLogin}" method="post">
+    <input type="text" name="managerEmail" id="manager-loginId" placeholder="이메일주소" required>
+    <input type="password" name="managerPw" id="manager-loginPw" placeholder="비밀번호" required>
+    <img class="manager-formTogle1" th:src="@{/image/view.png}" alt="토글1">
+    <img class="manager-formTogle2" th:src="@{/image/noView.png}" alt="토글2">
+    <p id="manager-none"></p>
+    <button id="manager-loginButton">로그인</button>
+    <p th:if="${loginError}" th:text="${loginError}" style="color: red;"></p>
+    <!-- 로그인 폼 -->
+
+  </form>
+</div>
+
+<script th:src="@{/js/manager/managerLogin.js}"></script>
+</body>
+
+</html>

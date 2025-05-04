@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맛있는 재활용</title>
+    <link rel="stylesheet" th:href="@{/css/main/main.css}"/>
+
+    <!-- 그래프 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <script defer th:src="@{/js/main/main.js}"></script>
+
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+
+<!-- 메인 -->
+<main>
+
+    <!-- 슬로건, 출처 -->
+    <section class="main-section1">
+        <div class="main-section1Container">
+            <div class="main-section1Frame">
+                <img th:src="@{/image/refrigerator.png}" id="main-refrigerator"/>
+                <img th:src="@{/image/font.png}" id="main-logoFont"/>
+                <p class="main-slogan">: 음식물 쓰레기 감소를 위한<br> 챗봇 레시피</p>
+                <p class="main-ourcesFrom">데이터 출처 : 공공데이터 포털<br> 계산식 출처 : 음식물의 에너지 소모량 및 온실가스 배출량 산정 연구(환경부,2010)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 월별 음식물쓰레기 배출량 -->
+    <section class="main-section2">
+        <div class="main-section2Container">
+            <div class="main-section2Frame">
+                <h1 class="main-sectionTitle">음<span class="main-titleText">쓰</span> NOW</h1>
+                <div id="main-titleNotice">매월 말 or 초 최신화 됩니다</div>
+                <h2 class="main-sectionSubTitle" id="currentYearMonth"></h2>
+                <div class="main-sectionInfo">
+                    <span id="totalWaste"></span><span id="portion"></span>
+                </div>
+                <div class="main-blank"></div>
+
+                <!-- 그래프 -->
+                <canvas id="myChart" style="width:100%;max-width:950px"></canvas>
+
+                <div class="main-blank"></div>
+                <div class="main-blank"></div>
+
+                <select name="monthSelect" id="main-monthSelect">
+                    <option value="1월">1월</option>
+                    <option value="2월">2월</option>
+                    <option value="3월">3월</option>
+                    <option value="4월">4월</option>
+                    <option value="5월">5월</option>
+                    <option value="6월">6월</option>
+                    <option value="7월">7월</option>
+                    <option value="8월">8월</option>
+                    <option value="9월">9월</option>
+                    <option value="10월">10월</option>
+                    <option value="11월">11월</option>
+                    <option value="12월">12월</option>
+                </select>
+
+                <h3 id="main-amountText">그래프의 정보는 가구당 월 평균일 뿐</h3>
+                <p>전국적으로 하루 약 <span>14,000 톤</span>, 연간 약 <span>500만여 톤</span>의 음식물 쓰레기가 배출됩니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 음쓰 계산기 -->
+    <section class="main-section3">
+        <div class="main-section3Container">
+            <div class="main-section3Frame">
+                <h1 class="main-sectionTitle">음<span class="main-titleText">쓰</span> 계산기</h1>
+                <div class="main-blank"></div>
+                <div class="main-resultTitle">음식물쓰레기 무게</div>
+
+                <div class="main-calculator">
+                    <form>
+                        <input type="number" id="main-qnt" class="main-weightInput" step="0.01" placeholder="kg 입력"> kg
+                    </form>
+                    <div class="main-equals"> =</div>
+                    <div id="main-portion" class="main-calcResult">0 인분</div>
+                </div>
+
+                <div class="main-blank"></div>
+                <div class="main-resultTitleFrame">
+                    <div class="main-resultTitle">온실가스 배출량</div>
+                    <div class="main-resultTitle">에너지 소비량</div>
+                </div>
+                <div class="topResult">
+                    <div class="main-resultBox">
+                        <img src="../../image/earth.png">
+                        <div class="resultName">온실가스 배출량</div>
+                        <div id="main-co2" class="main-result">0 kgCO2eq.</div>
+                    </div>
+                    <div class="main-resultBox">
+                        <img src="../../image/tree.png">
+                        <div class="resultName">소나무 1년 탄소흡수량</div>
+                        <div id="main-tree" class="main-result">0 그루</div>
+                    </div>
+                    <div class="main-resultBox">
+                        <img src="../../image/electricity.png">
+                        <div class="resultName">전기에너지</div>
+                        <div id="main-energy" class="main-result">0 kWh</div>
+                    </div>
+                    <div class="main-resultBox">
+                        <img src="../../image/washer.png">
+                        <div class="resultName">세탁기 사용</div>
+                        <div id="main-washingMachine" class="main-result">0 회</div>
+                    </div>
+                </div>
+
+                <div class="main-blank"></div>
+                <div class="main-resultTitle">처리비용</div>
+                <div class="topResult">
+                    <div class="main-resultBox">
+                        <div class="resultName">처리장 공사비</div>
+                        <div id="main-processCost" class="main-result">0 원</div>
+                    </div>
+                    <div class="main-resultBox">
+                        <div class="resultName">수집/운반 처리비</div>
+                        <div id="main-transCost" class="main-result">0 원</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 베스트, 워스트 지역 -->
+    <section class="main-section4">
+        <div class="main-section4Container">
+            <div class="main-section4Frame">
+
+                <h1 class="main-sectionTitle">음<span class="main-titleText">쓰</span>에 대하여</h1>
+
+                <!-- 동영상 -->
+                <iframe id="main-player" width="980" height="570"
+                        src="https://www.youtube.com/embed/3EiqwheF6H8?si=dsJMEgQGtFvJm_zr"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+    </section>
+
+</main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+</html>

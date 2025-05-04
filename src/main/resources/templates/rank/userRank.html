@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 환경기여 랭킹</title>
+    <link rel="stylesheet" th:href="@{/css/rank/userRank.css}">
+    <script defer th:src="@{/js/rank/userRank.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 환경기여 랭킹 타이틀-->
+        <div class="userRankTitle">
+            <span style="color: #317FF0;">환경기여</span>
+            <span style="color: #EBAA39;">랭킹</span>
+        </div>
+        <div class="userRankMyScore" th:each="rank : ${rankList}">
+            <div class="userRankMyScoreNumber">내 랭킹</div>
+            <div th:text="${rank.rank} + '위&nbsp;'">66위&nbsp;&nbsp;</div>
+            <div th:text=" '(' + ${rank.scoreGet} + '점)'">(1590점)</div>
+            <div class="userRankquestion">?</div>
+            <div class="userRankAnswer">점수 및 포인트 적립방법<br><br> 1. 챗봇 레시피 작성 시 환경기여 점수 <u>10점</u><br><br> 2. 내가 쓴 레시피 타 유저가 추천 시 환경기여 점수 <u>5점</u><br><br> 3. 매달 초 환경기여 랭킹에 따라 포인트 차등 지급 <br> - 1등 ~ 5등 : 500포인트<br> - 6등 ~ 10등 : 400포인트<br> - 11등 ~ 20등 : 300포인트<br> - 21등 ~ 30등 : 200포인트<br>                - 31등 ~ 50등 : 100포인트<br> - 그외 등수 50포인트 <br><br> 4. 점수를 통한 랭킹 외 포인트 적립 가능 <br> - 출석체크는 하루에 한번만 가능 <br> - 출석체크 시 10포인트 적립 <br> - 매달 말일까지 연속 출석 시 200포인트 추가 지급 <br> - 개근 달성 시 당일 자동 지급
+            </div>
+        </div>
+        <!-- 랭킹 순위 !-->
+        <div class="userRankType">
+            <div class="userRankRanking">순위</div>
+            <div class="userRankImage">이미지</div>
+            <div class="userRankName">이름</div>
+            <div class="userRankNameContributingScore">환경기여 점수</div>
+        </div>
+        <!-- 1등 랭킹 -->
+        <div class="userRankTypeOne" th:each="rank : ${fiftyRankList}">
+            <div class="userRankRankingOne">
+                <!-- 1등 금메달, 2등 은메달, 3등 동메달 이미지 삽입 조건문 작성!! -->
+                <div th:if="${rank.rank == 1}">
+                    <img class="userRankOneTwoThree" src="/image/myPage/goldMedal.png" alt="Gold Medal">
+                </div>
+                <div th:if="${rank.rank == 2}">
+                    <img class="userRankOneTwoThree" src="/image/myPage/silverMedal.png" alt="Silver Medal">
+                </div>
+                <div th:if="${rank.rank == 3}">
+                    <img class="userRankOneTwoThree" src="/image/myPage/bronzeMedal.png" alt="Bronze Medal">
+                </div>
+                <div th:if="${rank.rank > 3}">
+                    <span th:text="${rank.rank}"></span>
+                </div>
+            </div>
+
+
+            <div class="userRankImageOne" th:if="${rank.userNumber != null && rank.profilePic == null}">
+                <img class="userRankOneImgSet" th:src="@{/image/photo/} + ${rank.photoLocal}" alt="User Image">
+            </div>
+
+            <div class="userRankImageOne" th:if="${rank.userNumber != null && rank.profilePic != null}">
+                <img class="userRankOneImgSet" th:src="${rank.profilePic}" alt="User Image">
+            </div>
+
+            <div class="userRankNameOne" th:text="${rank.userNickname}">이강철</div>
+            <div class="userRankNameContributingScoreOne" th:text="${rank.scoreGet} + '점'">5000점</div>
+
+        </div>
+        <!-- 페이지 네이션 -->
+        <div id="pagination"></div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

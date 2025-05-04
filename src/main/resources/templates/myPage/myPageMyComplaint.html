@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 신고 받은 글</title>
+    <link rel="stylesheet" th:href="@{/css/myPage/myPageMyComplaint.css}">
+    <script defer th:src="@{/js/myPage/myPageMyComplaint.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 신고 받은 글 타이틀-->
+        <div class="myPage-myComplaintTitleTop">
+            <span style="color: #317FF0;">신고</span>
+            <span style="color: #EBAA39;">받은 글</span>
+        </div>
+        <!-- 왼쪽 마이페이지 네비바>-->
+        <div class="myPage-myComplaintMain">
+            <div class="myPage-myComplaintContainer">
+                <div class="myPage-lengthBar">
+                    <div id="myPage-informationPage">&nbsp;마이페이지</div>
+                    <div id="myPage-informationSecond"><a th:href="@{/myPage/myPageInformation}">&nbsp;내 정보</a></div>
+                    <div id="myPage-informationThree"><a th:href="@{/myPage/myPageSteamedList}">&nbsp;찜목록</a></div>
+                    <div id="myPage-informationForth"><a th:href="@{/myPage/myPageMyRecipe}">&nbsp;내가 쓴 레시피</a></div>
+                    <div id="myPage-informationFifth"><a th:href="@{/myPage/myPageMyPost}">&nbsp;내가 쓴 게시글</a></div>
+                    <div id="myPage-informationsisxth"><a th:href="@{/myPage/myPageMyComplaint}">&nbsp;신고 받은 글</a></div>
+                    <div id="myPage-informationseventh"><a th:href="@{/myPage/myPageChecked}">&nbsp;출석 체크</a></div>
+                    <div id="myPage-informationeighth"><a th:href="@{/myPage/myPageMyPoint}">&nbsp;포인트내역</a></div>
+                </div>
+            </div>
+            <!-- 신고 내역 -->
+            <div class="myPage-myComplaintWrap">
+                <div class="myPage-myComplaintTitleMain">
+                    <ul>
+                        <li>
+                            <span class="myPage-myComplaintTitleNumber">순번</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myComplaintTitleContent">제목 및 내용</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myComplaintTitleContentType">유형</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myComplaintTitleCause">신고 사유</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myComplaintTitleDate">신고 날짜</span>
+                        </li>
+                    </ul>
+                </div>
+                <div th:each="siren, start : ${sirenList}" class="myPage-myComplaintTitleMainOne">
+                    <ul>
+                        <li>
+                            <span class="myPage-myComplaintTitleNumberZero" th:text="${start.index + 1}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <div class= "myPage-myComplaintTitleContentOne" th:text="${siren.titleAndContent}"></div>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myComplaintTitleContentTypeTwo" th:text="${siren.sirenType}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myComplaintTitleCauseThree" th:text="${siren.sirenReason}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myComplaintTitleDateFour" th:text="${siren.sirenDate}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="pagination"></div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

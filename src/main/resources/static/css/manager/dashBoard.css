@@ -1,0 +1,180 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.manager-logoImg {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 100px;
+  cursor: pointer;
+}
+
+#manager-dashBoardBox {
+  width: 1380px;
+  height: 600px;
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: lightgray;
+
+}
+
+#dashBoard-list {
+  width: 20%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+}
+
+li {
+  margin-left: 10px;
+  height: 50px;
+  cursor: pointer;
+  border: 1px solid #EBAA39;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  
+}
+
+#dashBoard-admin {
+  color: #EBAA39;
+}
+
+#dashBoard-span {
+  position: absolute;
+  top: 7%;
+  left: 12%;
+}
+
+#dashBoard-profile {
+  position: absolute;
+  left: 6%;
+  width: 50px;
+  height: 50px;
+}
+
+#dashBoard-contentBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 76%;
+  height: 100%;
+
+}
+#dashBoard-top {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  height: 38%;
+  border-radius: 5px;
+}
+
+span {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.dashBoard-top-box {
+  width: 33%;
+  background-color: white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap:20px;
+  cursor: pointer;
+}
+
+#dashBoard-bottom {
+  width: 100%;
+  height: 58%;
+  background-color: white;
+  border-radius: 5px;
+}
+
+#dashBoard-calImg {
+  width: 100px;
+  height: auto;
+}
+
+.dashBoard-calender {
+  display: flex;
+  gap: 10px;
+}
+
+.dashBoard-light {
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.dashBoard-date {
+  line-height: 100px;
+}
+
+#dashBoard-bottom {
+  display: flex;
+  justify-content: space-around;
+}
+.dashBoard-member {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 18%;
+  height: 270px;
+  border: 1px solid #424242;
+  border-radius: 5px;
+}
+
+.dashBoard-member img {
+  width: 90px;
+  height: 90px;
+  position: relative;
+  top: 8%;
+  left: 25%;
+
+}
+
+.dashBoard-member span {
+ text-align: center;
+ font-size: 11px;
+}
+
+#manager-logout {
+  position: absolute;
+  right: 3%;
+  top: 4%;
+  width: 70px;
+  height: 35px;
+  background-color: #EBAA39;
+  border: white;
+  border-radius: 7px;
+  color: white;
+  cursor: pointer;
+}
+
+

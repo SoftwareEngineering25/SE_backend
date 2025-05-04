@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원관리</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link rel="stylesheet" href="./../../css/manager/manageUser.css">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" src="./../../image/logo.png">
+</a>
+<div id="manager-dashBoardBox">
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+
+
+    <div id="manage-member">
+        <div id="manage-memberTop">
+            <p id="manage-memberBold">회원 관리</p>
+            <button id="memberPause">회원정지</button>
+            <button id="memberOut">회원탈퇴</button>
+        </div>
+
+        <div id="manage-memberList">
+            <ul id="manage-memberUl">
+                <li id="manage-memberTitle">
+                    <input id="title-check" type="checkbox" value="전체선택">
+                    <span id="title-num">No.</span>
+                    <span id="title-name">이름</span>
+                    <span id="title-div">구분</span>
+                    <span id="title-phone">전화번호</span>
+                    <span id="title-email">이메일</span>
+                </li>
+
+                <!-- 검색 결과가 있을 때 -->
+                <li th:if="${user != null}">
+                    <input type="checkbox" th:value="${user.userNumber}">
+                    <span class="con-num" th:text="${user.userNumber}"></span>
+                    <span class="con-name" th:text="${user.userNickName}"></span>
+                    <span class="con-div" th:text="${user.userStatus}"></span>
+                    <span class="con-phone" th:text="${user.userPhone}"></span>
+                    <span class="con-email" th:text="${user.userEmail}"></span>
+                </li>
+
+                <!-- 기본 사용자 리스트 -->
+                <li th:each="userList : ${userList}" th:if="${user == null}">
+                    <input type="checkbox" th:value="${userList.userNumber}">
+                    <span class="con-num" th:text="${userList.userNumber}"></span>
+                    <span class="con-name" th:text="${userList.userNickName}"></span>
+                    <span class="con-div" th:text="${userList.userStatus}"></span>
+                    <span class="con-phone" th:text="${userList.userPhone}"></span>
+                    <span class="con-email" th:text="${userList.userEmail}"></span>
+                </li>
+
+            </ul>
+
+            <div id="pagination"></div>
+        </div>
+    </div>
+    <form class="manager-search-form" th:action="@{/manager/userSearch}" method="post">
+        <input type="text" id="manager-input" name="userNumber" placeholder="회원번호"/>
+        <button class="manager-search">검색</button>
+    </form>
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+
+<script src="./../../js/manager/manageUser.js"></script>
+</body>
+
+</html>

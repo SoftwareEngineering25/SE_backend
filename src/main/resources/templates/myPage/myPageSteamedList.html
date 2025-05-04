@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 찜목록</title>
+    <link rel="stylesheet" th:href="@{/css/myPage/myPageSteamedList.css}">
+    <script defer th:src="@{/js/myPage/myPageSteamedList.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 찜목록 타이틀-->
+        <div class="myPage-steamedListTitle">
+            <span style="color: #317FF0;">찜</span>
+            <span style="color: #EBAA39;">목록</span>
+        </div>
+        <!-- 왼쪽 마이페이지 네비바>-->
+        <div class="myPage-steamedListContainer">
+            <div class="myPage-lengthBar">
+                <div id="myPage-informationPage">&nbsp;마이페이지</div>
+                <div id="myPage-informationSecond"><a th:href="@{/myPage/myPageInformation}">&nbsp;내 정보</a></div>
+                <div id="myPage-informationThree"><a th:href="@{/myPage/myPageSteamedList}">&nbsp;찜목록</a></div>
+                <div><a th:href="@{/myPage/myPageMyRecipe}">&nbsp;내가 쓴 레시피</a></div>
+                <div><a th:href="@{/myPage/myPageMyPost}">&nbsp;내가 쓴 게시글</a></div>
+                <div><a th:href="@{/myPage/myPageMyComplaint}">&nbsp;신고 받은 글</a></div>
+                <div><a th:href="@{/myPage/myPageChecked}">&nbsp;출석 체크</a></div>
+                <div id="myPage-informationeighth"><a th:href="@{/myPage/myPageMyPoint}">&nbsp;포인트내역</a></div>
+            </div>
+        </div>
+        <!-- 찜목록 이미지 및 글 맨 위-->
+        <div class="myPage-pictureContainerReal">
+            <div class="myPage-pictureWrap">
+                <div class="myPage-pictureprideOne" th:each="steam : ${userSteamList}">
+                    <div class="myPage-pictureLeft">
+                        <a th:href="${steam.recipeType == '챗봇레시피' ? '/recipe/chatBotDetailPage?recipeNumber=' + steam.recipeNumber : '/recipe/myDetailPage?recipeNumber=' + steam.recipeNumber}">
+                            <img id="myPage-pictureOne" th:src="@{/image/photo/} + ${steam.photoOriginal}" alt="레시피 사진">
+                        </a>
+                    </div>
+                    <div class="myPage-pictureInside">
+                        <div class="myPage-pictureSide">
+                            <div class="myPage-pictureTitle">
+                                <a th:href="${steam.recipeType == '챗봇레시피' ? '/recipe/chatBotDetailPage?recipeNumber=' + steam.recipeNumber : '/recipe/myDetailPage?recipeNumber=' + steam.recipeNumber}"
+                                   th:text="${steam.recipeTitle}">레시피 제목</a>
+                            </div>
+                        </div>
+                        <div class="myPage-pictureSideRight">
+                            <button type="button" class="myPage-pictureListDelete"
+                                    th:attr="data-recipe-number=${steam.recipeNumber}, data-user-number=${steam.userNumber}">
+                                찜 삭제
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 페이지 네이션 -->
+            <div id="pagination"></div>
+        </div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

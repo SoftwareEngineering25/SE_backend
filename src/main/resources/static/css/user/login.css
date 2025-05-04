@@ -1,0 +1,168 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+
+main {
+  margin: 0;
+  padding: 0;
+  height: 800px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+
+.login-logoImg {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 150px;
+  cursor: pointer;
+}
+
+#login-loginBox {
+  width: 500px;
+  height: 300px;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#login-logo {
+  display: flex;
+  justify-content: center;
+  font-size: 35px;
+  font-family: 'Cute Font', cursive;
+  font-weight: bold;
+}
+
+#login-loginBlue {
+  color: #317FF0;
+}
+
+#login-loginOrange {
+  color: #EBAA39;
+}
+
+#login-formOne {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+#login-loginId {
+  width: 400px;
+  height: 40px;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#login-loginPw {
+  width: 400px;
+  height: 40px;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+#login-loginButton {
+  margin-top: 10px;
+  width: 400px;
+  height: 40px;
+  color: white;
+  border-radius: 5px;
+  background-color: #424242;
+  cursor: pointer;
+  border: none;
+}
+
+.login-formTogleOne {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 120px;
+  right: 55px;
+  cursor: pointer;
+  top: 160px;
+}
+
+.login-formTogleTwo {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 120px;
+  right: 55px;
+  display: none;
+  cursor: pointer;
+  top: 160px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.login-formTwo,
+.login-formThree {
+  align-items: center;
+  text-align: center;
+  gap: 15px;
+  color: black;
+}
+
+#login-kakaoButton {
+  margin-top: 10px;
+  width: 400px;
+  height: 40px;
+  color: black;
+  border-radius: 5px;
+  background-color: #424242;
+  cursor: pointer;
+  background-color: #FEE500;
+  border: none;
+}
+
+#login-naverButton {
+  margin-top: 10px;
+  width: 400px;
+  height: 40px;
+  color: white;
+  border-radius: 5px;
+  background-color: #424242;
+  cursor: pointer;
+  background-color: #03C75A;
+  border: none;
+}
+
+.login-socialHr {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.35);
+  font-size: 12px;
+  margin: 8px 0px;
+}
+
+.login-socialHr::before,
+.login-socialHr::after {
+  content: "";
+  flex-grow: 1;
+  background: rgba(0, 0, 0, 0.35);
+  height: 1px;
+  font-size: 0px;
+  line-height: 0px;
+  margin: 0px 16px;
+}
+
+.login-formTwo a{
+  color: #424242;
+}

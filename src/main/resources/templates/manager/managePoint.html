@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>포인트관리</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link rel="stylesheet" href="./../../css/manager/managePoint.css">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" src="./../../image/logo.png">
+</a>
+<div id="manager-dashBoardBox">
+
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="manage-member">
+        <div id="manage-memberTop">
+            <p id="manage-memberBold">포인트 관리</p>
+            <form id="manager-select">
+                <select>
+                    <option value="0" th:selected="${selectedMonth == null}">전체선택</option>
+                    <option value="1" th:selected="${selectedMonth == 1}">1월</option>
+                    <option value="2" th:selected="${selectedMonth == 2}">2월</option>
+                    <option value="3" th:selected="${selectedMonth == 3}">3월</option>
+                    <option value="4" th:selected="${selectedMonth == 4}">4월</option>
+                    <option value="5" th:selected="${selectedMonth == 5}">5월</option>
+                    <option value="6" th:selected="${selectedMonth == 6}">6월</option>
+                    <option value="7" th:selected="${selectedMonth == 7}">7월</option>
+                    <option value="8" th:selected="${selectedMonth == 8}">8월</option>
+                    <option value="9" th:selected="${selectedMonth == 9}">9월</option>
+                    <option value="10" th:selected="${selectedMonth == 10}">10월</option>
+                    <option value="11" th:selected="${selectedMonth == 11}">11월</option>
+                    <option value="12" th:selected="${selectedMonth == 12}">12월</option>
+                </select>
+            </form>
+
+            <button id="memberPause">포인트 회수</button>
+            <button id="memberOut">선택 삭제</button>
+        </div>
+        <div id="manage-memberList">
+            <ul id="manage-memberUl">
+                <li id="manage-memberTitle">
+                    <input id="title-check" type="checkbox" value="전체선택">
+                    <span id="title-num">No.</span>
+                    <span id="title-name">닉네임</span>
+                    <span id="title-email">이메일</span>
+                    <span id="title-points">포인트 내용</span>
+                    <span id="title-point">포인트</span>
+                    <span id="title-date">일시</span>
+                    <span id="title-sum">포인트 합</span>
+                </li>
+
+                <li th:each="point : ${point}" th:if="${point != null}">
+                    <input type="checkbox" th:value="${point.pointNumber}">
+                    <span class="point-num" th:text="${point.pointNumber}"></span>
+                    <span class="point-name" th:text="${point.userNickName}"></span>
+                    <span class="point-email" th:text="${point.userEmail}"></span>
+                    <span class="point-check" th:text="${point.pointNote}"></span>
+                    <span class="point-point" th:text="${point.pointGet}"></span>
+                    <span class="point-date" th:text="${point.pointDate}"></span>
+                    <span class="point-sum" th:text="${point.pointSum}"></span>
+                </li>
+
+                <li th:each="pointList : ${pointList}" th:if="${point == null}">
+                    <input type="checkbox" th:value="${pointList.pointNumber}">
+                    <span class="point-num" th:text="${pointList.pointNumber}"></span>
+                    <span class="point-name" th:text="${pointList.userNickName}"></span>
+                    <span class="point-email" th:text="${pointList.userEmail}"></span>
+                    <span class="point-check" th:text="${pointList.pointNote}"></span>
+                    <span class="point-point" th:text="${pointList.pointGet}"></span>
+                    <span class="point-date" th:text="${pointList.pointDate}"></span>
+                    <span class="point-sum" th:text="${pointList.pointSum}"></span>
+                </li>
+            </ul>
+
+            <div id="pagination"></div>
+        </div>
+    </div>
+    <form class="manager-search-form" th:action="@{/manager/pointSearch}" method="post">
+        <input type="text" id="manager-input" name="userNickName" placeholder="닉네임"/>
+        <button class="manager-search">검색</button>
+    </form>
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+
+<script src="./../../js/manager/managePoint.js"></script>
+</body>
+
+</html>

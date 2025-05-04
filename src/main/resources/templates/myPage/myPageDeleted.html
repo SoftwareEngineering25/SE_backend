@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 회원탈퇴완료</title>
+    <link rel="stylesheet" th:href="@{/css/myPage/myPageDelete.css}">
+    <script defer th:src="@{/js/myPage/myPageDelete.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 회원 탈퇴 창 -->
+        <div class="myPage-completeWrap">
+            <div class="myPage-completeImage">
+                <img th:src="@{/image/check1.png}">
+            </div>
+            <div class="myPage-completeText">
+                회원 탈퇴 완료
+            </div>
+            <div class="myPage-completeTextBottom">
+                맛있는 재활용 사이트 회원 탈퇴 신청이 완료되었습니다.
+            </div>
+            <div class="myPage-completeBtn">
+                <a th:href="@{/DRmain}"><button class="myPage-completeMainBtn">메인으로</button></a>
+            </div>
+        </div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

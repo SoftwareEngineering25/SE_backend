@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 1500px;
+}
+
+li {
+    list-style: none;
+}
+
+.myPage-myRecipeTitle {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 35px;
+    margin-bottom: 30px;
+}
+
+
+/* ------- 왼쪽 마이페이지 메뉴바 ------*/
+
+#myPage-informationPage {
+    background-color: #ccc;
+    padding-top: 17px;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+#myPage-informationForth {
+    color: #EBAA39;
+}
+
+.myPage-lengthBar {
+    margin-top: 43px;
+}
+
+
+/* 마이페이지 메뉴 스타일 */
+
+.myPage-lengthBar div {
+    font-size: 17px;
+    margin: 25px 0;
+    text-align: left;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ccc;
+    width: 170px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+
+/* 호버 시 글씨 색을 주황색으로 변경 */
+
+.myPage-lengthBar div:hover {
+    color: #EBAA39;
+    cursor: pointer;
+}
+
+
+/* 출석 체크의 보더선 제거 */
+
+.myPage-lengthBar div:last-child {
+    border-bottom: none;
+}
+
+
+/* -------왼쪽 마이페이지 메뉴바 ------ */
+
+.myPage-steamedListContainer {
+    display: flex;
+}
+
+.myPage-myRecipeInside {
+    display: flex;
+}
+
+#myPage-myRecipeOne {
+    width: 250px;
+    height: 250px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.myPage-myRecipeWrap {
+    margin-top: 70px;
+    margin-left: 40px;
+    display: flex;
+}
+
+.myPage-myRecipeMiddleTitle {
+    font-weight: 700;
+    color: #000000;
+    font-size: 15px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.myPage-myRecipeName {
+    font-size: 12px;
+    color: #999999;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.myPage-myRecipeListDelete {
+    font-size: 12px;
+    color: #999999;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+
+/* 내가 쓴 레시피 글 및 이미지 */
+
+.myPage-myRecipeContainerReal {
+    position: relative;
+}
+
+.myPage-myRecipeWrap {
+    display: grid;
+    grid-template-columns: repeat(3, 290px);
+    /* 3개의 열로 구성 */
+    position: absolute;
+    top: -605px;
+    left: 205px;
+}
+
+.myPage-myRecipeprideOne {
+    padding-right: 50px;
+    margin-bottom: 40px;
+}
+
+.myPage-myRecipeprideTwo {
+    padding-right: 50px;
+}
+
+#pagination {
+    position: absolute;
+    top: 546px;
+    left: 582px;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#pagination .paginationjs-pages {
+    display: flex;
+}
+
+#pagination .paginationjs-pages li {
+    list-style: none;
+    margin-right: 8px; /* 숫자 박스 간 간격 */
+    border-right: 1px solid #aaa; /* 기본 페이지 번호의 오른쪽 경계선 */
+}
+
+#pagination .paginationjs-pages li:last-child {
+    border-right: none; /* 마지막 페이지에는 오른쪽 경계선 제거 */
+    margin-right: 0; /* 마지막 페이지에도 오른쪽 여백 제거 */
+}
+
+#pagination .paginationjs-pages li a {
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    background: #fff;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination .paginationjs-pages li a:hover {
+    background: #eee;
+}
+
+#pagination .paginationjs-pages li.active {
+    border-right: none; /* active 상태에서 오른쪽 경계선 없애기 */
+}
+
+#pagination .paginationjs-pages li.active a {
+    background: #317FF0; /* active 상태일 때 배경색 */
+    color: #fff; /* active 상태일 때 텍스트 색상 */
+}
+
+#pagination .paginationjs-pages li.disabled a {
+    opacity: 0.5;
+}
+
+/* >> 버튼 스타일 */
+#pagination .paginationjs-pages li.paginationjs-next {
+    border-right: 1px solid #aaa; /* >> 버튼에 오른쪽 경계선 추가 */
+}
+
+#pagination .paginationjs-go-input input[type="text"],
+#pagination .paginationjs-go-button input[type="button"] {
+    background: #317FF0; /* 버튼 배경색 */
+    color: #fff;
+    border: none; /* 버튼 보더 제거 */
+    border-radius: 5px;
+    padding: 0 8px;
+    height: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#pagination .paginationjs-go-button input[type="button"]:hover,
+#pagination .paginationjs-go-input input[type="text"]:hover {
+    background-color: #286bbd;
+}

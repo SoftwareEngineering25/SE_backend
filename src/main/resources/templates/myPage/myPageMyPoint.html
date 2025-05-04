@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 내 포인트 내역</title>
+    <link rel="stylesheet" th:href="@{/css/myPage/myPageMyPoint.css}">
+    <script defer th:src="@{/js/myPage/myPageMyPoint.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 신고 받은 글 타이틀-->
+        <div class="myPage-myPointTitleTop">
+            <span style="color: #317FF0;">포인트</span>
+            <span style="color: #EBAA39;">내역</span>
+        </div>
+        <!-- 왼쪽 마이페이지 네비바>-->
+        <div class="myPage-myPointMain">
+            <div class="myPage-myPointContainer">
+                <div class="myPage-lengthBar">
+                    <div id="myPage-informationPage">&nbsp;마이페이지</div>
+                    <div id="myPage-informationSecond"><a th:href="@{/myPage/myPageInformation}">&nbsp;내 정보</a></div>
+                    <div id="myPage-informationThree"><a th:href="@{/myPage/myPageSteamedList}">&nbsp;찜목록</a></div>
+                    <div id="myPage-informationForth"><a th:href="@{/myPage/myPageMyRecipe}">&nbsp;내가 쓴 레시피</a></div>
+                    <div id="myPage-informationFifth"><a th:href="@{/myPage/myPageMyPost}">&nbsp;내가 쓴 게시글</a></div>
+                    <div id="myPage-informationsisxth"><a th:href="@{/myPage/myPageMyComplaint}">&nbsp;신고 받은 글</a></div>
+                    <div id="myPage-informationseventh"><a th:href="@{/myPage/myPageChecked}">&nbsp;출석 체크</a></div>
+                    <div id="myPage-informationeighth"><a th:href="@{/myPage/myPageMyPoint}">&nbsp;포인트 내역</a></div>
+                </div>
+            </div>
+            <!-- 신고 내역 -->
+            <div class="myPage-myPointWrap">
+                <div class="myPage-myPointTitleMain">
+                    <ul>
+                        <li>
+                            <span class="myPage-myPointTitleNumber">순번</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPointTitleContent">포인트 내용</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPointTitleContentType">포인트</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPointTitleCause">일시</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPointTitleDate">총 포인트</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="myPage-myPointTitleMainOne">
+                    <ul>
+                        <div class="myPage-myPointTitleMainOne">
+                            <ul>
+                                <!-- 포인트 내역 반복 -->
+                                <li th:each="point, pointNumber : ${pointHistory}">
+                                    <span class="myPage-myPointTitleNumberZero" th:text="${pointNumber.index + 1}">1</span>
+                                    <div class="vertical-barSecond"></div>
+                                    <span class="myPage-myPointTitleContentOne" th:text="${point.pointNote}">출석체크</span>
+                                    <div class="vertical-barSecond"></div>
+                                    <span class="myPage-myPointTitleContentTypeTwo" th:text="${point.pointGet}">10</span>
+                                    <div class="vertical-barSecond"></div>
+                                    <span class="myPage-myPointTitleCauseThree" th:text="${point.getFormattedPointDate()}">2024-10-14 15:57:23</span>
+                                    <div class="vertical-barSecond"></div>
+                                    <span class="myPage-myPointTitleDateFour" th:text="${point.totalPoints}">10</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 페이지 네이션 -->
+        <div id="pagination"></div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

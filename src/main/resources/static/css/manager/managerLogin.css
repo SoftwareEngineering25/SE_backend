@@ -1,0 +1,93 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+#manager-logo {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.manager-logoImg {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 100px;
+  cursor: pointer;
+}
+ 
+#manager-loginBox {
+  width: 500px;
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#manager-logo {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 25px;
+  font-family: 'Cute Font', cursive;
+}
+
+#manager-loginBlue {
+  color: #317FF0;
+}
+
+#manager-loginOrange {
+  color: #EBAA39;
+}
+
+#manager-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+#manager-loginId {
+  width: 400px;
+  height: 40px;
+}
+
+#manager-loginPw {
+  width: 400px;
+  height: 40px; 
+}
+
+#manager-loginButton {
+  width: 400px;
+  height: 40px; 
+  color: white;
+  border-radius: 5px;
+  background-color: #424242;
+  cursor: pointer;
+}
+
+.manager-formTogle1 {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 120px;
+  right: 50px;
+  cursor: pointer;
+}
+
+.manager-formTogle2 {
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  bottom: 120px;
+  right: 50px;
+  display: none;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}

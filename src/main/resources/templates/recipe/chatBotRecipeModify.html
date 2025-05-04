@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/recipe/chatBotRecipeModify.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- Toast UI Editor CSS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.css">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <title>DR - 챗봇 레시피 수정</title>
+</head>
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="chatBotRecipeModify-mainContainer">
+        <div class="chatBotRecipeModify-mainBox">
+            <div class="chatBotRecipeModify-title">
+                <span class="chatBotRecipeModify-text1">챗봇 레시피</span>
+                <span class="chatBotRecipeModify-text2">수정</span>
+            </div>
+
+            <div class="chatBotRecipeModify-warning">
+                <p class="chatBotRecipeModify-warningText">1. 챗봇 레시피는 챗봇 채팅 사진과 음식 완성 사진이 필요합니다</p>
+                <p class="chatBotRecipeModify-warningText">2. 허위작성 적발시 적립한 환경기여점수,포인트에 불이익을 받을 수 있습니다</p>
+                <p class="chatBotRecipeModify-warningText">3. 음식대표사진, 레시피사진 순으로 사진 등록하지 않으면 점수가 회수될 수 있습니다.</p>
+            </div>
+
+            <div class="chatBotRecipeModify-inputContainer">
+                <input type="hidden" id="recipeNumberHidden" th:value="${recipeNumber}">
+                <input type="text" class="chatBotRecipeModify-titleInput" id="recipeTitle"
+                       th:value="${recipeTitle}" placeholder="제목을 입력하세요">
+            </div>
+
+
+
+            <div id="contsEditor"><input type="hidden" id="recipeTextHidden" th:utext="${recipeText}"></div>
+
+            <form id="chatBotRecipeModifyForm" th:action="@{/recipe/saveChatBotRecipeUpdate}" method="post">
+                <input type="hidden" name="recipeNumber" th:value="${recipeNumber}">
+                <input type="hidden" name="recipeTitle" id="hiddenrecipeTitle">
+                <input type="hidden" name="recipeText" id="hiddenrecipeText">
+                <input type="hidden" name="photoLocal" th:value="${photoLocal}">
+                <input type="hidden" name="photoOriginal" th:value="${photoOriginal}">
+
+                <div class="chatBotRecipeModify-write">
+                    <button type="button" class="chatBotRecipeModify-writeButton" id="updateButton">수정</button>
+                </div>
+            </form>
+
+            <form th:action="@{/recipe/chatBotRecipeList}" method="get">
+                <div class="chatBotRecipeModify-write">
+                    <button type="submit" class="chatBotRecipeModify-cancelButton">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script>
+    const editor = new toastui.Editor({
+        el: document.querySelector('#contsEditor'),
+        previewStyle: 'vertical',
+        initialEditType: 'wysiwyg',
+        height: '500px',
+        placeholder: '내용을 입력해 주세요.',
+        hooks: {
+            addImageBlobHook: async (blob, callback) => {
+                const formData = new FormData();
+                formData.append('image', blob);
+
+                try {
+                    const response = await fetch('/tui-editor/image-upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error('이미지 업로드 실패: ' + data.error);
+                    }
+
+                    // 클라이언트에서 받은 파일 정보로 콜백 호출
+                    callback(URL.createObjectURL(blob), '이미지'); // 이미지를 에디터에 추가
+
+                } catch (error) {
+                    alert('이미지 업로드에 실패했습니다. 다시 시도해주세요.');
+                    console.error('이미지 업로드 실패:', error);
+                }
+            }
+        }
+    });
+    // 페이지 로드 시 기존 데이터 설정
+    window.onload = function() {
+        const title = document.getElementById('recipeTitle').value;
+        const content = document.getElementById('recipeTextHidden').value;
+        document.getElementById('recipeTitle').value = title;
+        editor.setHTML(content);
+    };
+
+    document.getElementById('updateButton').addEventListener('click', function (event) {
+        // 제목과 에디터 내용을 hidden 필드에 저장
+        document.getElementById('hiddenrecipeTitle').value = document.getElementById('recipeTitle').value;
+        document.getElementById('hiddenrecipeText').value = editor.getHTML();
+
+        // 폼 제출
+        document.getElementById('chatBotRecipeModifyForm').submit();
+    });
+</script>
+</body>
+
+</html>

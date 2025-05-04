@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 1500px;
+}
+
+li {
+    list-style: none;
+}
+
+.myPage-checkTitle {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 35px;
+    margin-bottom: 30px;
+}
+
+
+/* ------- 왼쪽 마이페이지 메뉴바 ------*/
+
+#myPage-informationPage {
+    background-color: #ccc;
+    padding-top: 17px;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+#myPage-informationSeventh {
+    color: #EBAA39;
+}
+
+.myPage-lengthBar {
+    margin-top: 43px;
+}
+
+
+/* 마이페이지 메뉴 스타일 */
+
+.myPage-lengthBar div {
+    font-size: 17px;
+    margin: 25px 0;
+    text-align: left;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ccc;
+    width: 170px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+
+/* 호버 시 글씨 색을 주황색으로 변경 */
+
+.myPage-lengthBar div:hover {
+    color: #EBAA39;
+    cursor: pointer;
+}
+
+
+/* 출석 체크의 보더선 제거 */
+
+.myPage-lengthBar div:last-child {
+    border-bottom: none;
+}
+
+
+/* -------왼쪽 마이페이지 메뉴바 ------ */
+
+
+/* -------출석체크 란 -------- */
+
+.myPage-checkMainWrap {
+    display: flex;
+    padding-top: 25px;
+}
+
+#calendar {
+    width: 920px;
+    margin-left: 30px;
+    margin-top: 35px;
+}
+
+
+/* 날짜 숫자 스타일 */
+
+.fc-daygrid-day-number {
+    display: flex;
+    /* Flexbox 사용 */
+    justify-content: center;
+    /* 가로 중앙 정렬 */
+    align-items: center;
+    /* 세로 중앙 정렬 */
+    height: 100%;
+    /* 전체 높이 차지 */
+    font-size: 18px;
+    /* 숫자 크기 조정 */
+    color: black;
+    /* 숫자 색상 */
+}
+
+
+/* 오늘 날짜 스타일 */
+
+.fc-daygrid-day.fc-day-today.active {
+    position: relative;
+}
+
+
+/* 체크 이미지 스타일 */
+
+#checkInButton {
+    border: none;
+    color: white;
+    background-color: #EBAA39;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    height: 50px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    margin-left: 600px;
+}

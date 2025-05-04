@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dr.mapper.user.UserMapper">
+
+    <!-- 회원가입 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertUser" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="userNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_USER (
+        USER_EMAIL, USER_PW, USER_NICKNAME, USER_PHONE,
+        USER_STATUS, PROVIDER, PROVIDER_ID, PROFILE_PIC -- 기본값 설정 필요 컬럼 추가 (스키마 확인)
+        -- , USER_GENDER, USER_BIRTH -- NOT NULL 컬럼이 있다면 추가 필요
+        )
+        VALUES (
+        #{userEmail}, #{userPw}, #{userNickName}, #{userPhone},
+        '일반회원', NULL, NULL, 'basicProfile.png' -- 기본값 예시 (스키마 확인)
+        -- , #{userGender}, #{userBirth} -- DTO에 해당 필드 필요
+        )
+    </insert>
+
+    <!-- 이메일 중복확인 (MySQL 호환) -->
+    <select id="checkEmailExists" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM DR_USER
+        WHERE USER_EMAIL = #{userEmail}
+    </select>
+
+    <!-- 휴대폰 중복확인 (MySQL 호환) -->
+    <select id="checkPhoneExists" parameterType="String" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END
+        FROM DR_USER
+        WHERE USER_PHONE = #{userPhone}
+    </select>
+
+    <!-- 로그인 (MySQL 호환, 사진 조회 수정) -->
+    <select id="userLogin" resultType="UserSessionDTO">
+        SELECT DU.USER_NUMBER, DU.USER_NICKNAME, DU.PROFILE_PIC AS PHOTO_LOCAL -- DR_USER의 PROFILE_PIC 사용
+        FROM DR_USER DU
+        WHERE DU.USER_EMAIL = #{userEmail}
+          AND DU.USER_PW = #{userPw}
+          AND DU.USER_STATUS != '탈퇴' -- 탈퇴한 회원 제외 (선택적)
+    </select>
+
+    <!-- 이메일찾기 (MySQL 호환) -->
+    <select id="userEmailFind" parameterType="String" resultType="EmailFindDTO">
+        SELECT U.USER_EMAIL
+        FROM DR_USER U
+        WHERE U.USER_PHONE = #{userPhone}
+    </select>
+
+    <!-- 비밀번호 찾기 (MySQL 호환) -->
+    <select id="userPwFind" parameterType="PwFindDTO" resultType="PwFindDTO">
+        SELECT USER_PHONE
+        FROM DR_USER
+        WHERE USER_PHONE = #{arg1} AND USER_EMAIL = #{arg0} -- 파라미터 순서 주의 (arg0: email, arg1: phone)
+    </select>
+
+    <!-- 비밀번호 변경 (MySQL 호환) -->
+    <update id="updatePassword">
+        UPDATE DR_USER
+        SET USER_PW = #{userPw}
+        WHERE USER_PHONE = #{userPhone}
+        <!-- WHERE USER_EMAIL = #{userEmail}  이메일 기준이 더 안전할 수 있음 -->
+    </update>
+
+    <!-- 닉네임 중복 확인 (MySQL 호환) -->
+    <select id="checkNickName" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM DR_USER
+        WHERE USER_NICKNAME = #{userNickName}
+    </select>
+
+    <!-- 방금 가입유저 PK 조회 (MySQL 호환) -->
+    <select id="findNewUser" parameterType="UserDTO" resultType="Long">
+        SELECT USER_NUMBER
+        FROM DR_USER
+        WHERE USER_EMAIL = #{userEmail} AND
+            USER_NICKNAME = #{userNickName} AND
+            USER_PHONE = #{userPhone}
+        ORDER BY USER_NUMBER DESC -- 혹시 모를 중복 시 가장 최근 가입자 조회
+            LIMIT 1
+    </select>
+
+    <!-- 신규가입 포인트 기록 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertNewUserPoint" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="pointNumber">
+        <!-- <selectKey> 제거 -->
+        <!-- 컬럼명 확인: POINT_CHANGE -->
+        INSERT INTO DR_POINT (USER_NUMBER, POINT_CHANGE, POINT_NOTE, POINT_DATE)
+        VALUES (#{userNumber}, 0, '신규가입', NOW()) -- 예시: 0포인트 지급
+        <!-- VALUES (#{userNumber}, 100, '신규가입 축하', NOW())  예시: 100포인트 지급 -->
+    </insert>
+
+    <!-- 신규가입 점수 기록 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertNewUserScore" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="scoreNumber">
+        <!-- <selectKey> 제거 -->
+        <!-- 컬럼명 확인: SCORE_GET -->
+        INSERT INTO DR_SCORE (USER_NUMBER, SCORE_GET, SCORE_DATE, SCORE_REASON)
+        VALUES (#{userNumber}, 0, NOW(), '신규가입') -- 예시: 0점 부여
+    </insert>
+
+    <!-- 신규가입 기본 프사 레코드 추가 (MySQL 호환: AUTO_INCREMENT) -->
+    <!-- 참고: DR_USER.PROFILE_PIC 기본값이 있다면 이 쿼리는 불필요할 수 있음 -->
+    <insert id="insertNewUserPhoto" parameterType="UserDTO" useGeneratedKeys="true" keyProperty="photoNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_PHOTO (USER_NUMBER, PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_UPLOAD_DATE)
+        VALUES (#{userNumber}, 'basicProfile.png', 'basicProfile.png', NOW()) -- 예시: 기본값 설정
+    </insert>
+</mapper>

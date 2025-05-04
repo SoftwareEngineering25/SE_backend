@@ -1,0 +1,97 @@
+/* 공통 스타일 */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+  margin: 0;
+  padding: 0;
+  height: 700px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.pwreset-container {
+  background-color: white;
+  border-radius: 5px;
+  max-width: 400px;
+  width: 1100px;
+  margin: 0 auto;
+}
+
+.pwreset-title {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.pwreset-leftTitle{
+  color: #317FF0;
+}
+
+.pwreset-rightTitle{
+  color: #ebaa39;
+}
+
+.pwreset-form{
+  margin-top: 100px;
+}
+
+.pwreset-input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.pwreset-finishButton {
+  width: 100%;
+  padding: 10px;
+  background-color: #ebaa39;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 120px;
+}
+
+.pwreset-label{
+  font-weight: 600;
+}
+
+.error-message {
+  color: red;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.input-withButton {
+  position: relative;
+  margin: 8px 0;
+}
+
+.input-withButton .pwreset-input {
+  padding-right: 100px; /* 버튼이 들어갈 공간을 확보 */
+}
+
+/* 비밀번호 토글 아이콘 스타일 */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.input-withButton .apijoin-input {
+  padding-right: 40px; /* 토글 이미지가 들어갈 공간 확보 */
+}
+

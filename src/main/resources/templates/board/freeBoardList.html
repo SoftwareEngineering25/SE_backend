@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 자유게시판 목록</title>
+    <link rel="stylesheet" th:href="@{/css/board/freeBoardList.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <script defer th:src="@{/js/board/freeBoardList.js}"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="freeboardlist-container">
+
+        <div class="freeboardlist-title">
+            <span class="freeboardlist-leftTitle">자유</span>
+            <span class="freeboardlist-rightTitle">게시판</span>
+        </div>
+
+        <br>
+        <span class="freeboardlist-smallTitle">회원들의 이야기가 담긴 자유 게시판입니다.</span>
+        <br><br><br>
+
+        <div class="freeboardlist-rightButton">
+            <button class="freeboardlist-firstButton" onclick="location.href='/board/freeBoardList'">최신순</button>
+            <button class="freeboardlist-thirdButton" onclick="location.href='/board/freeBoardListGood'">추천순</button>
+        </div>
+        <br>
+
+        <div class="freeboardlist-row header">
+            <div class="freeboardlist-titleColumn">제목</div>
+            <div class="freeboardlist-nameColumn">닉네임</div>
+            <div class="freeboardlist-voteColumn">추천 수</div>
+            <div class="freeboardlist-dateColumn">날짜</div>
+        </div>
+
+        <div id="freeboardlist-page">
+            <div th:each="freeBoardList : ${freeBoardList}">
+                <a th:href="@{/board/freeBoardDetail(boardNumber=${freeBoardList.boardNumber})}">
+                    <div class="freeboardlist-row">
+                        <div class="freeboardlist-titleColumn" th:text="${freeBoardList.boardTitle}"></div>
+                        <div class="freeboardlist-nameColumn" th:text="${freeBoardList.userNickName}"></div>
+                        <div class="freeboardlist-voteColumn" th:text="${freeBoardList.goodCount}"></div>
+                        <div class="freeboardlist-dateColumn" th:text="${freeBoardList.boardWriteDate}"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div id="pagination"></div>
+
+<!--        <a th:href="@{/board/freeBoardWrite}">-->
+<!--            <button class="freeboardlist-writeButton">글 작성</button>-->
+<!--        </a>-->
+
+<!--        <form th:action="@{/board/freeBoardWrite}" method="get">-->
+<!--            <button class="freeboardlist-writeButton">글 작성</button>-->
+<!--        </form>-->
+
+                <a th:href="@{/board/freeBoardWrite}">
+                    <button class="freeboardlist-writeButton">글 작성</button>
+                </a>
+
+
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

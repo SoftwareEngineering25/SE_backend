@@ -1,0 +1,166 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* 메인 넓이 수정 */
+.myRecipeList-mainContainer {
+    width: 1100px;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 100px auto 0 auto;
+}
+
+main {
+    height: 1800px;
+}
+
+/* 나만의 레시피 제목 */
+.myRecipeList-text1 {
+    margin-bottom: 30px;
+    margin-right: 10px;
+    text-align: center;
+    color: #317FF0;
+    font-size: 35px;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+.myRecipeList-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myRecipeList-text2 {
+    font-size: 35px;
+    color: #EBAA39;
+    font-weight: bold;
+}
+
+
+/* 나만의 레시피 글작성,최신순,추천순 버튼들 */
+.myRecipeList-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1100px;
+    /* height: 30px; */
+}
+
+.myRecipeList-writeButton {
+    width: 150px;
+    height: 50px;
+    background-color: #EBAA39;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+
+}
+
+.myRecipeList-rightButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 260px;
+    height: 37px;
+}
+
+.myRecipeList-firstButton, .myRecipeList-secondButton, .myRecipeList-thirdButton {
+    width: 200px;
+    height: 37px;
+    border: none;
+    cursor: pointer;
+    /* color: white; */
+    border: 1px solid lightgray;
+}
+
+/* 버튼이 클릭될때마다 배경색깔과 텍스트 색깔이 바뀌는거 설정 */
+.myRecipeList-rightButton button.active {
+    background-color: #EBAA39;
+    color: white;
+}
+
+/* 나만의 레시피 목록들 */
+.myRecipeList-outbox {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 1150px;
+    align-items: center;
+}
+
+.myRecipeList-foodTitle {
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 15px;
+}
+
+.myRecipeList-writer, .myRecipeList-date, .myRecipeList-select {
+    /* color: lightgrey; */
+    margin-top: 0px;
+    font-size: 10px;
+}
+
+.myRecipeList-listbox {
+    width: 260px;
+    height: 260px;
+    overflow: hidden;
+}
+
+.myRecipeList-listbox img {
+    width: 260px;
+    border-radius: 5px;
+}
+
+
+#manage-pages {
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.manage-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#pagination {
+    margin: 50px;
+    position: relative;
+    left: 37%;
+}
+
+.resultContainer {
+    width: 100%;
+    margin: 50px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.resultContainer img {
+    display: block;
+    width: 350px;
+    margin: 30px;
+}
+
+.resultIsNull {
+    font-size: 40px;
+    color: #808080;
+}

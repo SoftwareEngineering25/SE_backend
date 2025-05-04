@@ -1,0 +1,200 @@
+*{
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+#dashBoard-product {
+  color: #EBAA39;
+}
+
+.manager-logoImg {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 100px;
+  cursor: pointer;
+}
+
+#manager-dashBoardBox {
+  width: 1380px;
+  height: 600px;
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: lightgray;
+
+}
+
+#dashBoard-list {
+  width: 20%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+#dashBoard-list ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#dashBoard-list li {
+  margin-left: 10px;
+  height: 50px;
+  cursor: pointer;
+  border: 1px solid #EBAA39;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px; 
+}
+
+#dashBoard-admin {
+  color: black;
+}
+
+#dashBoard-span {
+  position: absolute;
+  top: 7%;
+  left: 12%;
+}
+
+#dashBoard-profile {
+  position: absolute;
+  left: 6%;
+  width: 50px;
+  height: 50px;
+}
+
+#manage-member {
+  width: 80%;
+  height: 100%;
+  background-color: white;
+  border-radius: 5px;
+
+}
+
+#manage-memberTop {
+  height: 15%;
+}
+
+#manage-memberBold {
+  padding-top: 20px;
+  padding-left: 20px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#updateButton {
+  position: relative;
+  top: 5%;
+  left: 45%;
+  width: 100px;
+  height: 40px;
+  background-color: #EBAA39;
+  color: white;
+  border-radius: 5px;
+  border: white;
+  cursor: pointer;
+  
+}
+
+#manage-register {
+  width: 95%;
+  height: 70%;
+  margin: 0 auto;
+  display: flex;
+}
+
+#register-left {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#register-right {
+  width: 85%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#register-left-img {
+  width: 100%;
+  height: 37.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0.7px solid lightgray;
+  background-color: #EBEBEB;
+}
+
+.register-left-con {
+  width: 100%;
+  height: 12.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border:0.7px solid lightgray;
+  background-color: #EBEBEB;
+}
+
+#register-right-img  {
+  width: 20%;
+  height: 37.5%;
+  border: 0.7px solid lightgray;
+  padding-left: 10px;
+}
+
+#register-right-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.register-right-con {
+  width: 100%;
+  height: 12.5%;
+  display: flex;
+  align-items: center;
+  border: 0.7px solid lightgray;
+  padding-left: 10px;
+}
+
+#targetDiv {
+  display: flex;
+  flex-wrap: wrap; /* 줄바꿈을 허용하는 속성 */
+  gap: 10px; /* 요소들 사이의 간격 */
+}
+
+#numberUp {
+  width: 30px;
+  line-height: 20px;
+  background-color: #EBAA39;
+  color: white;
+  border: white;
+  cursor: pointer;
+}
+
+#vita500 {
+  width: 130px;
+}
+
+
+
+
+
+
+

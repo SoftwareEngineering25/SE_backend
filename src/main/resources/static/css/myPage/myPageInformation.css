@@ -1,0 +1,323 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 1000px;
+}
+
+li {
+    list-style: none;
+}
+
+
+/* 회원탈퇴 타이틀 */
+
+.myPage-informationTitle {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 35px;
+    margin-bottom: 65px;
+}
+
+
+/* 마이페이지 */
+
+#myPage-informationPage {
+    background-color: #ccc;
+    padding-top: 17px;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+#myPage-informationSecond {
+    color: #EBAA39;
+}
+
+
+/* 마이페이지 메뉴 스타일 */
+
+.myPage-lengthBar {
+    margin-top: 8px;
+}
+
+.myPage-lengthBar div {
+    font-size: 17px;
+    margin: 25px 0;
+    text-align: left;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ccc;
+    width: 170px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+
+/* 호버 시 글씨 색을 주황색으로 변경 */
+
+.myPage-lengthBar div:hover {
+    color: #EBAA39;
+    cursor: pointer;
+}
+
+
+/* 출석 체크의 보더선 제거 */
+
+.myPage-lengthBar div:last-child {
+    border-bottom: none;
+}
+
+.myPage-containerBox {
+    display: flex;
+    align-items: center;
+    /* 수직 정렬 */
+}
+
+.myPage-profile {
+    border-radius: 50%;
+    object-fit: cover;
+    /* 테두리 색상 변경 */
+}
+
+.profileImage {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid lightgray;
+}
+
+#uploadIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: pointer;
+}
+
+.myPage-profile {
+    position: absolute;
+    top: -240px;
+    left: 305px;
+}
+
+.myPage-informationTop {
+    border-bottom: 2px solid #424242;
+    margin-top: 50px;
+}
+
+.myPage-informationText {
+    margin-top: 170px;
+    padding-left: 50px;
+    width: 100%;
+}
+
+.myPage-informationLeft {
+    background-color: #F5F5F5;
+    width: 50px;
+    height: 90px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 84px;
+    padding-left: 7px;
+}
+
+.myPage-pictureImage {
+    position: relative;
+}
+
+.myPage-informationName {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px dotted #424242;
+    position: relative;
+}
+
+.myPage-informationRight {
+    width: 93px;
+    margin-left: 30px;
+}
+
+.mypage-informationIdLeft {
+    background-color: #F5F5F5;
+    width: 65px;
+    height: 80px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 75px;
+}
+
+.myPage-informationId {
+    display: flex;
+    border-bottom: 1px dotted #424242;
+}
+
+.myPge-informationEmail {
+    display: flex;
+    align-items: center;
+    width: 438px;
+    margin-left: 33px;
+}
+
+.myPage-informationPhone {
+    background-color: #F5F5F5;
+    width: 140px;
+    height: 80px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
+}
+
+.myPage-informationNumber {
+    width: 150px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myPage-informationScore {
+    display: flex;
+    border-bottom: 1px dotted #424242;
+}
+
+.myPage-informationMyScore {
+    background-color: #F5F5F5;
+    width: 140px;
+    height: 80px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myPage-informationScoreNumber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 362px;
+    width: 109px;
+}
+
+.myPage-informationRank {
+    background-color: #F5F5F5;
+    width: 150px;
+    height: 80px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myPage-informationRankNumber {
+    width: 150px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+}
+
+.myPage-informationPoint {
+    display: flex;
+    border-bottom: 1px dotted #424242;
+}
+
+.myPage-informationPointText {
+    background-color: #F5F5F5;
+    width: 70px;
+    height: 50px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 70px;
+}
+
+.myPage-informationPointNumber {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 340px;
+    width: 121px;
+}
+
+.myPage-outGo {
+    border: none;
+    color: white;
+    background-color: #EBAA39;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80px;
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-top: 30px;
+    float: right;
+    margin-left: 20px;
+}
+
+.myPage-completeWrite {
+    border: none;
+    color: white;
+    background-color: #F66F58;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80px;
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-top: 30px;
+    float: right;
+}
+
+.myPage-nickNameChange {
+    border: none;
+    color: white;
+    background-color: #EBAA39;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100px;
+    height: 50px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-left: 60px;
+}
+
+#nicknameError {
+    position: absolute;
+    left: 144px;
+    top: 71px;
+    font-size: 13px;
+}
+
+#nicknameInput {
+    border: 1px solid #EBAA39;
+    padding: 8px;
+    border-radius: 5px;
+    width: 85px;
+    margin-left: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}

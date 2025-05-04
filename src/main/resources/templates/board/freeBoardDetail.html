@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/board/freeBoardDetail.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+    <title>DR - 자유게시판 상세페이지</title>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="freeBoardDetail-mainContainer">
+        <div class="freeBoardDetail-mainBox">
+            <div class="freeBoardDetail-infobox">
+                <div class="freeBoardDetail-infoFirst">
+                    <div class="freeBoardDetail-infoInBox1">
+                        <img th:src="@{/image/photo/} + ${freeBoardDetail.photoLocal}" th:if="${freeBoardDetail.photoLocal != null && freeBoardDetail.profilePic == null}" alt="User Image">
+                        <img th:src="${freeBoardDetail.profilePic}" th:if="${freeBoardDetail.photoLocal == null && freeBoardDetail.profilePic != null}" alt="User Image">
+                    </div>
+                    <div class="freeBoardDetail-infoInBox2">
+                        <p class="freeBoardDetail-writeName" th:text="${freeBoardDetail.userNickName}">작성자</p>
+                        <p class="freeBoardDetail-foodTitle" th:text="${freeBoardDetail.boardTitle}">제목</p>
+                        <p class="freeBoardDetail-date" th:text="${freeBoardDetail.boardWriteDate}">날짜</p>
+                        <input type="hidden" name="userNumber2" th:value="${freeBoardDetail.userNumber}"/>
+
+                    </div>
+                </div>
+
+                <div class="freeBoardDetail-infoSecond">
+                    <!-- 신고 버튼: 모든 사용자에게 표시 -->
+                    <div class="freeBoardDetail-secondButton">
+                        <a th:href="@{/board/boardReport(boardNumber=${freeBoardDetail.boardNumber})}">
+                            <button class="freeBoardDetail-buttonTwo">신고</button>
+                        </a>
+                    </div>
+                    <br><br>
+                    <!-- 수정 및 삭제 버튼: 작성자에게만 표시 -->
+                    <div class="freeBoardDetail-firstButton"
+                         th:if="${userNickName != null and userNickName == freeBoardDetail.userNickName}">
+                        <br><br>
+                        <!-- 수정 및 삭제 버튼: 작성자에게만 표시 -->
+                        <form th:action="@{/board/freeBoardModify}" method="get">
+                            <input type="hidden" name="boardNumber3" id="boardNumber3"
+                                   th:value="${freeBoardDetail.boardNumber}">
+                            <input type="hidden" name="boardTitle" th:value="${freeBoardDetail.boardTitle}">
+                            <input type="hidden" name="boardText" th:value="${freeBoardDetail.boardText}">
+                            <button id="updateButton" class="freeBoardDetail-buttonOne">수정</button>
+                        </form>
+
+                        <form th:action="@{/board/deleteFreeBoard}" method="post" onsubmit="return confirmDelete()">
+                            <input type="hidden" name="boardNumber2" id="boardNumber2"
+                                   th:value="${freeBoardDetail.boardNumber}">
+                            <button id="deleteButton" class="freeBoardDetail-buttonOne">삭제</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="freeBoardDetail-writetext">
+                <p class="freeBoardDetail-texts" th:utext="${freeBoardDetail.boardText}">글 내용</p>
+
+                <div class="freeBoardDetail-recommendImg">
+                    <input type="hidden" id="boardNumber" name="boardNumber" th:value="${freeBoardDetail.boardNumber}">
+                    <img src="/image/recommend.png" id="recommendImg" class="recommend-inactive" alt="recommend"
+                         th:src="@{/image/recommend.png}">
+                    <p id="recommendCount" th:text="'추천수: ' + ${freeBoardDetail.goodCount}"></p>
+                </div>
+            </div>
+
+            <div class="freeBoardDetail-commentSection">
+                <div class="freeBoardDetail-commentInput">
+                    <form th:action="@{/board/freeBoardDetail}" method="post">
+                        <input type="hidden" name="boardNumber" th:value="${freeBoardDetail.boardNumber}"/>
+                        <textarea id="commentTextArea" placeholder="댓글을 입력하세요..." rows="3" name="replyText"></textarea>
+                        <input type="hidden" name="userNumber" th:value="${session.userNumber}"/> <!-- 세션 값을 폼에 포함 -->
+                        <div class="freeBoardDetail-commentActions">
+                            <button type="submit" class="freeBoardDetail-addBtn" onclick="submitComment()">등록</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- 댓글 리스트 반복문 시작 -->
+                <div th:each="freeBoardComments : ${freeBoardComments}">
+                    <div class="freeBoardDetail-comment" id="comment${freeBoardComments.replyNumber}">
+                        <div class="freeBoardDetail-commentUserImg">
+                            <img th:src="@{/image/photo/} + ${freeBoardComments.photoLocal}" th:if="${freeBoardComments.photoLocal != null && freeBoardComments.profilePic == null}" alt="User Image">
+                            <img th:src="${freeBoardComments.profilePic}" th:if="${freeBoardComments.photoLocal == null && freeBoardComments.profilePic != null}" alt="User Image">
+                        </div>
+
+                        <div class="freeBoardDetail-commentContent">
+                            <input type="hidden" name="replyNumber" th:value="${freeBoardComments.replyNumber}">
+                            <div class="freeBoardDetail-commentHeader">
+                                <span class="freeBoardDetail-commentUsername"
+                                      th:text="${freeBoardComments.userNickName}">작성자</span>
+                                <a th:href="@{/board/boardReport(boardNumber=${freeBoardDetail.boardNumber}, replyNumber=${freeBoardComments.replyNumber})}">
+                                    <button class="freeBoardDetail-reportBtn">신고</button>
+                                </a>
+                            </div>
+
+                            <!-- 수정된 날짜가 있으면 수정된 날짜를 보이고, 없으면 작성 날짜만 보이도록 처리 -->
+                            <div class="freeBoardDetail-commentDate"
+                                 th:text="${freeBoardComments.replyModifyDate != null ? freeBoardComments.replyModifyDate + '(수정됨)' : freeBoardComments.replyWriteDate}">
+
+                                작성 날짜
+                            </div>
+                            <br><br>
+                            <div class="freeBoardDetail-commentText" id="commentText${freeBoardComments.replyNumber}"
+                                 th:text="${freeBoardComments.replyText}">댓글 내용
+                            </div>
+
+                            <div class="freeBoardDetail-buttonGroup"
+                                 th:if="${userNickName != null and userNickName == freeBoardComments.userNickName}">
+                                <button type="button" class="freeBoardDetail-editBtn"
+                                        th:attr="data-reply-number=${freeBoardComments.replyNumber}">수정
+                                </button>
+                                <button type="button" class="freeBoardDetail-deleteBtn"
+                                        th:attr="data-reply-number=${freeBoardComments.replyNumber}">삭제
+                                </button>
+                            </div>
+
+
+                            <!-- 댓글 수정 입력창, 기본적으로 숨김 상태 -->
+                            <div class="freeBoardDetail-commentInput" style="display:none;"
+                                 id="editInput${freeBoardComments.replyNumber}">
+                                <textarea id="editTextarea${freeBoardComments.replyNumber}" rows="3"></textarea>
+                                <div class="freeBoardDetail-commentActions">
+                                    <button class="freeBoardDetail-saveBtn">저장</button>
+                                    <button class="freeBoardDetail-cancelBtn">취소</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 댓글 리스트 반복문 끝 -->
+            </div>
+        </div>
+        <div id="pagination"></div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/board/freeBoardDetail.js}" defer></script>
+</body>
+</html>

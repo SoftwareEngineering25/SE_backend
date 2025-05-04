@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 냉장봇</title>
+    <link rel="stylesheet" th:href="@{/css/chatBot/nangjangbot.css}"/>
+
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!--    script 태그에 stype=module 설정을 해야 모듈을 사용할 수 있다.-->
+    <script defer type="module" th:src="@{/js/module/module.js}"></script>
+
+    <!-- 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+    <script defer th:src="@{/js/chatBot/nangjangbot.js}"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+
+<main>
+    <!-- 사이드바 -->
+    <div id="nangjangbot-sideBar">
+        <img th:src="@{/image/nangjangbot/close.png}" id="nangjangbot-closeBtn">
+        <div id="nangjangbot-newChatContainer">
+            <a th:href="@{/chatBot/nangjangbot}"><img th:src="@{/image/nangjangbot/newChat.png}"
+                                                      id="nangjangbot-newChatBtn"></a>
+            <div id="nangjangbot-newChat">새 채팅</div>
+        </div>
+
+        <div id="nangjangbot-sideMenu">
+            <a th:href="@{/rank/userRank}">
+                <div><img th:src="@{/image/nangjangbot/checkRank.png}"
+                          class="nanajangbot-menuImg"><span>랭킹 확인하러 가기</span>
+                </div>
+            </a>
+            <a th:href="@{/recipe/chatBotRecipeWriter}">
+                <div><img th:src="@{/image/nangjangbot/writeRecipe.png}" class="nanajangbot-menuImg"><span>챗봇 레시피 작성하러
+              가기</span></div>
+            </a>
+        </div>
+
+        <div id="nangjangbot-sideBarTitle">이전 채팅</div>
+
+        <div id="nangjangbot-chatListContainer">
+            <!-- 새채팅방 추가하는 div -->
+            <div id="temporary"></div>
+
+            <!-- 채팅방리스트 -->
+            <div class="nangjangbot-lastChat" th:each="chat : ${chatList}">
+                <span class="nangjangbot-lastChatTitle" th:text="${chat.sessionTitle}"> </span>
+                <span class="nangjangbot-lastChatDate" th:text="${chat.createDate}"></span>
+                <input type="hidden" class="lastChatSession" th:value="${chat.sessionNumber}"/>
+                <button type="button" class="nangjangbot-imgFrame">
+                    <img th:src="@{/image/nangjangbot/delete.png}">
+                </button>
+            </div>
+        </div>
+
+        <div id="nangjangbot-notice">최근 열개의 채팅만 나타납니다</div>
+
+    </div>
+
+    <div class="nangjangbot-pageTitle">냉장<span>봇</span></div>
+
+    <div id="nangjangbot-text">
+        <div id="nangjangbot-ingredients">
+            <img th:src="@{/image/nangjangbot/apple.png}">
+            <img th:src="@{/image/nangjangbot/vegetable.png}">
+            <img th:src="@{/image/nangjangbot/meat.png}">
+            <img th:src="@{/image/nangjangbot/apple.png}">
+            <img th:src="@{/image/nangjangbot/vegetable.png}">
+            <img th:src="@{/image/nangjangbot/meat.png}">
+            <img th:src="@{/image/nangjangbot/apple.png}">
+            <img th:src="@{/image/nangjangbot/vegetable.png}">
+            <img th:src="@{/image/nangjangbot/meat.png}">
+            <img th:src="@{/image/nangjangbot/apple.png}">
+            <img th:src="@{/image/nangjangbot/vegetable.png}">
+            <img th:src="@{/image/nangjangbot/meat.png}">
+        </div>
+        <span>맛있는 재활용과 함께하는 환경 지키기</span>
+    </div>
+
+    <!-- 채팅시작시 여유공간 블럭 -->
+    <div class="nangjangbot-block"></div>
+
+    <div id="loading-spinner">냉장봇 답변 로딩 중...</div>
+
+    <!-- 대화 컨테이너 -->
+    <div id="nangjangbot-conversationContainer">
+        <!-- 이전채팅내용 -->
+
+
+        <!-- 유저와 챗봇의 대화가 이곳에 추가 -->
+    </div>
+
+
+    <!-- 채팅입력 -->
+    <form action="#컨트롤러로" method="" id="nangjangbot-chating">
+        <div id="nangjangbot-btnContainer"><img th:src="@{/image/nangjangbot/sideBar.png}" id="nangjangbot-listBtn">
+        </div>
+        <input type="text" id="nangjangbot-sendMsg" name="userMessage" autocomplete="off"
+               placeholder="냉장고에 남은 재료와 원하는 요리를 말씀해주세요! ex: 계란과 토마토가 남았는데 한식이 먹고싶어">
+        <button id="nangjangbot-sendBtn"><img th:src="@{/image/nangjangbot/send.png}"></button>
+    </form>
+
+    <!-- 컨트롤러에서 사용하기 위한 채팅방 번호 히든 -->
+    <input type="hidden" id="sessionNumber" th:value="${nangjangbotDTO.sessionNumber}" readonly />
+
+    <!-- 팁 안내 -->
+    <!--    <div id="nangjangbot-tip">?</div>-->
+    <!--    <div id="nangjangbot-tipText">-->
+    <!--      냉장봇과 친해지기 TIP-->
+    <!--      <br>-->
+    <!--      <br>-->
+    <!--      <p>1. 자세히 알려달라는 질문으로 <br>더 좋은 답변을 유도해 보세요!</p>-->
+    <!--      <br>-->
+    <!--      <p>2. ~에 먹을 매운맛/단맛/짠맛 <br>양념 레시피 자세히 알려줘</p>-->
+    <!--      <br>-->
+    <!--      <p>3. ~가 남았는데 한식/중식/일식 <br>요리 레시피 자세히 알려줘</p>-->
+    <!--      <br>-->
+    <!--      <p>4. 레시피 -> 챗봇레시피 작성으로 <br>점수 획득 및 포인트 획득이 가능합니다.</p>-->
+    <!--    </div>-->
+</main>
+
+
+<!-- 푸터 -->
+<!--<footer th:replace="~{/fragment/footer :: footer}"></footer>-->
+</body>
+
+</html>

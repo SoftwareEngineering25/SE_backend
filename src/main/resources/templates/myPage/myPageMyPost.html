@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 내가 쓴 게시글</title>
+    <link rel="stylesheet" th:href="@{/css/myPage/myPageMyPost.css}">
+    <script defer th:src="@{/js/myPage/myPageMyPost.js}"></script>
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+    <main>
+        <!-- 내가 쓴 게시글 타이틀-->
+        <div class="myPage-myPostTitleTop">
+            <span style="color: #317FF0;">내가 쓴 </span>
+            <span style="color: #EBAA39;">게시글</span>
+        </div>
+        <!-- 왼쪽 마이페이지 네비바>-->
+        <div class="myPage-myPostMain">
+            <div class="myPage-myPostContainer">
+                <div class="myPage-lengthBar">
+                    <div id="myPage-informationPage">&nbsp;마이페이지</div>
+                    <div id="myPage-informationSecond"><a th:href="@{/myPage/myPageInformation}">&nbsp;내 정보</a></div>
+                    <div id="myPage-informationThree"><a th:href="@{/myPage/myPageSteamedList}">&nbsp;찜목록</a></div>
+                    <div id="myPage-informationForth"><a th:href="@{/myPage/myPageMyRecipe}">&nbsp;내가 쓴 레시피</a></div>
+                    <div id="myPage-informationFifth"><a th:href="@{/myPage/myPageMyPost}">&nbsp;내가 쓴 게시글</a></div>
+                    <div><a th:href="@{/myPage/myPageMyComplaint}">&nbsp;신고 받은 글</a></div>
+                    <div><a th:href="@{/myPage/myPageChecked}">&nbsp;출석 체크</a></div>
+                    <div id="myPage-informationeighth"><a th:href="@{/myPage/myPageMyPoint}">&nbsp;포인트내역</a></div>
+                </div>
+            </div>
+            <!-- 신고 내역 -->
+            <div class="myPage-myPostWrap">
+                <div class="myPage-myPostTitleMain">
+                    <ul>
+                        <li>
+                            <span class="myPage-myPostTitleNumber">순번</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPostTitleContent">제목</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPostTitleContentType">유형</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPostTitleCause">추천 수</span>
+                            <div class="vertical-bar"></div>
+                            <span class="myPage-myPostTitleDate">등록 날짜</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="myPage-myPostTitleMainOne">
+                    <ul>
+                        <li th:each="post, iterStat : ${userPosts}">
+                            <span class="myPage-myPostTitleNumberZero" th:text="${iterStat.index + 1}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <a th:href="${post.myPostType == '자유게시판' ? '/board/freeBoardDetail?boardNumber=' + post.boardNumber : '/board/honeyBoardDetail?boardNumber=' + post.boardNumber}"
+                               class="myPage-myPostTitleContentOne"
+                               th:text="${post.myPostTitle}"></a>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myPostTitleContentTypeTwo" th:text="${post.myPostType}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myPostTitleCauseThree" th:text="${post.myPostgoodCount}"></span>
+                            <div class="vertical-barSecond"></div>
+                            <span class="myPage-myPostTitleDateFour" th:text="${post.myPostWriteDate}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 페이지 네이션 -->
+        <div id="pagination"></div>
+    </main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

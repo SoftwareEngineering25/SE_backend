@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DR - 이메일 찾기</title>
+  <link rel="stylesheet" th:href="@{/css/user/emailFind.css}">
+  <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+  <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+  <script defer th:src="@{/js/fragment/header.js}"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.js"
+          integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+  <div class="emailfind-container">
+    <div class="emailfind-title">
+      <span class="emailfind-leftTitle">이메일</span>
+      <span class="emailfind-rightTitle">찾기</span>
+    </div>
+    <form id="apijoinForm" th:action="@{/user/emailFindOk}" method="post">
+      <!-- 폼 필드들 -->
+      <!-- 휴대폰 번호 필드 -->
+      <label for="phone" class="emailfind-label">휴대폰 번호</label>
+      <div class="input-withButton">
+        <input type="text" id="phone" name="phone" class="emailfind-input" placeholder="하이픈(-)없이 숫자만 입력해주세요."
+               required>
+        <button type="button" id="sendCode" class="emailfind-eventButton">인증요청</button>
+      </div>
+      <span class="error-message" id="phoneError"></span>
+      <br><br>
+      <!-- 인증번호 필드 -->
+      <label for="authCode" class="emailfind-label">인증번호</label>
+      <div class="input-withButton">
+        <input type="text" id="authCode" name="authCode" class="emailfind-input" placeholder="인증번호를 입력해주세요."
+               required>
+        <button type="button" id="verifyCode" class="emailfind-eventButton">인증확인</button>
+      </div>
+      <span class="error-message" id="authCodeError"></span>
+      <!-- 인증완료 버튼 -->
+      <button id="finishButton" class="emailfind-finishButton">인증완료</button>
+    </form>
+  </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/user/emailFind.js}" defer></script>
+</body>
+
+</html>

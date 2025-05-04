@@ -1,0 +1,186 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* 메인 넓이 수정 */
+.chatBotRecipeList-mainContainer {
+    width: 1100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+main{
+    height: 2000px;
+}
+
+/* 나만의 레시피 제목 */
+.chatBotRecipeList-text1{
+    margin-right: 10px;
+    text-align: center;
+    color: #317FF0;
+    font-size: 35px;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.chatBotRecipeList-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+    margin-bottom: 65px;
+}
+.chatBotRecipeList-text2{
+    font-size: 35px;
+    color: #EBAA39;
+    font-weight: bold;
+}
+
+
+/* 나만의 레시피 글작성,최신순,추천순 버튼들 */
+.chatBotRecipeList-button{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1100px;
+}
+
+.chatBotRecipeList-writeButton{
+    width: 150px;
+    height: 50px;
+    background-color: #EBAA39;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    cursor: pointer;
+
+}
+.chatBotRecipeList-rightButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 260px;
+    height: 37px;
+}
+.chatBotRecipeList-firstButton, .chatBotRecipeList-secondButton, .chatBotRecipeList-thirdButton{
+    width: 200px;
+    height: 37px;
+    border: none;
+    cursor: pointer;
+    /* color: white; */
+    border: 1px solid lightgray;
+}
+/* 버튼이 클릭될때마다 배경색깔과 텍스트 색깔이 바뀌는거 설정 */
+.chatBotRecipeList-rightButton button.active {
+    background-color: #EBAA39;
+    color: white;
+}
+
+/* 나만의 레시피 목록들 */
+.chatBotRecipeList-outbox{
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 1150px;
+    align-items: center;
+}
+.chatBotRecipeList-foodTitle{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 15px;
+}
+.chatBotRecipeList-writer, .chatBotRecipeList-date, .chatBotRecipeList-select{
+    /* color: lightgrey; */
+    margin-top: 0px;
+    font-size: 13px;
+}
+.chatBotRecipeList-listbox {
+    width: 260px;
+    height: 260px;
+    overflow: hidden;
+}
+
+.aaaaaaa{
+    width: 230px;
+    height: 180px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#pagination .paginationjs-pages {
+    display: flex;
+}
+
+#pagination .paginationjs-pages li {
+    list-style: none;
+    margin-right: 8px; /* 숫자 박스 간 간격 */
+    border-right: 1px solid #aaa; /* 기본 페이지 번호의 오른쪽 경계선 */
+}
+
+#pagination .paginationjs-pages li:last-child {
+    border-right: none; /* 마지막 페이지에는 오른쪽 경계선 제거 */
+    margin-right: 0; /* 마지막 페이지에도 오른쪽 여백 제거 */
+}
+
+#pagination .paginationjs-pages li a {
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    background: #fff;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination .paginationjs-pages li a:hover {
+    background: #eee;
+}
+
+#pagination .paginationjs-pages li.active {
+    border-right: none; /* active 상태에서 오른쪽 경계선 없애기 */
+}
+
+#pagination .paginationjs-pages li.active a {
+    background: #317FF0; /* active 상태일 때 배경색 */
+    color: #fff; /* active 상태일 때 텍스트 색상 */
+}
+
+#pagination .paginationjs-pages li.disabled a {
+    opacity: 0.5;
+}
+
+/* >> 버튼 스타일 */
+#pagination .paginationjs-pages li.paginationjs-next {
+    border-right: 1px solid #aaa; /* >> 버튼에 오른쪽 경계선 추가 */
+}
+
+#pagination .paginationjs-go-input input[type="text"],
+#pagination .paginationjs-go-button input[type="button"] {
+    background: #317FF0; /* 버튼 배경색 */
+    color: #fff;
+    border: none; /* 버튼 보더 제거 */
+    border-radius: 5px;
+    padding: 0 8px;
+    height: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#pagination .paginationjs-go-button input[type="button"]:hover,
+#pagination .paginationjs-go-input input[type="text"]:hover {
+    background-color: #286bbd;
+}
+

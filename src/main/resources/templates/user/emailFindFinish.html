@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DR - 이메일 찾기 완료</title>
+  <link rel="stylesheet" th:href="@{/css/user/emailFindFinish.css}">
+  <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+  <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+  <script defer th:src="@{/js/fragment/header.js}"></script>
+  <!-- 네비바 폰트 -->
+  <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+  <!-- 제이쿼리 -->
+  <script src="https://code.jquery.com/jquery-3.7.1.js"
+          integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+  <div class="emailfindfinish-container">
+    <div class="emailfindfinish-title">
+      <span class="emailfindfinish-leftTitle">이메일</span>
+      <span class="emailfindfinish-rightTitle">찾기</span>
+    </div>
+    <div class="emailfindfinish-box">
+      <!-- Spring에서 받아온 이메일을 보여줌 -->
+      <span class="emailfindfinish-message">찾으신 이메일은 다음과 같습니다:</span>
+      <div class="emailfindfinish-email">
+        <!-- 스프링에서 넘겨받은 이메일 값 출력 -->
+        <span th:text="${'찾으신 이메일은'+userEmail.userEmail +'입니다'}"></span> <!-- 스프링의 email 변수를 사용 -->
+      </div>
+      <span>항상 감사합니다.</span>
+    </div>
+  </div>
+  <br>
+  <div class="emailfindfinish-finishButton">
+    <button class="emailfindfinish-loginButton" th:onclick="|location.href='@{/user/login}'|">로그인</button>
+    <button class="emailfindfinish-pwButton" th:onclick="|location.href='@{/user/PwFind}'|">비밀번호 찾기</button>
+  </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/user/emailFindFinish.js}" defer></script>
+</body>
+
+</html>

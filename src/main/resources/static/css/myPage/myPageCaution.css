@@ -1,0 +1,95 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 700px;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+
+/* 회원탈퇴 타이틀 */
+
+.myPage-cautionTitle {
+    font-weight: bold;
+    text-align: center;
+    font-size: 35px;
+    padding-top: 50px;
+}
+
+
+/* 회원탈퇴 웹 */
+
+.myPage-cautionWrap {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin-top: 50px;
+}
+
+
+/* 회원탈퇴 주의사항 체크 */
+
+.myPage-cautionCheck {
+    color: #EBAA39;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 30px;
+    font-size: 20px;
+}
+
+.myPage-cautionCheckText {
+    color: gray;
+    padding-left: 100px;
+    padding-top: 30px;
+    font-weight: bold;
+}
+
+.myPage-cautionInput {
+    text-align: center;
+    font-size: 17px;
+    color: gray;
+    font-weight: bold;
+    padding-top: 20px;
+    padding-bottom: 25px;
+}
+
+.myPage-cautionButton {
+    text-align: center;
+    padding-top: 30px;
+}
+
+#myPage-CButton {
+    border: none;
+    color: white;
+    background-color: #424242;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80px;
+    height: 50px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.memberOut-caution-cancel {
+    border: none;
+    color: white;
+    background-color: #EBAA39;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80px;
+    height: 50px;
+    font-weight: bold;
+    font-size: 16px;
+}

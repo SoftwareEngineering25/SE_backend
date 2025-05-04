@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 푸터 -->
+<footer th:fragment="footer">
+    <div class="main-footerContainer">
+        <div id="main-footerText">
+            <p><strong><a th:href="@{/terms}">이용약관</a> | <a th:href="@{/privacyPolicy}">개인정보처리방침</a></strong></p>
+            <br>
+            <p>(04377)서울특별시 강남구 테헤란로 146 현익빌딩, <br>(06236)서울특별시 강남구 테헤란로26길 12 제일비전타워</p>
+            <p>대표이사 : 정승환 | 사업자등록번호 : 13-72011641</p>
+            <p>사업자명 : ㈜맛있는 재활용 | 대표이메일 : shjeong19943@gmail.com</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

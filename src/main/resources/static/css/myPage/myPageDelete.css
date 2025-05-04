@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 550px;
+}
+
+.myPage-completeWrap {
+    border: 1px solid lightgray;
+    border-radius: 7px;
+    margin-bottom: 35px;
+    margin-top: 100px;
+}
+
+.myPage-completeImage {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.myPage-completeImage img {
+    width: 50px;
+}
+
+.myPage-completeText {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.myPage-completeTextBottom {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 15px;
+    color: gray;
+    margin-top: 20px;
+}
+
+.myPage-completeBtn {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.myPage-completeMainBtn {
+    border: none;
+    color: white;
+    background-color: #EBAA39;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 80px;
+    height: 50px;
+    font-weight: bold;
+    font-size: 16px;
+}

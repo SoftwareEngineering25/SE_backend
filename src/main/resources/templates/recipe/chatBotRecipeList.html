@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/recipe/chatBotRecipeList.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+
+    <!-- 페이지네이션 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <title>DR - 챗봇 레시피 목록</title>
+</head>
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="chatBotRecipeList-mainContainer">
+        <div class="chatBotRecipeList-mainBox">
+            <!-- 챗봇 레시피 목록 제목 -->
+            <div class="chatBotRecipeList-title">
+                <span class="chatBotRecipeList-text1">챗봇</span>
+                <span class="chatBotRecipeList-text2">레시피</span>
+            </div>
+
+            <!-- 글작성, 전체보기, 최신순, 추천순 버튼들 -->
+            <div class="chatBotRecipeList-button">
+                <form action="/recipe/chatBotRecipeWriter" method="get">
+                    <button class="chatBotRecipeList-writeButton">글작성</button>
+                </form>
+                <div class="chatBotRecipeList-rightButton">
+                    <button class="chatBotRecipeList-secondButton" onclick="location.href='/recipe/chatBotRecipeList'">최신순</button>
+                    <button class="chatBotRecipeList-thirdButton" onclick="location.href='/recipe/chatBotRecipeListGood'">추천순</button>
+                </div>
+            </div>
+
+            <!-- 챗봇 레시피 목록 -->
+            <div class="chatBotRecipeList-outbox">
+                <div class="chatBotRecipeList-listbox" th:each="chatBotRecipeList : ${chatBotRecipeList}">
+                    <a th:href="@{/recipe/chatBotDetailPage(recipeNumber=${chatBotRecipeList.recipeNumber})}">
+                        <img th:src="@{/image/photo/} + ${chatBotRecipeList.photoOriginal}" alt="레시피사진" class="aaaaaaa">
+                    </a>
+                    <p class="chatBotRecipeList-foodTitle" th:text="${chatBotRecipeList.recipeTitle}"></p>
+                    <span class="chatBotRecipeList-writer" th:text="${chatBotRecipeList.userNickName}"></span>
+                    <span class="chatBotRecipeList-date" th:text="${chatBotRecipeList.recipeWriteDate}"></span>
+                    <p class="chatBotRecipeList-select" th:text="'추천수 ' + ${chatBotRecipeList.goodCount}"></p>
+                </div>
+            </div>
+            <div id="pagination"></div>
+        </div>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/recipe/chatBotRecipeList.js}" defer></script>
+</body>
+</html>

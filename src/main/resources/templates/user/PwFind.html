@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 비밀번호 찾기</title>
+    <link rel="stylesheet" th:href="@{/css/user/PwFind.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="pwfind-container">
+        <div class="pwfind-title">
+            <span class="pwfind-leftTitle">비밀번호</span>
+            <span class="pwfind-rightTitle">찾기</span>
+        </div>
+        <form id="pwFindForm" class="pwFindForm" method="post">
+            <label for="userEmail" class="pwfind-label">아이디(이메일)</label>
+            <div class="pwinput-withButton">
+                <input type="text" id="userEmail" name="userEmail" class="pwfind-input" placeholder="아이디를 입력하세요."
+                       required>
+            </div>
+            <span class="error-message" id="userEmailError"></span>
+            <br><br>
+            <label for="userPhone" class="pwfind-label">휴대폰 번호</label>
+            <div class="pwinput-withButton">
+                <input type="text" id="userPhone" name="userPhone" class="pwfind-input"
+                       placeholder="하이픈(-)없이 숫자만 입력해주세요." required>
+                <button type="button" id="sendCode" class="pwfind-eventButton">인증요청</button>
+            </div>
+            <span class="error-message" id="phoneError"></span>
+            <br><br>
+            <label for="authCode" class="pwfind-label">인증번호</label>
+            <div class="pwinput-withButton">
+                <input type="text" id="authCode" name="authCode" class="pwfind-input" placeholder="인증번호를 입력해주세요."
+                       required>
+                <button type="button" id="verifyCode" class="pwfind-eventButton">인증확인</button>
+            </div>
+            <span class="error-message" id="authCodeError"></span>
+            <br>
+            <button type="submit" class="pwfind-finishButton">인증완료</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/user/PwFind.js}"></script>
+</body>
+</html>

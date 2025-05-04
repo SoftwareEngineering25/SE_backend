@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 에러 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/error/error500.css}">
+    <script defer th:src="@{/js/error/error403.js}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="error-container">
+    <div class="error-text">
+        <img th:src="@{/image/error/error500.png}" id="errorPicture500">
+        <h1>앗! 500 에러</h1>
+        <p>알 수 없는 오류가 발생했습니다.</p>
+        <a th:href="@{/DRmain}" class="home-button">홈으로 이동</a>
+    </div>
+</div>
+</body>
+</html>

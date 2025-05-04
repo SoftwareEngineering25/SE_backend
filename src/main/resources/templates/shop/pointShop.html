@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 포인트샵</title>
+    <link rel="stylesheet" th:href="@{/css/shop/pointShop.css}"/>
+
+    <!-- 헤더 / 푸터 -->
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <script defer th:src="@{/js/shop/pointShop.js}"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<!-- 헤더 -->
+<header th:replace="~{/fragment/header :: header}"></header>
+
+<main>
+    <div class="pointShop-titleContainer">
+        <div class="pointShop-pageTitle">포인트 <span>샵</span></div>
+    </div>
+
+    <!-- 내 포인트 -->
+    <section class="pointShop-section1">
+        <div class="pointShop-myPoint" th:text="'내 포인트 : ' + ${myPoint} + ' point'"></div>
+    </section>
+
+    <!-- 상품 목록 -->
+    <section class="pointShop-section2">
+        <div class="pointShop-productContainer">
+            <img th:src="@{/image/shop/leftBtn.png}" class="pointShop-leftBtn">
+            <div class="pointShop-productFrame">
+                <div class="pointShop-productList" th:each="product : ${productList}">
+                    <div class="pointShop-product">
+                        <div class="pointShop-productInfo">
+                            <img th:src="@{/image/photo/} + ${product.photoLocal}" class="pointShop-productImage">
+                            <div class="pointShop-productName" th:text="${product.productName}"></div>
+                            <div class="pointShop-productText">
+                                <span class="pointShop-productPrice" th:text="${product.productPrice} + 'point'"></span>
+                                <span class="pointShop-productStock"
+                                      th:text="'재고 : ' + ${product.productCount} + 'ea'"></span>
+                            </div>
+                            <form action="#컨트롤러로" method="post" class="pointShop-productSubmit">
+                                <div>
+                                    <input type="number" class="pointShop-buyEa" min="1"> ea
+                                </div>
+                                <button class="pointShop-buyBtn">상품구매</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img th:src="@{/image/shop/rightBtn.png}" class="pointShop-rightBtn">
+        </div>
+    </section>
+
+
+    <!-- 안내문 -->
+    <section class="pointShop-section3">
+        <div class="pointShop-noticeContainer">
+            <img th:src="@{/image/shop/howToUse.png}">
+            <img th:src="@{/image/shop/precautions.png}">
+        </div>
+    </section>
+</main>
+<!-- 푸터 -->
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+</body>
+
+</html>

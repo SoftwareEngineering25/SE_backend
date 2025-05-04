@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 1500px;
+}
+
+li {
+    list-style: none;
+}
+
+.userRankTitle {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 35px;
+    margin-bottom: 30px;
+}
+
+
+/* 환경 기여 랭킹 내 점수 */
+
+.userRankMyScore {
+    display: flex;
+    color: #333333;
+    font-weight: bold;
+    font-size: 26px;
+    justify-content: center;
+    margin-top: 80px;
+    position: relative;
+}
+
+.userRankMyScoreNumber {
+    padding-right: 150px;
+}
+
+.userRankquestion {
+    margin-left: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    font-size: 29px;
+    position: relative;
+    cursor: pointer;
+    /* 애니메이션 추가 */
+    animation: bounce 2.5s infinite;
+}
+
+
+/* 위아래로 움직이는 애니메이션 정의 */
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(5px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.userRankAnswer {
+    width: 330px;
+    height: 350px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    background-color: #888888;
+    color: white;
+    font-size: 13px;
+    letter-spacing: -0.3px;
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 750px;
+}
+
+.userRankType {
+    display: flex;
+    color: #333333;
+    background-color: #E6EAF3;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.userRankRanking {
+    width: 150px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.userRankImage {
+    width: 200px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.userRankName {
+    width: 250px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding-right: 150px;
+}
+
+.userRankNameContributingScore {
+    width: 150px;
+    height: 45px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.userRankTypeOne {
+    display: flex;
+    color: #333333;
+}
+
+.userRankRankingOne {
+    width: 150px;
+    height: 90px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding-top: 10px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.userRankImageOne {
+    width: 200px;
+    height: 90px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.userRankNameOne {
+    width: 250px;
+    height: 90px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    padding-right: 150px;
+}
+
+.userRankNameContributingScoreOne {
+    width: 150px;
+    height: 90px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+
+/* 1등 ~ 3등 메달 이미지 */
+
+.userRankOneTwoThree {
+    width: 100px;
+}
+
+
+/* 이미지 사진 */
+
+.userRankOneImgSet {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    margin-top: 20px;
+}
+
+#pagination {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#pagination .paginationjs-pages {
+    display: flex;
+}
+
+#pagination .paginationjs-pages li {
+    list-style: none;
+    margin-right: 8px; /* 숫자 박스 간 간격 */
+    border-right: 1px solid #aaa; /* 기본 페이지 번호의 오른쪽 경계선 */
+}
+
+#pagination .paginationjs-pages li:last-child {
+    border-right: none; /* 마지막 페이지에는 오른쪽 경계선 제거 */
+    margin-right: 0; /* 마지막 페이지에도 오른쪽 여백 제거 */
+}
+
+#pagination .paginationjs-pages li a {
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    background: #fff;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination .paginationjs-pages li a:hover {
+    background: #eee;
+}
+
+#pagination .paginationjs-pages li.active {
+    border-right: none; /* active 상태에서 오른쪽 경계선 없애기 */
+}
+
+#pagination .paginationjs-pages li.active a {
+    background: #317FF0; /* active 상태일 때 배경색 */
+    color: #fff; /* active 상태일 때 텍스트 색상 */
+}
+
+#pagination .paginationjs-pages li.disabled a {
+    opacity: 0.5;
+}
+
+/* >> 버튼 스타일 */
+#pagination .paginationjs-pages li.paginationjs-next {
+    border-right: 1px solid #aaa; /* >> 버튼에 오른쪽 경계선 추가 */
+}
+
+#pagination .paginationjs-go-input input[type="text"],
+#pagination .paginationjs-go-button input[type="button"] {
+    background: #317FF0; /* 버튼 배경색 */
+    color: #fff;
+    border: none; /* 버튼 보더 제거 */
+    border-radius: 5px;
+    padding: 0 8px;
+    height: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#pagination .paginationjs-go-button input[type="button"]:hover,
+#pagination .paginationjs-go-input input[type="text"]:hover {
+    background-color: #286bbd;
+}

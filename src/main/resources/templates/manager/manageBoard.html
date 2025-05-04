@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>레시피/게시판 관리</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link rel="stylesheet" th:href="@{/css/manager/manageBoard.css}">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" th:src="@{/image/logo.png}">
+</a>
+
+<div id="manager-dashBoardBox">
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="manage-member">
+        <div id="manage-memberTop">
+            <p id="manage-memberBold">게시글 관리</p>
+            <button id="memberOut">삭제</button>
+        </div>
+        <div id="manage-memberList">
+            <ul id="manage-memberUl">
+                <li id="manage-memberTitle">
+                    <input id="title-check" type="checkbox" value="전체선택">
+                    <span id="title-num">No.</span>
+                    <span id="title-title">제목</span>
+                    <span id="title-name">작성자</span>
+                    <span id="title-good">추천수</span>
+                    <span id="title-date">작성일</span>
+                    <span id="title-type">종류</span>
+                </li>
+
+                <li th:if="${board != null}">
+                    <a th:href="${board.boardType == '자유게시판' ?
+                       '/board/freeBoardDetail?boardNumber=' + board.boardNumber :
+                       '/board/honeyBoardDetail?boardNumber=' + board.boardNumber}">
+                        <input type="checkbox" class="con-check" th:value="${board.boardNumber}">
+                        <span class="con-num" th:text="${board.boardNumber}"></span>
+                        <span class="con-con" th:text="${board.boardTitle}"></span>
+                        <span class="con-name" th:text="${board.userNickName}"></span>
+                        <span class="con-good" th:text="${board.goodCount}"></span>
+                        <span class="con-date" th:text="${board.boardWriteDate}"></span>
+                        <span class="con-type" th:text="${board.boardType}"></span>
+                    </a>
+                </li>
+
+                <li th:each="boardList : ${boardList}" th:if="${board == null}">
+                    <a th:href="${boardList.boardType == '자유게시판' ?
+                       '/board/freeBoardDetail?boardNumber=' + boardList.boardNumber :
+                       '/board/honeyBoardDetail?boardNumber=' + boardList.boardNumber}">
+                        <input type="checkbox" class="con-check" th:value="${boardList.boardNumber}">
+                        <span class="con-num" th:text="${boardList.boardNumber}"></span>
+                        <span class="con-con" th:text="${boardList.boardTitle}"></span>
+                        <span class="con-name" th:text="${boardList.userNickName}"></span>
+                        <span class="con-good" th:text="${boardList.goodCount}"></span>
+                        <span class="con-date" th:text="${boardList.boardWriteDate}"></span>
+                        <span class="con-type" th:text="${boardList.boardType}"></span>
+                    </a>
+                </li>
+
+
+            </ul>
+            <div id="pagination"></div>
+        </div>
+    </div>
+    <form class="manager-search-form" th:action="@{/manager/boardSearch}" method="get">
+        <input type="text" id="manager-input" name="boardNumber" placeholder="게시글 번호"/>
+        <button class="manager-search">검색</button>
+    </form>
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+
+<script th:src="@{/js/manager/manageBoard.js}"></script>
+</body>
+
+</html>

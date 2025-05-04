@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <!-- cute font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+</head>
+<body>
+<header th:fragment="header">
+
+    <!-- 헤더 -->
+    <div class="main-headerContainer">
+        <div class="main-headerTop">
+            <a th:href="@{/DRmain}"><img th:src="@{/image/logo.png}" id="main-logo"></a>
+            <form th:action="@{/search}" method="get" class="main-searchBar">
+                <select name="searchType" class="main-dropDown">
+                    <option value="꿀팁게시판">꿀팁 게시판</option>
+                    <option value="나만의레시피">나만의 레시피</option>
+                    <option value="챗봇레시피">챗봇 레시피</option>
+                    <option value="자유게시판">자유 게시판</option>
+                </select>
+
+                <input type="text" name="searchValue" class="main-searchInput" th:if="${session.userNumber != null || session.providerId != null}"
+                       placeholder="검색어를 입력하세요">
+                <input type="text" class="main-searchInput" th:unless="${session.userNumber != null || session.providerId != null}"
+                       placeholder="로그인 후 이용 가능합니다" readonly>
+
+                <button type="submit"><img th:src="@{/image/searchButton.png}" class="main-searchBtn" th:if="${session.userNumber != null || session.providerId != null}"></button>
+                <div><img th:src="@{/image/searchButton.png}" class="main-searchBtn" th:unless="${session.userNumber != null || session.providerId != null}"></div>
+            </form>
+
+            <!-- 일반가입 유저 -->
+            <div class="main-welcomeUser" th:if="${session.userNumber != null && session.providerId == null}">
+                <div class="main-profile">
+                    <img th:src="@{/image/photo/} + ${session.photoLocal}">
+                </div>
+                <div class="main-welcome" th:text="${session.userNickName + ' 님 환영합니다'}"></div>
+                <form th:action="@{/DRlogout}" method="get">
+                    <button class="main-logout">로그아웃</button>
+                </form>
+            </div>
+
+            <!-- 카카오 가입유저 -->
+            <div class="main-welcomeUser" th:if="${session.providerId != null && session.userNumber != null}">
+                <div class="main-profile">
+                    <img th:src="${session.profilePic}">
+                </div>
+                <div class="main-welcome" th:text="${session.userNickName + ' 님 환영합니다'}"></div>
+                <form th:action="@{/DRlogout}" method="get">
+                    <button class="main-logout">로그아웃</button>
+                </form>
+            </div>
+
+
+            <!-- 비로그인 -->
+            <div class="main-visitorBtn" th:if="${session.userNumber == null}">
+                <form th:action="@{/user/login}" method="get">
+                    <button class="main-login">로그인</button>
+                </form>
+                <form th:action="@{/user/join}" method="get">
+                    <button class="main-join">회원가입</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 비로그인 네비바 -->
+        <div class="main-headerNav" th:if="${session.userNumber == null && session.providerId == null}">
+            <ul class="main-navMenu">
+                <li class="main-chatBot"><a th:href="@{/user/login}" class="header-goLogin">냉장봇</a></li>
+                <li class="main-rank"><a th:href="@{/user/login}" class="header-goLogin">환경기여 랭킹</a></li>
+                <li class="main-recipe">
+                    레시피
+                    <ul class="main-recipeList">
+                        <li><a th:href="@{/user/login}" class="header-goLogin">챗봇레시피</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">나만의레시피</a></li>
+                    </ul>
+                </li>
+                <li class="main-board">
+                    게시판
+                    <ul class="main-boardList">
+                        <li><a th:href="@{/user/login}" class="header-goLogin">자유게시판</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">꿀팁게시판</a></li>
+                    </ul>
+                </li>
+                <li class="main-shop"><a th:href="@{/user/login}" class="header-goLogin">포인트샵</a></li>
+                <li class="main-myPage">
+                    마이페이지
+                    <ul class="main-myPageList">
+                        <li><a th:href="@{/user/login}" class="header-goLogin">내 정보</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">찜 목록</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">내가 쓴 레시피</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">내가 쓴 게시글</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">신고 받은 글</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">출석체크</a></li>
+                        <li><a th:href="@{/user/login}" class="header-goLogin">포인트 내역</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 로그인 네비바 -->
+        <div class="main-headerNav" th:if="${session.userNumber != null || session.providerId != null}">
+            <ul class="main-navMenu">
+                <li class="main-chatBot"><a th:href="@{/chatBot/nangjangbot}">냉장봇</a></li>
+                <li class="main-rank"><a th:href="@{/rank/userRank}">환경기여 랭킹</a></li>
+                <li class="main-recipe">
+                    레시피
+                    <ul class="main-recipeList">
+                        <li><a th:href="@{/recipe/chatBotRecipeList}">챗봇레시피</a></li>
+                        <li><a th:href="@{/recipe/myRecipeList}">나만의레시피</a></li>
+                    </ul>
+                </li>
+                <li class="main-board">
+                    게시판
+                    <ul class="main-boardList">
+                        <li><a th:href="@{/board/freeBoardList}">자유게시판</a></li>
+                        <li><a th:href="@{/board/honeyBoardList}">꿀팁게시판</a></li>
+                    </ul>
+                </li>
+                <li class="main-shop"><a href="#" onclick="postRequest('/shop/pointShop')">포인트샵</a></li>
+                <li class="main-myPage">
+                    마이페이지
+                    <ul class="main-myPageList">
+                        <li><a th:href="@{/myPage/myPageInformation}">내 정보</a></li>
+                        <li><a th:href="@{/myPage/myPageSteamedList}">찜 목록</a></li>
+                        <li><a th:href="@{/myPage/myPageMyRecipe}">내가 쓴 레시피</a></li>
+                        <li><a th:href="@{/myPage/myPageMyPost}">내가 쓴 게시글</a></li>
+                        <li><a th:href="@{/myPage/myPageMyComplaint}">신고 받은 글</a></li>
+                        <li><a th:href="@{/myPage/myPageChecked}">출석체크</a></li>
+                        <li><a th:href="@{/myPage/myPageMyPoint}">포인트 내역</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+</body>
+</html>

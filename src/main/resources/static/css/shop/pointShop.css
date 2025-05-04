@@ -1,0 +1,155 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+img {
+  display: block;
+}
+
+.pointShop-titleContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.pointShop-pageTitle {
+  font-size: 35px;
+  font-weight: bold;
+  margin: 100px 0 30px 0;
+  color: #317FF0;
+}
+
+.pointShop-pageTitle span {
+  color: #EBAA39;
+}
+
+.pointShop-section1 {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(218, 218, 218);
+}
+
+.pointShop-myPoint {
+  font-size: 30px;
+  font-weight: bold;
+  color: #333333;
+  margin: 25px;
+}
+
+.pointShop-section3 {
+  height: 650px;
+}
+
+.pointShop-noticeContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.pointShop-noticeContainer img {
+  width: 450px;
+  margin: 80px 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pointShop-section2 {
+  position: relative;
+  background-color: rgb(218, 218, 218);
+  height: 450px;
+}
+
+.pointShop-productContainer {
+  justify-content: center;
+  align-items: center;
+
+}
+
+.pointShop-productContainer,
+.pointShop-productFrame {
+  position: relative;
+  display: flex;
+}
+
+.pointShop-productFrame {
+  width: 1100px;
+  height: 400px;
+  margin-top: 50px;
+  overflow: hidden;
+  position: relative;
+}
+
+.pointShop-productList {
+  display: flex;
+  position: relative;
+  left: 10px; /* 슬라이드 이동을 위한 초기값 */
+  transition: left 0.3s ease; /* 슬라이드 애니메이션 */
+}
+
+.pointShop-product {
+  width: 255px;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.pointShop-productImage {
+  width: 255px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pointShop-productName,
+.pointShop-productText {
+  margin: 10px 0;
+}
+
+.pointShop-productText,
+.pointShop-productSubmit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  letter-spacing: -0.3px;
+}
+
+.pointShop-productText> :nth-child(1) {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.pointShop-productText> :nth-child(2) {
+  font-size: 12px;
+}
+
+.pointShop-productSubmit input {
+  height: 20px;
+  width: 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+/* Webkit 브라우저 (Chrome, Safari 등)에서 스피너 활성화 */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  /* 기본 스피너를 항상 보이게 */
+}
+
+.pointShop-productSubmit button {
+  width: 70px;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  background-color: #EBAA39;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.pointShop-leftBtn,
+.pointShop-rightBtn {
+  position: relative;
+  width: 40px;
+  cursor: pointer;
+  border: 2px solid gray;
+  border-radius: 22px;
+  box-shadow: 0 4px 8px rgba(0  , 0, 0, 0.2);
+}

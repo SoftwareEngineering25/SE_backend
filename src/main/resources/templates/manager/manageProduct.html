@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원관리</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.4/pagination.css"/>
+    <link rel="stylesheet" href="./../../css/manager/manageProduct.css">
+</head>
+
+<body>
+<a th:href="@{/manager/dashBoard}">
+    <img class="manager-logoImg" src="./../../image/logo.png">
+</a>
+<div id="manager-dashBoardBox">
+    <div id="dashBoard-list">
+        <ul>
+            <a th:href="@{/manager/dashBoard}">
+                <li id="dashBoard-admin">
+                    <img id="dashBoard-profile" th:src="@{/image/basicProfile.png}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span th:text="${session.managerName}"></span>
+                </li>
+            </a>
+            <a th:href="@{/manager/manageUser}">
+                <li id="dashBoard-user">회원관리</li>
+            </a>
+            <a th:href="@{/manager/manageBoard}">
+                <li id="dashBoard-board">게시글 관리</li>
+            </a>
+            <a th:href="@{/manager/manageRecipe}">
+                <li id="dashBoard-recipe">레시피 관리</li>
+            </a>
+            <a th:href="@{/manager/manageComment}">
+                <li id="dashBoard-comment">댓글관리</li>
+            </a>
+            <a th:href="@{/manager/managePoint}">
+                <li id="dashBoard-point">포인트관리</li>
+            </a>
+            <a th:href="@{/manager/manageReport}">
+                <li id="dashBoard-report">신고관리</li>
+            </a>
+            <a th:href="@{/manager/manageProduct}">
+                <li id="dashBoard-product">상품관리</li>
+            </a>
+        </ul>
+    </div>
+
+    <div id="manage-member">
+        <div id="manage-memberTop">
+            <p id="manage-memberBold">상품 관리</p>
+            <a th:href="@{/manager/registerProduct}">
+                <button id="memberPause">등록</button>
+            </a>
+
+                <button id="memberUpdate">추가</button>
+
+
+            <button id="memberOut">삭제</button>
+        </div>
+        <div id="manage-memberList">
+            <ul id="manage-memberUl">
+                <li id="manage-memberTitle">
+                    <input id="title-check" type="checkbox" value="전체선택">
+                    <span id="title-num">No.</span>
+                    <span id="title-name">상품명</span>
+                    <span id="title-point">소모포인트</span>
+                    <span id="title-stock">재고</span>
+                </li>
+                <li th:each="product, iterStat : ${productList}">
+                    <input type="checkbox" th:value="${product.productName}">
+                    <span class="product-num" th:text="${iterStat.index + 1}"></span>
+                    <span class="product-name" th:text="${product.productName}"></span>
+                    <span class="product-point" th:text="${product.productPrice}"></span>
+                    <span class="product-stock" th:text="${product.productCount}"></span>
+                </li>
+            </ul>
+
+            <div id="pagination"></div>
+
+        </div>
+    </div>
+
+
+</div>
+<form th:action="@{/manager/managerLogout}" method="get">
+    <button id="manager-logout">로그아웃</button>
+</form>
+
+
+<script src="./../../js/manager/manageProduct.js"></script>
+</body>
+
+</html>

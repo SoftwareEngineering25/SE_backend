@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - 비밀번호 변경</title>
+    <link rel="stylesheet" th:href="@{/css/user/PwReset.css}">
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="pwreset-container">
+        <div class="pwreset-title">
+            <span class="pwreset-leftTitle">비밀번호</span>
+            <span class="pwreset-rightTitle">변경</span>
+        </div>
+        <form method="post" id="pwResetForm" class="pwreset-form" th:action="@{/user/PwReset}">
+
+            <input type="hidden" name="userPhone" th:value="${userPhone}"> <!-- 수정된 부분 -->
+
+            <label for="newPassword" class="pwreset-label">새 비밀번호</label>
+            <div class="input-withButton">
+                <input type="newPassword" id="newPassword" name="userPw" class="pwreset-input"
+                       placeholder="새 비밀번호를 입력하세요." required>
+                <img th:src="@{/image/noView.png}" id="passwordToggle" class="toggle-password" alt="비밀번호 보기/숨기기">
+            </div>
+            <span class="error-message" id="passwordError"></span>
+            <br><br>
+            <label for="confirmNewPassword" class="pwreset-label">새 비밀번호 확인</label>
+            <div class="input-withButton">
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="pwreset-input"
+                       placeholder="새 비밀번호를 한 번 더 입력하세요." required>
+                <img th:src="@{/image/noView.png}" id="confirmPasswordToggle" class="toggle-password" alt="비밀번호 보기/숨기기">
+            </div>
+            <span class="error-message" id="confirmPasswordError"></span>
+            <button type="submit" class="pwreset-finishButton">변경완료</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/user/PwReset.js}"></script>
+</body>
+</html>

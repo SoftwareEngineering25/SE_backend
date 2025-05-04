@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR - API 회원가입</title>
+    <link rel="stylesheet" th:href="@{/css/user/apiJoin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/header.css}"/>
+    <link rel="stylesheet" th:href="@{/css/fragment/footer.css}"/>
+    <script defer th:src="@{/js/fragment/header.js}"></script>
+    <!-- 네비바 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+    <!-- 제이쿼리 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<header th:replace="~{/fragment/header :: header}"></header>
+<main>
+    <div class="apijoin-container">
+        <div class="apijoin-title">
+            <span class="apijoin-leftTitle">추가</span>
+            <span class="apijoin-rightTitle">기입</span>
+        </div>
+        <br>
+        <form th:action="@{/user/apiJoinOK}" method="post" id="apijoinForm" class="apijoin-form">
+            <!-- 아이디(이메일) 필드 -->
+            <label for="accountEmail" class="apijoin-label">아이디(이메일)</label>
+            <div class="input-withButton">
+                <input type="text" th:value="${session.accountEmail}" id="accountEmail" name="accountEmail" class="apijoin-input" placeholder="아이디를 입력하세요." readonly required>
+            </div>
+            <span class="error-message" id="accountEmailError"></span>
+            <br>
+            <!-- 닉네임 필드 -->
+            <label for="name" class="apijoin-label">닉네임</label>
+            <input type="text" th:value="${session.userNickName}" id="name" name="name" class="apijoin-input" placeholder="이름을 입력하세요." required>
+            <input type="hidden" th:value="${session.profilePic}" id="profilePic" name="profilePic" class="apijoin-input">
+            <input type="hidden" th:value="${session.providerId}" id="providerId" name="providerId" class="apijoin-input">
+            <input type="hidden" th:value="${session.provider}" id="provider" name="provider" class="apijoin-input">
+            <span class="error-message" id="nameError"></span>
+            <br>
+            <!-- 휴대폰 번호 필드 -->
+            <br>
+            <label for="phone" class="apijoin-label">휴대폰 번호</label>
+            <div class="input-withButton">
+                <input type="text" id="phone" name="phone" class="apijoin-input" placeholder="하이픈(-)없이 숫자만 입력해주세요." required>
+                <button type="button" id="sendCode" class="apijoin-eventButton">인증요청</button>
+            </div>
+            <span class="error-message" id="phoneError" style="display: block; color: red;"></span>
+            <br>
+            <!-- 인증번호 필드 -->
+            <label for="authCode" class="apijoin-label">인증번호</label>
+            <div class="input-withButton">
+                <input type="text" id="authCode" name="authCode" class="apijoin-input" placeholder="인증번호를 입력해주세요." required>
+                <button type="button" id="verifyCode" class="apijoin-eventButton">인증확인</button>
+            </div>
+            <span class="error-message" id="authCodeError"></span>
+            <br>
+            <!-- 약관 동의 체크박스 -->
+            <div class="apijoin-checkbox">
+                <input type="checkbox" id="checkAll" name="checkAll" class="apijoin-checkboxInput">
+                <label for="checkAll" class="signup-checkboxLabel">전체 동의(선택포함)</label>
+            </div>
+            <span class="error-message" id="termsError"></span>
+            <hr>
+            <div class="apijoin-checkbox">
+                <input type="checkbox" id="checkAge" name="checkAge" class="apijoin-checkboxInput" required>
+                <label for="checkAge" class="signup-checkboxLabel">[필수] 만 14세 이상입니다.</label>
+            </div>
+            <div class="apijoin-checkbox">
+                <input type="checkbox" id="checkTerms" name="checkTerms" class="apijoin-checkboxInput" required>
+                <label for="checkTerms" class="signup-checkboxLabel">[필수] <a th:href="@{/terms}" class="join-agree">이용약관</a> 확인</label>
+            </div>
+            <div class="apijoin-checkbox">
+                <input type="checkbox" id="checkPrivacy" name="checkPrivacy" class="apijoin-checkboxInput" required>
+                <label for="checkPrivacy" class="signup-checkboxLabel">[필수] <a th:href="@{/privacyPolicy}" class="join-agree">개인정보처리방침</a> 확인</label>
+            </div>
+            <div class="apijoin-checkbox">
+                <input type="checkbox" id="checkAds" name="checkAds" class="apijoin-checkboxInput">
+                <label for="checkAds" class="signup-checkboxLabel">[선택] 광고성메세지 수신 동의</label>
+            </div>
+            <!-- 회원가입 버튼 -->
+            <button type="button" id="submitForm" class="apijoin-finishButton">회원가입</button>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{/fragment/footer :: footer}"></footer>
+<script th:src="@{/js/user/apiJoin.js}" defer></script>
+</body>
+
+</html>

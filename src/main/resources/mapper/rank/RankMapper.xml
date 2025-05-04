@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dr.mapper.rank.RankMapper">
+
+    <!-- 자기 자신 랭킹 조회 쿼리 (MySQL 8.0+ 호환) -->
+    <select id="getRankList" parameterType="Long" resultType="RankDTO">
+        SELECT
+            RANK_DATA.`RANK`,  -- 작은따옴표(')를 백틱(`)으로 수정
+            RANK_DATA.USER_NICKNAME,
+            -- 최신 업로드 사진 또는 DR_USER의 프로필 사진 사용
+            COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL, -- NVL -> COALESCE
+            RANK_DATA.SCORE_GET
+        FROM (
+                 SELECT
+                     DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS `RANK`, -- 여기도 백틱으로 감싸는 것이 안전합니다.
+                         U.USER_NICKNAME,
+                     LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL, -- 가장 최근 업로드된 사진 경로
+                     U.PROFILE_PIC,                        -- DR_USER 테이블의 프로필 사진 경로
+                     SUM(S.SCORE_GET) AS SCORE_GET,        -- 컬럼명 SCORE_GET 확인 필요
+                     U.USER_NUMBER
+                 FROM DR_USER U
+                          JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+                          LEFT JOIN (
+                     SELECT
+                         P.USER_NUMBER,
+                         P.PHOTO_LOCAL,
+                         -- 사용자별 가장 최근 업로드된 사진 찾기
+                         ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN -- 컬럼명 PHOTO_UPLOAD_DATE 확인 필요
+                     FROM DR_PHOTO P
+                     WHERE P.USER_NUMBER IS NOT NULL -- 사용자 관련 사진만
+                 ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1 -- 최신 사진(RN=1)만 조인
+                 GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+             ) RANK_DATA
+        WHERE RANK_DATA.USER_NUMBER = #{userNumber}
+    </select>
+
+    <!-- 50위까지 랭킹 조회 쿼리 (MySQL 8.0+ 호환) -->
+    <select id="fiftyRankList" resultType="RankDTO">
+        SELECT
+        RANK_DATA.`RANK`,  -- 외부 SELECT 절: 백틱 추가
+        RANK_DATA.USER_NICKNAME,
+        -- 최신 업로드 사진 또는 DR_USER의 프로필 사진 사용
+        COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+        RANK_DATA.SCORE_GET,
+        RANK_DATA.USER_NUMBER -- RankDTO에 userNumber 필드가 있다면 추가
+        FROM (
+        SELECT
+        DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS `RANK`, -- 내부 서브쿼리 AS 절: 백틱 추가
+        U.USER_NICKNAME,
+        LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+        U.PROFILE_PIC,
+        SUM(S.SCORE_GET) AS SCORE_GET,
+        U.USER_NUMBER
+        FROM DR_USER U
+        JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+        LEFT JOIN (
+        SELECT
+        P.USER_NUMBER,
+        P.PHOTO_LOCAL,
+        ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+        FROM DR_PHOTO P
+        WHERE P.USER_NUMBER IS NOT NULL
+        ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+        GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+        ) RANK_DATA
+        WHERE RANK_DATA.`RANK` &lt; 51 -- WHERE 절: 백틱 추가
+        ORDER BY RANK_DATA.`RANK` ASC -- ORDER BY 절: 백틱 추가
+    </select>
+
+    <!-- 1등부터 5등까지 사용자 조회 (MySQL 8.0+ 호환) -->
+    <select id="Top5Rank" resultType="RankDTO">
+        SELECT
+        RANK_DATA.RANK,
+        RANK_DATA.USER_NICKNAME,
+        COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+        RANK_DATA.SCORE_GET,
+        RANK_DATA.USER_NUMBER
+        FROM (
+        SELECT
+        DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS RANK,
+        U.USER_NICKNAME,
+        LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+        U.PROFILE_PIC,
+        SUM(S.SCORE_GET) AS SCORE_GET,
+        U.USER_NUMBER
+        FROM DR_USER U
+        JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+        LEFT JOIN (
+        SELECT
+        P.USER_NUMBER,
+        P.PHOTO_LOCAL,
+        ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+        FROM DR_PHOTO P
+        WHERE P.USER_NUMBER IS NOT NULL
+        ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+        GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+        ) RANK_DATA
+        WHERE RANK_DATA.RANK &lt; 6
+        ORDER BY RANK_DATA.RANK ASC
+    </select>
+
+    <!-- 월초 포인트 적립 (MySQL 호환: AUTO_INCREMENT 사용) -->
+    <insert id="insertPoint" parameterType="PointCheckDTO" useGeneratedKeys="true" keyProperty="pointNumber">
+        <!-- Oracle 시퀀스 대신 AUTO_INCREMENT 사용 -->
+        <!-- 컬럼명 확인: POINT_GET -> POINT_CHANGE? -->
+        INSERT INTO DR_POINT (POINT_CHANGE, POINT_NOTE, POINT_DATE, USER_NUMBER)
+        VALUES (#{pointGet}, #{pointNote}, NOW(), #{userNumber}) -- SYSDATE -> NOW()
+    </insert>
+
+    <!-- 6등부터 10등까지 사용자 조회 (MySQL 8.0+ 호환) -->
+    <select id="top10Rank" resultType="RankDTO">
+        SELECT
+            RANK_DATA.RANK,
+            RANK_DATA.USER_NICKNAME,
+            COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+            RANK_DATA.SCORE_GET,
+            RANK_DATA.USER_NUMBER
+        FROM (
+                 SELECT
+                     DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS RANK,
+                         U.USER_NICKNAME,
+                     LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+                     U.PROFILE_PIC,
+                     SUM(S.SCORE_GET) AS SCORE_GET,
+                     U.USER_NUMBER
+                 FROM DR_USER U
+                          JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+                          LEFT JOIN (
+                     SELECT
+                         P.USER_NUMBER,
+                         P.PHOTO_LOCAL,
+                         ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+                     FROM DR_PHOTO P
+                     WHERE P.USER_NUMBER IS NOT NULL
+                 ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+                 GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+             ) RANK_DATA
+        WHERE RANK_DATA.RANK BETWEEN 6 AND 10
+        ORDER BY RANK_DATA.RANK ASC
+    </select>
+
+    <!-- 11등부터 20등까지 사용자 조회 (MySQL 8.0+ 호환) -->
+    <select id="top20Rank" resultType="RankDTO">
+        SELECT
+            RANK_DATA.RANK,
+            RANK_DATA.USER_NICKNAME,
+            COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+            RANK_DATA.SCORE_GET,
+            RANK_DATA.USER_NUMBER
+        FROM (
+                 SELECT
+                     DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS RANK,
+                         U.USER_NICKNAME,
+                     LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+                     U.PROFILE_PIC,
+                     SUM(S.SCORE_GET) AS SCORE_GET,
+                     U.USER_NUMBER
+                 FROM DR_USER U
+                          JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+                          LEFT JOIN (
+                     SELECT
+                         P.USER_NUMBER,
+                         P.PHOTO_LOCAL,
+                         ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+                     FROM DR_PHOTO P
+                     WHERE P.USER_NUMBER IS NOT NULL
+                 ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+                 GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+             ) RANK_DATA
+        WHERE RANK_DATA.RANK BETWEEN 11 AND 20
+        ORDER BY RANK_DATA.RANK ASC
+    </select>
+
+    <!-- 21등부터 30등까지 사용자 조회 (MySQL 8.0+ 호환) -->
+    <select id="top30Rank" resultType="RankDTO">
+        SELECT
+            RANK_DATA.RANK,
+            RANK_DATA.USER_NICKNAME,
+            COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+            RANK_DATA.SCORE_GET,
+            RANK_DATA.USER_NUMBER
+        FROM (
+                 SELECT
+                     DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS RANK,
+                         U.USER_NICKNAME,
+                     LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+                     U.PROFILE_PIC,
+                     SUM(S.SCORE_GET) AS SCORE_GET,
+                     U.USER_NUMBER
+                 FROM DR_USER U
+                          JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+                          LEFT JOIN (
+                     SELECT
+                         P.USER_NUMBER,
+                         P.PHOTO_LOCAL,
+                         ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+                     FROM DR_PHOTO P
+                     WHERE P.USER_NUMBER IS NOT NULL
+                 ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+                 GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+             ) RANK_DATA
+        WHERE RANK_DATA.RANK BETWEEN 21 AND 30
+        ORDER BY RANK_DATA.RANK ASC
+    </select>
+
+    <!-- 51등 이하 사용자 조회 (MySQL 8.0+ 호환) -->
+    <select id="topOtherRank" resultType="RankDTO">
+        SELECT
+            RANK_DATA.RANK,
+            RANK_DATA.USER_NICKNAME,
+            COALESCE(RANK_DATA.LATEST_PHOTO_LOCAL, RANK_DATA.PROFILE_PIC) AS PHOTO_LOCAL,
+            RANK_DATA.SCORE_GET,
+            RANK_DATA.USER_NUMBER
+        FROM (
+                 SELECT
+                     DENSE_RANK() OVER (ORDER BY SUM(S.SCORE_GET) DESC) AS RANK,
+                         U.USER_NICKNAME,
+                     LP.PHOTO_LOCAL AS LATEST_PHOTO_LOCAL,
+                     U.PROFILE_PIC,
+                     SUM(S.SCORE_GET) AS SCORE_GET,
+                     U.USER_NUMBER
+                 FROM DR_USER U
+                          JOIN DR_SCORE S ON U.USER_NUMBER = S.USER_NUMBER
+                          LEFT JOIN (
+                     SELECT
+                         P.USER_NUMBER,
+                         P.PHOTO_LOCAL,
+                         ROW_NUMBER() OVER (PARTITION BY P.USER_NUMBER ORDER BY P.PHOTO_UPLOAD_DATE DESC) AS RN
+                     FROM DR_PHOTO P
+                     WHERE P.USER_NUMBER IS NOT NULL
+                 ) LP ON U.USER_NUMBER = LP.USER_NUMBER AND LP.RN = 1
+                 GROUP BY U.USER_NICKNAME, LP.PHOTO_LOCAL, U.PROFILE_PIC, U.USER_NUMBER
+             ) RANK_DATA
+        WHERE RANK_DATA.RANK > 50
+        ORDER BY RANK_DATA.RANK ASC
+    </select>
+
+</mapper>

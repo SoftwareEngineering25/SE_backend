@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dr.mapper.chatBot.NangjangbotMapper">
+
+    <!-- 채팅방 생성 (MySQL: AUTO_INCREMENT 사용) -->
+    <insert id="createChatSession" parameterType="NangjangbotDTO" useGeneratedKeys="true" keyProperty="sessionNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_CHAT_SESSION(USER_NUMBER, SESSION_TITLE, CREATE_DATE) -- CREATE_DATE는 DEFAULT CURRENT_TIMESTAMP 가정
+        VALUES (#{userNumber}, #{sessionTitle}, NOW()) -- 명시적으로 NOW() 추가 또는 DEFAULT 값 활용
+    </insert>
+
+    <!-- 현재 유저가 가장 최근에 생성한 채팅방 번호 조회 (MySQL: LIMIT 사용) -->
+    <select id="getSessionNumber" parameterType="Long" resultType="Long">
+        SELECT SESSION_NUMBER
+        FROM DR_CHAT_SESSION
+        WHERE USER_NUMBER = #{userNumber}
+        ORDER BY CREATE_DATE DESC
+            LIMIT 1 -- ROWNUM = 1 대신 LIMIT 1 사용
+    </select>
+
+    <!-- 유저채팅 행 추가 (MySQL: AUTO_INCREMENT 사용) -->
+    <insert id="insertUserMsg" parameterType="NangjangbotDTO" useGeneratedKeys="true" keyProperty="chatNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_CHAT(USER_MSG, SESSION_NUMBER, USER_NUMBER, CHAT_TIME) -- CHAT_TIME은 DEFAULT CURRENT_TIMESTAMP 가정
+        VALUES (#{userMsg}, #{sessionNumber}, #{userNumber}, NOW()) -- 명시적으로 NOW() 추가 또는 DEFAULT 값 활용
+    </insert>
+
+    <!-- 챗봇응답 행 추가 (MySQL: AUTO_INCREMENT 사용) -->
+    <!-- 참고: 챗봇 응답에 USER_NUMBER를 넣는 것이 맞는지 확인 필요. DDL 상 USER_NUMBER는 NULL 가능. -->
+    <!-- 만약 봇 응답에 USER_NUMBER가 필요 없다면 INSERT 문과 DTO에서 제거해야 함. -->
+    <insert id="insertBotReply" parameterType="NangjangbotDTO" useGeneratedKeys="true" keyProperty="chatNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_CHAT(BOT_REPLY, SESSION_NUMBER, USER_NUMBER, CHAT_TIME) -- CHAT_TIME은 DEFAULT CURRENT_TIMESTAMP 가정
+        VALUES (#{botReply}, #{sessionNumber}, #{userNumber}, NOW()) -- 명시적으로 NOW() 추가 또는 DEFAULT 값 활용
+    </insert>
+
+    <!-- 사이드바 채팅목록 (MySQL 호환) -->
+    <!-- 불필요한 서브쿼리 제거 가능 -->
+    <select id="getChatList" parameterType="Long" resultType="NangjangbotDTO">
+        SELECT SESSION_NUMBER, SESSION_TITLE, CREATE_DATE
+        FROM DR_CHAT_SESSION
+        WHERE USER_NUMBER = #{userNumber}
+        ORDER BY SESSION_NUMBER DESC
+    </select>
+
+    <!-- 이전채팅내용 조회 (MySQL 호환) -->
+    <select id="getChatContents" parameterType="Long" resultType="NangjangbotDTO">
+        SELECT C.SESSION_NUMBER, C.USER_MSG ,C.BOT_REPLY, C.CHAT_TIME -- CHAT_TIME 추가 (정렬 및 표시용)
+        FROM DR_CHAT_SESSION CS JOIN DR_CHAT C ON CS.SESSION_NUMBER = C.SESSION_NUMBER
+        WHERE C.SESSION_NUMBER = #{sessionNumber}
+        ORDER BY C.CHAT_NUMBER ASC -- 또는 C.CHAT_TIME ASC
+    </select>
+
+    <!-- 채팅 삭제 (MySQL 호환) -->
+    <!-- 참고: DR_CHAT 테이블에 ON DELETE CASCADE 설정 시 관련 채팅 내용도 함께 삭제됨 -->
+    <delete id="deleteChat" parameterType="Long">
+        DELETE FROM DR_CHAT_SESSION
+        WHERE SESSION_NUMBER = #{sessionNumber}
+    </delete>
+
+</mapper>

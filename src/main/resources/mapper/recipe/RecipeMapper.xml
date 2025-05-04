@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dr.mapper.recipe.RecipeMapper">
+
+    <!-- ================================================= -->
+    <!-- ============ 나만의 레시피 (My Recipe) ============ -->
+    <!-- ================================================= -->
+
+    <!-- 나만의레시피 최신순 (MySQL 8.0+ 호환, 사진 조회 수정) -->
+    <select id="selectAllPages" resultType="MyRecipeListDTO">
+        SELECT
+            R.RECIPE_NUMBER AS recipeNumber,
+            R.RECIPE_TITLE AS recipeTitle,
+            U.USER_NICKNAME AS userNickName,
+            DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+            P.PHOTO_LOCAL AS photoLocal,       -- 대표 사진 경로
+            P.PHOTO_ORIGINAL AS photoOriginal, -- 대표 사진 원본명
+            COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount -- 추천수 (DISTINCT 추가)
+        FROM DR_RECIPE R
+                 JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                 LEFT JOIN (
+            -- 각 레시피의 첫 번째 사진만 선택 (대표 사진)
+            SELECT
+                PHOTO_LOCAL,
+                PHOTO_ORIGINAL,
+                RECIPE_NUMBER,
+                ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN
+            FROM DR_PHOTO
+            WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1
+                 LEFT JOIN DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+        WHERE R.RECIPE_TYPE = '나만의레시피'
+        GROUP BY R.RECIPE_NUMBER, R.RECIPE_TITLE, U.USER_NICKNAME, R.RECIPE_WRITE_DATE, P.PHOTO_LOCAL, P.PHOTO_ORIGINAL
+        ORDER BY R.RECIPE_WRITE_DATE DESC
+    </select>
+
+    <!-- 나만의 레시피 추천순 (MySQL 8.0+ 호환, 사진 조회 수정) -->
+    <select id="selectRecipesGood" resultType="MyRecipeListDTO">
+        SELECT
+            R.RECIPE_NUMBER AS recipeNumber,
+            R.RECIPE_TITLE AS recipeTitle,
+            U.USER_NICKNAME AS userNickName,
+            DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+            P.PHOTO_LOCAL AS photoLocal,
+            P.PHOTO_ORIGINAL AS photoOriginal,
+            COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount
+        FROM DR_RECIPE R
+                 JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                 LEFT JOIN (
+            SELECT
+                PHOTO_LOCAL,
+                PHOTO_ORIGINAL,
+                RECIPE_NUMBER,
+                ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN
+            FROM DR_PHOTO
+            WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1
+                 LEFT JOIN DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+        WHERE R.RECIPE_TYPE = '나만의레시피'
+        GROUP BY R.RECIPE_NUMBER, R.RECIPE_TITLE, U.USER_NICKNAME, R.RECIPE_WRITE_DATE, P.PHOTO_LOCAL, P.PHOTO_ORIGINAL
+        ORDER BY goodCount DESC, R.RECIPE_WRITE_DATE DESC -- 추천순, 최신순
+    </select>
+
+    <!-- 나만의 레시피 상세페이지 (MySQL 8.0+ 호환) -->
+    <!-- 참고: P.PHOTO_LOCAL은 작성자의 프로필 사진을 가져옴 (최신 업로드 기준) -->
+    <select id="selectMyRecipeDetail" resultType="MyRecipeDetailDTO">
+        SELECT
+            R.RECIPE_NUMBER,
+            R.RECIPE_TITLE,
+            R.RECIPE_TYPE,
+            R.RECIPE_TEXT,
+            DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+            U.USER_NICKNAME,
+            -- 작성자 프로필 사진 (최신 업로드 또는 DR_USER.PROFILE_PIC)
+            COALESCE(P.PHOTO_LOCAL, U.PROFILE_PIC) AS PHOTO_LOCAL,
+            COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount, -- DISTINCT 추가
+            R.USER_NUMBER,
+            U.PROFILE_PIC -- 필요시 DTO에 추가
+        FROM
+            DR_RECIPE R
+                JOIN
+            DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                LEFT JOIN
+            DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+                LEFT JOIN (
+                -- 작성자의 가장 최근 업로드된 사진 조회
+                SELECT
+                    USER_NUMBER,
+                    PHOTO_LOCAL,
+                    ROW_NUMBER() OVER (PARTITION BY USER_NUMBER ORDER BY PHOTO_UPLOAD_DATE DESC) AS RN -- 컬럼명 PHOTO_UPLOAD_DATE 확인
+                FROM
+                    DR_PHOTO
+                WHERE USER_NUMBER IS NOT NULL
+            ) P ON U.USER_NUMBER = P.USER_NUMBER AND P.RN = 1
+        WHERE
+            R.RECIPE_NUMBER = #{recipeNumber}
+          AND R.RECIPE_TYPE = '나만의레시피'
+        GROUP BY
+            R.RECIPE_NUMBER, R.RECIPE_TITLE, R.RECIPE_TYPE, R.RECIPE_TEXT, R.RECIPE_WRITE_DATE,
+            U.USER_NICKNAME, P.PHOTO_LOCAL, R.USER_NUMBER, U.PROFILE_PIC
+    </select>
+
+    <!-- 나만의 레시피 추천 수 증가 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="increaseGoodCount" parameterType="MyRecipeGoodDTO" useGeneratedKeys="true" keyProperty="goodNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_GOOD(RECIPE_NUMBER, USER_NUMBER, GOOD_DATE)
+        VALUES (#{recipeNumber}, #{userNumber}, NOW()) -- GOOD_DATE 추가
+    </insert>
+
+    <!-- 나만의 레시피 추천 수 감소 (MySQL 호환) -->
+    <delete id="decreaseGoodCount" parameterType="MyRecipeGoodDTO">
+        DELETE
+        FROM DR_GOOD
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+          AND USER_NUMBER = #{userNumber}
+    </delete>
+
+    <!-- 나만의 레시피 상세페이지 댓글조회 (MySQL 호환, 사진 조회 수정) -->
+    <select id="selectMyRecipeComment" parameterType="Long" resultType="MyRecipeCommentDTO">
+        SELECT RP.REPLY_NUMBER      AS replyNumber,
+               U.USER_NICKNAME      AS userNickName,
+               RP.REPLY_WRITE_DATE  AS replyWriteDate,
+               RP.REPLY_MODIFY_DATE AS replyModifyDate,
+               RP.REPLY_TEXT        AS replyText,
+               U.PROFILE_PIC        AS photoLocal -- 댓글 작성자의 프로필 사진 (DR_USER.PROFILE_PIC 사용)
+        FROM DR_REPLY RP
+                 JOIN
+             DR_USER U ON RP.USER_NUMBER = U.USER_NUMBER
+                 -- LEFT JOIN DR_PHOTO P ON U.USER_NUMBER = P.USER_NUMBER -- 불필요한 조인 제거
+                 JOIN
+             DR_RECIPE R ON RP.RECIPE_NUMBER = R.RECIPE_NUMBER -- 이 조인도 WHERE 조건으로 충분하면 제거 가능
+        WHERE RP.RECIPE_NUMBER = #{recipeNumber}
+        ORDER BY RP.REPLY_WRITE_DATE DESC
+    </select>
+
+    <!-- 나만의 레시피 댓글작성 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertReply" parameterType="MyRecipeCommentDTO" useGeneratedKeys="true" keyProperty="replyNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_REPLY(REPLY_TEXT, RECIPE_NUMBER, USER_NUMBER, REPLY_WRITE_DATE)
+        VALUES (#{replyText}, #{recipeNumber}, #{userNumber}, NOW()) -- REPLY_WRITE_DATE 추가
+    </insert>
+
+    <!-- 나만의 레시피 댓글 수정 (MySQL 호환: SYSDATE -> NOW()) -->
+    <update id="updateMyReply" parameterType="MyRecipeCommentDTO">
+        UPDATE DR_REPLY
+        SET REPLY_TEXT        = #{replyText},
+            REPLY_MODIFY_DATE = NOW() -- SYSDATE -> NOW()
+        WHERE REPLY_NUMBER = #{replyNumber}
+    </update>
+
+    <!-- 나만의 레시피 댓글 삭제 (MySQL 호환) -->
+    <delete id="deleteMyReply" parameterType="Long">
+        DELETE
+        FROM DR_REPLY
+        WHERE REPLY_NUMBER = #{replyNumber}
+    </delete>
+
+    <!-- ================================================= -->
+    <!-- ============ 챗봇 레시피 (ChatBot Recipe) ========= -->
+    <!-- ================================================= -->
+
+    <!-- 챗봇레시피 최신순 (MySQL 8.0+ 호환, 사진 조회 수정) -->
+    <select id="selectAllPages1" resultType="ChatBotRecipeListDTO">
+        SELECT
+            R.RECIPE_NUMBER AS recipeNumber,
+            R.RECIPE_TITLE AS recipeTitle,
+            U.USER_NICKNAME AS userNickName,
+            DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+            P.PHOTO_LOCAL AS photoLocal,       -- 대표 사진 경로
+            P.PHOTO_ORIGINAL AS photoOriginal, -- 대표 사진 원본명
+            COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount -- 추천수 (DISTINCT 추가)
+        FROM DR_RECIPE R
+                 JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                 LEFT JOIN (
+            SELECT
+                PHOTO_LOCAL,
+                PHOTO_ORIGINAL,
+                RECIPE_NUMBER,
+                ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN
+            FROM DR_PHOTO
+            WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1
+                 LEFT JOIN DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+        WHERE R.RECIPE_TYPE = '챗봇레시피'
+        GROUP BY R.RECIPE_NUMBER, R.RECIPE_TITLE, U.USER_NICKNAME, R.RECIPE_WRITE_DATE, P.PHOTO_LOCAL, P.PHOTO_ORIGINAL
+        ORDER BY R.RECIPE_WRITE_DATE DESC
+    </select>
+
+    <!-- 챗봇레시피 추천순 (MySQL 8.0+ 호환, 사진 조회 수정) -->
+    <select id="selectAllPagesGood1" resultType="ChatBotRecipeListDTO">
+        SELECT
+            R.RECIPE_NUMBER AS recipeNumber,
+            R.RECIPE_TITLE AS recipeTitle,
+            U.USER_NICKNAME AS userNickName,
+            DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+            P.PHOTO_LOCAL AS photoLocal,
+            P.PHOTO_ORIGINAL AS photoOriginal,
+            COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount
+        FROM DR_RECIPE R
+                 JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                 LEFT JOIN (
+            SELECT
+                PHOTO_LOCAL,
+                PHOTO_ORIGINAL,
+                RECIPE_NUMBER,
+                ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN
+            FROM DR_PHOTO
+            WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1
+                 LEFT JOIN DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+        WHERE R.RECIPE_TYPE = '챗봇레시피'
+        GROUP BY R.RECIPE_NUMBER, R.RECIPE_TITLE, U.USER_NICKNAME, R.RECIPE_WRITE_DATE, P.PHOTO_LOCAL, P.PHOTO_ORIGINAL
+        ORDER BY goodCount DESC, R.RECIPE_WRITE_DATE DESC
+    </select>
+
+    <!-- 챗봇레시피 상세페이지 (MySQL 8.0+ 호환, 사진 조회 수정) -->
+    <select id="selectChatBotRecipeDetail" resultType="ChatBotRecipeDetailDTO">
+        SELECT R.RECIPE_NUMBER,
+               R.RECIPE_TITLE,
+               R.RECIPE_TYPE,
+               R.RECIPE_TEXT,
+               DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS recipeWriteDate, -- TO_CHAR -> DATE_FORMAT
+               U.USER_NICKNAME,
+               -- 레시피 대표 사진 조회 (첫 번째 사진)
+               P.PHOTO_LOCAL,
+               COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount, -- DISTINCT 추가
+               R.USER_NUMBER,
+               U.PROFILE_PIC -- 작성자 프로필 사진
+        FROM DR_RECIPE R
+                 JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
+                 LEFT JOIN DR_GOOD G ON R.RECIPE_NUMBER = G.RECIPE_NUMBER
+                 LEFT JOIN (
+            -- 레시피의 첫 번째 사진 조회
+            SELECT PHOTO_LOCAL, RECIPE_NUMBER,
+                   ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) as RN
+            FROM DR_PHOTO
+            WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1 -- ROWNUM 대신 ROW_NUMBER 사용
+        WHERE R.RECIPE_NUMBER = #{recipeNumber}
+          AND R.RECIPE_TYPE = '챗봇레시피'
+        GROUP BY R.RECIPE_NUMBER, R.RECIPE_TITLE, R.RECIPE_TYPE, R.RECIPE_TEXT, R.RECIPE_WRITE_DATE,
+                 U.USER_NICKNAME, P.PHOTO_LOCAL, R.USER_NUMBER, U.PROFILE_PIC
+    </select>
+
+    <!-- 챗봇 레시피 상세페이지 추천 수 증가 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="ChatBotincreaseGoodCount" parameterType="ChatBotRecipeCommentDTO" useGeneratedKeys="true" keyProperty="goodNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_GOOD(RECIPE_NUMBER, USER_NUMBER, GOOD_DATE)
+        VALUES (#{recipeNumber}, #{userNumber}, NOW()) -- GOOD_DATE 추가
+    </insert>
+
+    <!-- 챗봇 레시피 상세페이지 추천 수 감소 (MySQL 호환) -->
+    <delete id="ChatBotdecreaseGoodCount" parameterType="ChatBotRecipeCommentDTO">
+        DELETE
+        FROM DR_GOOD
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+          AND USER_NUMBER = #{userNumber}
+    </delete>
+
+    <!-- 챗봇레시피상세페이지 댓글조회 (MySQL 호환, 사진 조회 수정) -->
+    <select id="selectChatBotRecipeComment" parameterType="Long" resultType="ChatBotRecipeCommentDTO">
+        SELECT RP.REPLY_NUMBER      AS replyNumber,
+               U.USER_NICKNAME      AS userNickName,
+               RP.REPLY_WRITE_DATE  AS replyWriteDate,
+               RP.REPLY_MODIFY_DATE AS replyModifyDate,
+               RP.REPLY_TEXT        AS replyText,
+               U.PROFILE_PIC        AS photoLocal -- 댓글 작성자의 프로필 사진 (DR_USER.PROFILE_PIC 사용)
+        FROM DR_REPLY RP
+                 JOIN
+             DR_USER U ON RP.USER_NUMBER = U.USER_NUMBER
+                 -- LEFT JOIN DR_PHOTO P ON U.USER_NUMBER = P.USER_NUMBER -- 불필요한 조인 제거
+                 JOIN
+             DR_RECIPE R ON RP.RECIPE_NUMBER = R.RECIPE_NUMBER -- 이 조인도 WHERE 조건으로 충분하면 제거 가능
+        WHERE RP.RECIPE_NUMBER = #{recipeNumber}
+        ORDER BY RP.REPLY_WRITE_DATE DESC
+    </select>
+
+    <!-- 챗봇 레시피 댓글 작성 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertChatBotReply" parameterType="ChatBotRecipeCommentDTO" useGeneratedKeys="true" keyProperty="replyNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_REPLY(REPLY_TEXT, RECIPE_NUMBER, USER_NUMBER, REPLY_WRITE_DATE)
+        VALUES (#{replyText}, #{recipeNumber}, #{userNumber}, NOW()) -- REPLY_WRITE_DATE 추가
+    </insert>
+
+    <!-- 챗봇 레시피 댓글 수정 (MySQL 호환: SYSDATE -> NOW()) -->
+    <update id="updateChatBotReply" parameterType="ChatBotRecipeCommentDTO">
+        UPDATE DR_REPLY
+        SET REPLY_TEXT        = #{replyText},
+            REPLY_MODIFY_DATE = NOW() -- SYSDATE -> NOW()
+        WHERE REPLY_NUMBER = #{replyNumber}
+    </update>
+
+    <!-- 챗봇 레시피 댓글 삭제 (MySQL 호환) -->
+    <delete id="deleteChatBotReply" parameterType="Long">
+        DELETE
+        FROM DR_REPLY
+        WHERE REPLY_NUMBER = #{replyNumber}
+    </delete>
+
+    <!-- ================================================= -->
+    <!-- ============ 레시피 공통 (Common Recipe) ========== -->
+    <!-- ================================================= -->
+
+    <!-- 나만의레시피 글쓰기 (MySQL 호환: AUTO_INCREMENT, SYSDATE -> NOW()) -->
+    <insert id="insertMyRecipe" parameterType="MyRecipeWriteDTO" useGeneratedKeys="true" keyProperty="recipeNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_RECIPE (
+        USER_NUMBER, RECIPE_TITLE, RECIPE_TEXT, RECIPE_TYPE, RECIPE_WRITE_DATE
+        ) VALUES (
+        #{userNumber}, #{recipeTitle}, #{recipeText}, '나만의레시피', NOW() -- recipeType 직접 명시, SYSDATE -> NOW()
+        )
+    </insert>
+
+    <!-- 레시피 사진 테이블 추가 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertMyPhoto" parameterType="RecipePhotoDTO" useGeneratedKeys="true" keyProperty="photoNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_PHOTO (
+        PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE , RECIPE_NUMBER, PHOTO_UPLOAD_DATE -- PHOTO_UPLOAD_DATE 추가
+        ) VALUES (
+        #{photoOriginal}, #{photoLocal}, #{photoSize} ,  #{recipeNumber}, NOW()
+        )
+    </insert>
+
+    <!-- 챗봇 레시피 데이터 삽입 (MySQL 호환: AUTO_INCREMENT, SYSDATE -> NOW()) -->
+    <insert id="insertChatBotRecipe" parameterType="ChatBotRecipeWriteDTO" useGeneratedKeys="true" keyProperty="recipeNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_RECIPE (
+        USER_NUMBER, RECIPE_TITLE, RECIPE_TEXT, RECIPE_TYPE, RECIPE_WRITE_DATE
+        ) VALUES (
+        #{userNumber}, #{recipeTitle}, #{recipeText}, '챗봇레시피', NOW() -- recipeType 직접 명시, SYSDATE -> NOW()
+        )
+    </insert>
+
+    <!-- 챗봇 레시피 사진 삽입 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertChatBotPhoto" parameterType="RecipePhotoDTO" useGeneratedKeys="true" keyProperty="photoNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_PHOTO (
+        PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE , RECIPE_NUMBER, PHOTO_UPLOAD_DATE -- PHOTO_UPLOAD_DATE 추가
+        ) VALUES (
+        #{photoOriginal}, #{photoLocal}, #{photoSize} ,  #{recipeNumber}, NOW()
+        )
+    </insert>
+
+    <!-- 환경기여 점수 INSERT (글쓰기 시 10점 추가) (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertScoreByRecipe" parameterType="ScoreCheckDTO" useGeneratedKeys="true" keyProperty="scoreNumber">
+        <!-- <selectKey> 제거 -->
+        <!-- 컬럼명 확인: SCORE_GET -->
+        INSERT INTO DR_SCORE (USER_NUMBER, SCORE_GET, SCORE_DATE, SCORE_REASON)
+        VALUES (#{userNumber}, #{scoreGet}, NOW(), '레시피 작성') -- SCORE_DATE, SCORE_REASON 추가
+    </insert>
+
+    <!-- 나만의 레시피 추천받았을 시 점수 5점추가 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="insertScorerecommand" parameterType="ScoreCheckDTO" useGeneratedKeys="true" keyProperty="scoreNumber">
+        <!-- <selectKey> 제거 -->
+        <!-- 컬럼명 확인: SCORE_GET -->
+        INSERT INTO DR_SCORE (USER_NUMBER, SCORE_GET, SCORE_DATE, SCORE_REASON)
+        VALUES (#{userNumber}, #{scoreGet}, NOW(), '레시피 추천 받음') -- SCORE_DATE, SCORE_REASON 추가
+    </insert>
+
+    <!-- 나만의 레시피 추천해제 시 점수 5점 제거 (삭제) (MySQL 호환) -->
+    <delete id="deleteScorerecommand" parameterType="ScoreCheckDTO">
+        DELETE FROM DR_SCORE
+        WHERE SCORE_NUMBER = (
+            -- 가장 최근에 추가된 '레시피 추천 받음' 5점 기록 찾기
+            SELECT SCORE_NUMBER
+            FROM DR_SCORE
+            WHERE USER_NUMBER = #{userNumber} AND SCORE_GET = 5 AND SCORE_REASON = '레시피 추천 받음'
+            ORDER BY SCORE_DATE DESC, SCORE_NUMBER DESC
+            LIMIT 1
+            )
+    </delete>
+
+    <!-- 찜 추가 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="addSteam" parameterType="RecipeSteamDTO" useGeneratedKeys="true" keyProperty="steamNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_STEAM (RECIPE_NUMBER, USER_NUMBER, STEAM_DATE)
+        VALUES (#{recipeNumber}, #{userNumber}, NOW()) -- STEAM_DATE 추가
+    </insert>
+
+    <!-- 찜 삭제 (MySQL 호환) -->
+    <delete id="removeSteam" parameterType="RecipeSteamDTO">
+        DELETE
+        FROM DR_STEAM
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+          AND USER_NUMBER = #{userNumber}
+    </delete>
+
+    <!-- 신고페이지 (MySQL 호환: AUTO_INCREMENT) -->
+    <insert id="report" parameterType="RecipeReportDTO" useGeneratedKeys="true" keyProperty="sirenNumber">
+        <!-- <selectKey> 제거 -->
+        INSERT INTO DR_SIREN(SIREN_REASON, SIREN_TYPE , RECIPE_NUMBER , REPLY_NUMBER , USER_NUMBER, SIREN_DATE)
+        VALUES (#{sirenReason}, #{sirenType} , #{recipeNumber} , #{replyNumber} , #{userNumber}, NOW()) -- SIREN_DATE 추가
+    </insert>
+
+    <!-- 나만의 레시피 삭제 (레시피) (MySQL 호환) -->
+    <delete id="deleteRecipe" parameterType="Long">
+        DELETE FROM DR_RECIPE WHERE RECIPE_NUMBER = #{recipeNumber}
+    </delete>
+
+    <!-- 나만의 레시피 삭제 (사진) (MySQL 호환) -->
+    <delete id="deletePhoto" parameterType="Long">
+        DELETE FROM DR_PHOTO WHERE RECIPE_NUMBER = #{recipeNumber}
+    </delete>
+
+    <!-- 챗봇 레시피 삭제 (레시피) (MySQL 호환) -->
+    <delete id="deleteChatBotRecipe" parameterType="Long">
+        DELETE FROM DR_RECIPE WHERE RECIPE_NUMBER = #{recipeNumber}
+    </delete>
+
+    <!-- 챗봇 레시피 삭제 (사진) (MySQL 호환) -->
+    <delete id="deleteChatBotPhoto" parameterType="Long">
+        DELETE FROM DR_PHOTO WHERE RECIPE_NUMBER = #{recipeNumber}
+    </delete>
+
+    <!-- 나만의 레시피 업데이트 (레시피) (MySQL 호환) -->
+    <update id="updateRecipe" parameterType="MyRecipeUpdateDTO">
+        UPDATE DR_RECIPE
+        SET RECIPE_TITLE = #{recipeTitle},
+            RECIPE_TEXT = #{recipeText},
+            RECIPE_MODIFY_DATE = NOW() -- RECIPE_MODIFY_DATE 추가
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+    </update>
+
+    <!-- 나만의 레시피 업데이트 (사진) (MySQL 호환) -->
+    <!-- 참고: 보통 사진은 삭제 후 재등록. 업데이트 필요시 특정 사진 식별 필요 -->
+    <update id="updatePhoto" parameterType="MyRecipeUpdateDTO">
+        UPDATE DR_PHOTO
+        SET PHOTO_ORIGINAL = #{photoOriginal},
+        PHOTO_LOCAL = #{photoLocal},
+        PHOTO_SIZE = #{photoSize}
+        -- , PHOTO_UPLOAD_DATE = NOW() -- 업데이트 시간 기록?
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+        <!-- AND PHOTO_NUMBER = #{photoNumber}  특정 사진 업데이트 시 필요 -->
+    </update>
+
+    <!-- 챗봇 레시피 업데이트 (레시피) (MySQL 호환) -->
+    <update id="updateChatBotRecipe" parameterType="ChatBotRecipeUpdateDTO">
+        UPDATE DR_RECIPE
+        SET RECIPE_TITLE = #{recipeTitle},
+            RECIPE_TEXT = #{recipeText},
+            RECIPE_MODIFY_DATE = NOW() -- RECIPE_MODIFY_DATE 추가
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+    </update>
+
+    <!-- 챗봇 레시피 업데이트 (사진) (MySQL 호환) -->
+    <update id="updateChatBotPhoto" parameterType="ChatBotRecipeUpdateDTO">
+        UPDATE DR_PHOTO
+        SET PHOTO_ORIGINAL = #{photoOriginal},
+        PHOTO_LOCAL = #{photoLocal},
+        PHOTO_SIZE = #{photoSize}
+        -- , PHOTO_UPLOAD_DATE = NOW()
+        WHERE RECIPE_NUMBER = #{recipeNumber}
+        <!-- AND PHOTO_NUMBER = #{photoNumber} -->
+    </update>
+
+</mapper>

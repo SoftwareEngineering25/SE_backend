@@ -1,0 +1,309 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+main {
+    width: 1100px;
+    margin: 0 auto;
+    height: 900px;
+}
+
+li {
+    list-style: none;
+}
+
+.myPage-myPointTitleTop {
+    font-weight: bold;
+    text-align: center;
+    margin-top: 100px;
+    font-size: 35px;
+    margin-bottom: 55px;
+}
+
+
+/* ------- 왼쪽 마이페이지 메뉴바 ------*/
+
+#myPage-informationPage {
+    background-color: #ccc;
+    padding-top: 17px;
+    font-weight: bold;
+    font-size: 21px;
+}
+
+#myPage-informationeighth {
+    color: #EBAA39;
+}
+
+.myPage-lengthBar {
+    margin-top: 43px;
+}
+
+
+/* 마이페이지 메뉴 스타일 */
+
+.myPage-lengthBar div {
+    font-size: 17px;
+    margin: 25px 0;
+    text-align: left;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ccc;
+    width: 170px;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+
+/* 호버 시 글씨 색을 주황색으로 변경 */
+
+.myPage-lengthBar div:hover {
+    color: #EBAA39;
+    cursor: pointer;
+}
+
+
+/* 출석 체크의 보더선 제거 */
+
+.myPage-lengthBar div:last-child {
+    border-bottom: none;
+}
+
+
+/* -------왼쪽 마이페이지 메뉴바 ------ */
+
+.vertical-bar {
+    width: 2px;
+    height: 20px;
+    background-color: #333333;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.vertical-barSecond {
+    width: 1px;
+    height: 20px;
+    background-color: #333333;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.myPage-myPointTitleMain li {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid black;
+    border-bottom: 1px solid #424242;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.myPage-myPointMain {
+    display: flex;
+}
+
+.myPage-myPointTitle {
+    font-size: 25px;
+    font-weight: bold;
+    color: #525252;
+}
+
+.myPage-myPointTitleType {
+    font-size: 25px;
+    font-weight: bold;
+    color: #525252;
+}
+
+.myPage-myPointTitleContentType {
+    font-size: 22px;
+    font-weight: bold;
+    color: #525252;
+    width: 79px;
+}
+
+.myPage-myPointTitleDate {
+    font-size: 22px;
+    font-weight: bold;
+    color: #525252;
+    padding-right: 100px;
+}
+
+.myPage-myPointTitleContent {
+    font-size: 22px;
+    font-weight: bold;
+    color: #525252;
+    padding-right: 170px;
+}
+
+.myPage-myPointTitleMain {
+    padding-top: 45px;
+    padding-left: 50px;
+}
+
+.myPage-myPointTitleCause {
+    font-size: 22px;
+    font-weight: bold;
+    color: #525252;
+    margin-right: 165px;
+}
+
+.myPage-myPointTitleNumber {
+    font-size: 22px;
+    font-weight: bold;
+    color: #525252;
+    padding-right: 10px;
+}
+
+.myPage-myPointTitleNumberZero {
+    font-size: 20px;
+    color: #525252;
+    width: 54px;
+}
+
+.myPage-myPointTitleContentOne {
+    font-size: 20px;
+    color: #525252;
+    display: inline-block;
+    /* 또는 block */
+    width: 288px;
+    /* 원하는 너비 값 설정 */
+    white-space: nowrap;
+    /* 텍스트 줄 바꿈 방지 */
+    overflow: hidden;
+    /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis;
+    /* 넘치는 텍스트를 생략(...) 처리 */
+}
+
+.myPage-myPointTitleContentTypeTwo {
+    font-size: 20px;
+    color: #525252;
+    width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+.myPage-myPointTitleCauseThree {
+    font-size: 20px;
+    color: #525252;
+    width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+.myPage-myPointTitleDateFour {
+    font-size: 20px;
+    color: #525252;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.myPage-myPointTitleMainOne {
+    padding-left: 26px;
+}
+
+.myPage-myPointTitleMainOne li {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px dotted #424242;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.myPage-myPointTitleMainFinal {
+    padding-left: 50px;
+}
+
+.myPage-myPointTitleMainFinal li {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #424242;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
+/* 페이지 네이션 */
+
+#pagination {
+    position: relative;
+    top: -60px;
+}
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#pagination .paginationjs-pages {
+    display: flex;
+}
+
+#pagination .paginationjs-pages li {
+    list-style: none;
+    margin-right: 8px; /* 숫자 박스 간 간격 */
+    border-right: 1px solid #aaa; /* 기본 페이지 번호의 오른쪽 경계선 */
+}
+
+#pagination .paginationjs-pages li:last-child {
+    border-right: none; /* 마지막 페이지에는 오른쪽 경계선 제거 */
+    margin-right: 0; /* 마지막 페이지에도 오른쪽 여백 제거 */
+}
+
+#pagination .paginationjs-pages li a {
+    min-width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: block;
+    background: #fff;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#pagination .paginationjs-pages li a:hover {
+    background: #eee;
+}
+
+#pagination .paginationjs-pages li.active {
+    border-right: none; /* active 상태에서 오른쪽 경계선 없애기 */
+}
+
+#pagination .paginationjs-pages li.active a {
+    background: #317FF0; /* active 상태일 때 배경색 */
+    color: #fff; /* active 상태일 때 텍스트 색상 */
+}
+
+#pagination .paginationjs-pages li.disabled a {
+    opacity: 0.5;
+}
+
+/* >> 버튼 스타일 */
+#pagination .paginationjs-pages li.paginationjs-next {
+    border-right: 1px solid #aaa; /* >> 버튼에 오른쪽 경계선 추가 */
+}
+
+#pagination .paginationjs-go-input input[type="text"],
+#pagination .paginationjs-go-button input[type="button"] {
+    background: #317FF0; /* 버튼 배경색 */
+    color: #fff;
+    border: none; /* 버튼 보더 제거 */
+    border-radius: 5px;
+    padding: 0 8px;
+    height: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#pagination .paginationjs-go-button input[type="button"]:hover,
+#pagination .paginationjs-go-input input[type="text"]:hover {
+    background-color: #286bbd;
+}
