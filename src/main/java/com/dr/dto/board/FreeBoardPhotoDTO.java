@@ -10,13 +10,6 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class FreeBoardPhotoDTO {
-//    private Long photoNumber;
-//    private String photoOriginal;
-//    private String photoLocal;
-//    private String photoSize;
-//    private String photoUpload;
-//    private Long userNumber;
-//    private Long boardNumber;
     private Long photoNumber;
     private String photoOriginal;
     private String photoLocal;

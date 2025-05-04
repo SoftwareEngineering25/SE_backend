@@ -1,10 +1,7 @@
 package com.dr.config;
 
 import com.dr.domain.CustomOAuth2User;
-import com.dr.dto.user.KakaoUsersDTO;
-import com.dr.dto.user.UserSessionDTO;
 import com.dr.service.user.CustomOAuth2UserService;
-import com.dr.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

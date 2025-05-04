@@ -239,22 +239,7 @@ public class RecipeController {
                 // photoSizeLong은 null로 유지됨
             }
         }
-        recipePhotoDTO.setPhotoSize(photoSizeLong); // Long 타입 값을 DTO에 설정
-        // ---
-
-        // DR_PHOTO 테이블에 userNumber 컬럼이 있고 NOT NULL이라면, 여기서 userNumber를 설정해야 합니다.
-        // 만약 DR_PHOTO 테이블에 userNumber 컬럼이 있고 NOT NULL이라면, 이 줄의 주석을 해제하세요.
-        // recipePhotoDTO.setUserNumber(userNumber);
-
-        // DR_PHOTO 테이블에 RECIPE_NUMBER 컬럼이 있다면 DTO에도 설정해야 합니다.
-        // 이 값은 보통 레시피 게시글이 먼저 저장된 후 생성된 레시피 번호를 가져와서 사진 정보에 설정합니다.
-        // 이 부분은 saveRecipe 서비스 메소드 내부에서 처리될 가능성이 높습니다.
-        // 만약 컨트롤러에서 설정해야 한다면, 레시피 저장 후 반환되는 레시피 번호를 사용해야 합니다.
-
-
-        // 3. RecipeService 호출하여 레시피와 사진 저장
-        // saveRecipe 메소드에서 레시피를 먼저 저장하고 생성된 recipeNumber를
-        // recipePhotoDTO에 설정한 후 사진을 저장하는 로직이 포함되어야 합니다.
+        recipePhotoDTO.setPhotoSize(photoSizeLong);
         recipeService.saveRecipe(myRecipeWriteDTO, recipePhotoDTO);
 
         // 4. 성공 메시지 전달 후, 리디렉션
