@@ -4,9 +4,9 @@ name: Java CI with Gradle  # 워크플로우의 이름 (GitHub Actions 탭에 �
 
 on: # 워크플로우를 실행할 이벤트 트리거 설정
   push:
-    branches: [ "main", "develop" ] # main 또는 develop 브랜치에 push될 때 실행
+    branches: [ "master"] # main 또는 develop 브랜치에 push될 때 실행
   pull_request:
-    branches: [ "main", "develop" ] # main 또는 develop 브랜치로 pull request가 생성/업데이트될 때 실행
+    branches: [ "master"] # main 또는 develop 브랜치로 pull request가 생성/업데이트될 때 실행
 
 permissions: # 워크플로우 실행에 필요한 권한 (선택 사항, 기본값으로도 충분할 수 있음)
   contents: read
