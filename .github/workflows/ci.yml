@@ -59,7 +59,7 @@ jobs:
       - name: Apply database schema
         run: |
           echo "Applying database schema..."
-          mysql -h 127.0.0.1 -u root -p"$DB_ROOT_PASSWORD" SE < ./YOUR_SCHEMA_FILE_PATH # 실제 스키마 파일 경로로 수정
+          mysql -h 127.0.0.1 -u root -p"$DB_ROOT_PASSWORD" SE < src/main/resources/db/SE.sql # 실제 스키마 파일 경로로 수정
         env:
           DB_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
 
