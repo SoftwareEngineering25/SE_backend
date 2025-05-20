@@ -1,0 +1,25 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 6a61020f9ca172e1284f86a2743e6b98 # SecurityConfig에 하드코딩된 클라이언트 ID와 일치해야 함
+            client-secret: vPKEBYN2YpQIWThY79deYzO29qH6QEoi # 카카오 개발자 사이트에서 발급받은 Secret
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/SE?serverTimezone=UTC&characterEncoding=UTF-8
+      username: kimseonmin
+      password: 1234
+
+openai:
+  api:
+    key: sk-proj—mXp1ldv4HeHGhlfys2aUy90BOgU2BmwWuOlQq2tdhRr8cy0LJ1Jxc7o8aJ9wP15eidkQ0pZTWT3BlbkFJRzPzdP2onFdkNNBCY467ijuVWdbHU0ttY_APWZpx-A2zBLT3oLq5KX8XWYbSKMdg2ptwlMBgUA
+    url: https://api.openai.com/v1/chat/completions # 새로 추가
+coolsms:
+  api:
+    key: NCSBV849NEG60GKW # CoolSMS 웹사이트에서 발급받은 API Key
+    secret: J4726P0JAGUMVQROZIYVVUG7XSFFSTEH # CoolSMS 웹사이트에서 발급받은 API Secret
+    number: 010-4158-0566 # CoolSMS에 등록된 발신 번호 (하이픈 포함 또는 제외)
