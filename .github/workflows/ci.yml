@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+# .github/workflows/ci.yml
+# ... (이전 설정은 동일) ...
 
 jobs:
   build:
@@ -19,14 +21,18 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }} # 이것만 남겨봄
+          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          MYSQL_DATABASE: SE # 데이터베이스는 여기서 생성됨
+          MYSQL_USER: ${{ secrets.TEST_DB_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --silent"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -p${{ secrets.TEST_DB_PASSWORD }} --silent"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,13 +46,41 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Wait for MySQL to be ready # <--- MySQL 준비 대기 시간 추가
+        run: |
+          echo "Waiting for MySQL service to be ready..."
+          # apt-get update && apt-get install -y mysql-client # 필요시 mysql-client 설치
+          # 아래 healthcheck가 실패하면 이 스텝에서 오류 발생
+          timeout 60 bash -c 'until mysqladmin ping -h 127.0.0.1 -u root -p"$MYSQL_ROOT_PASSWORD_SECRET" --silent; do sleep 1; done'
+        env:
+          MYSQL_ROOT_PASSWORD_SECRET: ${{ secrets.TEST_DB_PASSWORD }}
+
+
+      - name: Create database schema # <--- 스키마 생성 스텝 추가
+        run: |
+          # mysql -h 127.0.0.1 -P 3306 -u ${{ secrets.TEST_DB_USERNAME }} -p${{ secrets.TEST_DB_PASSWORD }} SE < ./path/to/your/schema.sql
+          # 위 명령어는 로컬에 schema.sql 파일이 있다고 가정.
+          # 또는 아래처럼 직접 DDL 실행 (보안상 비밀번호 직접 노출 주의, 임시 테스트용)
+          # 스키마 파일 경로를 정확히 지정해야 합니다. (예: ./db/schema.sql)
+          # 만약 schema.sql 파일이 프로젝트 루트에 있다면:
+          # mysql -h 127.0.0.1 -P 3306 -u root -p${{ secrets.TEST_DB_PASSWORD }} SE < schema.sql
+          echo "Applying database schema..."
+          # 아래는 예시입니다. schema.sql 파일이 프로젝트 루트에 있다고 가정합니다.
+          # 실제 스키마 파일 경로로 수정하세요. (예: ./src/main/resources/schema.sql 또는 별도 db/schema.sql)
+          # 그리고 DROP DATABASE/CREATE DATABASE 부분은 서비스 컨테이너가 이미 SE 데이터베이스를 만들었으므로 제외하거나,
+          # 사용자에게 SE 데이터베이스에 대한 권한을 부여해야 할 수 있습니다.
+          # 가장 간단한 방법은 root 사용자로 접속하여 스키마를 실행하는 것입니다.
+          mysql -h 127.0.0.1 -u root -p"${{ secrets.TEST_DB_PASSWORD }}" SE < ./YOUR_SCHEMA_FILE.sql
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }} # 스키마 실행 시 루트 권한 필요할 수 있음
+
       - name: Build with Gradle
         env:
           SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/SE?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
           SPRING_DATASOURCE_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          SPRING_JPA_HIBERNATE_DDL_AUTO: validate # 또는 none (스키마를 직접 생성했으므로)
         run: |
           echo "DB URL: $SPRING_DATASOURCE_URL"
           echo "DB User: $SPRING_DATASOURCE_USERNAME"
-          # 비밀번호는 직접 출력하지 않는 것이 좋음
           ./gradlew build
