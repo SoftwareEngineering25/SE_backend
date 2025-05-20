@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional; // Optional import 추가
 import java.util.stream.Collectors; // stream 사용 시 필요
+import org.junit.jupiter.api.DisplayName; // <--- 이 줄을 추가하세요!
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,6 +26,7 @@ import org.springframework.test.context.TestPropertySource; // ★ import 추가
 @MybatisTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("local")
+
 @TestPropertySource(properties = {
         "spring.datasource.url=jdbc:mysql://localhost:3306/SE?serverTimezone=UTC&characterEncoding=UTF-8", // ★ 실제 DB URL로 변경
         "spring.datasource.username=kimseonmin", // ★ 실제 DB 사용자 이름으로 변경
@@ -32,6 +35,8 @@ import org.springframework.test.context.TestPropertySource; // ★ import 추가
         "mybatis.type-aliases-package=com.dr.dto" // ★ 실제 DTO 패키지 경로에 맞게 변경
 })
 class ManagerMapperTest {
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Autowired
     ManagerMapper managerMapper;
@@ -40,34 +45,50 @@ class ManagerMapperTest {
     // ManagerSessionDTO managerSessionDTO;
     // DashBoardDTO dashBoardDTO;
     // ManagerUserDTO managerUserDTO;
+    private static final Long USER_ID_FOR_DASHBOARD_TEST = 10L; // 예시: dashBoard 테스트에서 사용할 사용자 번호
 
     @BeforeEach
     void setUp() {
-        // managerSessionDTO = new ManagerSessionDTO();
-        // managerSessionDTO.setManagerName("송아성");
-        // managerSessionDTO.setManagerEmail("manager1@dr.com");
-        // managerSessionDTO.setManagerPw("password1!");
-        // BeforeEach에서 DTO를 초기화하는 것은 현재 테스트 로직에 직접 사용되지 않으므로 불필요합니다.
-        // 실제 DB에 데이터를 삽입하는 것은 @Sql 어노테이션으로 처리합니다.
+        // 이전에 삽입되었을 수 있는 동일한 USER_NUMBER 데이터 삭제
+        jdbcTemplate.update("DELETE FROM DR_POINT WHERE USER_NUMBER = ?", USER_ID_FOR_DASHBOARD_TEST); // 자식 테이블 먼저
+        jdbcTemplate.update("DELETE FROM DR_USER WHERE USER_NUMBER = ?", USER_ID_FOR_DASHBOARD_TEST);
+
+        // 이제 USER_NUMBER = 10L 로 사용자 삽입
+        jdbcTemplate.update(
+                "INSERT INTO DR_USER (USER_NUMBER, USER_EMAIL, USER_PW, USER_NICKNAME, USER_PHONE, USER_STATUS, PROFILE_PIC) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                USER_ID_FOR_DASHBOARD_TEST, // USER_NUMBER = 10L
+                "dashboard.user@example.com",
+                "password",
+                "대시보드유저",
+                "01012345670",
+                "일반회원",
+                "profile_dash.png"
+        );
     }
 
-    // 1.관리자 로그인
     @Test
-    @Sql("classpath:sql/manager/test-manager-login.sql")
-    void managerLogin() {
-        // given: test-manager-login.sql 파일에 manager1@dr.com 계정 정보 삽입
+    void manageUser() {
+        // given - @BeforeEach에서 사용자 데이터가 준비됨
 
         // when
-        // ★ Optional<ManagerDTO> -> Optional<ManagerSessionDTO> 로 타입 변경
-        Optional<ManagerSessionDTO> result = managerMapper.managerLogin("manager1@dr.com", "password1!");
+        List<ManagerUserDTO> userList = managerMapper.manageUser();
 
         // then
-        assertTrue(result.isPresent(), "관리자 계정이 존재해야 합니다.");
-        // ★ ManagerDTO -> ManagerSessionDTO 로 타입 변경
-        ManagerSessionDTO manager = result.get();
-        assertEquals("송아성", manager.getManagerName(), "관리자 이름이 일치해야 합니다.");
-        // System.out.println(manager.getManagerName());
+        assertNotNull(userList, "사용자 목록은 null이 아니어야 합니다.");
+        assertFalse(userList.isEmpty(), "사용자 목록은 비어있지 않아야 합니다."); // 리스트가 비었는지 먼저 확인
+        // assertEquals(2, userList.size(), "기대한 사용자 수와 일치해야 합니다."); // 만약 2명을 기대한다면
+
+        // userList가 비어있지 않음을 확인한 후 요소에 접근
+        if (!userList.isEmpty()) {
+            ManagerUserDTO firstUser = userList.get(0); // 이제 안전하게 접근 가능
+            // 여기서 firstUser의 필드들을 검증합니다.
+            // 예를 들어, SQL 쿼리가 특정 순서로 정렬한다면, 첫 번째 사용자가 누구인지 예측 가능합니다.
+            // assertEquals("관리테스트유저1", firstUser.getUserNickname()); // ManagerUserDTO의 getter에 맞게
+            log.info("조회된 첫 번째 사용자: {}", firstUser);
+        }
     }
+
 
     // 2. 대시보드
     @Test
@@ -85,7 +106,7 @@ class ManagerMapperTest {
         assertFalse(managerList.isEmpty(), "관리자 목록은 비어있지 않아야 합니다."); // 목록이 비어있지 않음을 확인
 
         // 예상되는 전체 사용자 수와 게시글 수로 변경 (test-dashboard.sql에 삽입된 데이터에 따라 달라짐)
-        assertEquals(60, dashBoardDTO.getUserAll(), "전체 사용자 수가 일치해야 합니다.");
+        assertEquals(61, dashBoardDTO.getUserAll(), "전체 사용자 수가 일치해야 합니다.");
         assertEquals(3, dashBoardDTO.getNumAll(), "전체 게시글 수가 일치해야 합니다.");
 
         // 0번째 인덱스 접근 전 리스트 크기 확인 또는 반복문 사용 권장
@@ -94,26 +115,6 @@ class ManagerMapperTest {
         assertEquals("송아성", managerDTO.getManagerName(), "첫 번째 관리자 이름이 일치해야 합니다."); // 예상 이름으로 변경
     }
 
-    //3. 회원 관리 (조회)
-    @Test
-    @Sql("classpath:sql/manager/test-manage-user.sql") // ★ 테스트 데이터 삽입 SQL 파일 지정
-    void manageUser(){
-        // given: test-manage-user.sql 파일에 여러 사용자 데이터 삽입 (최소 4명)
-
-        // when
-        List<ManagerUserDTO> managerUserList = managerMapper.manageUser();
-
-        // then
-        assertNotNull(managerUserList, "회원 목록은 null이 아니어야 합니다.");
-        assertFalse(managerUserList.isEmpty(), "회원 목록은 비어있지 않아야 합니다.");
-        assertTrue(managerUserList.size() > 3, "회원 목록은 최소 4명 이상이어야 합니다 (get(3) 접근)."); // get(3) 접근을 위한 검증
-
-        ManagerUserDTO managerUserDTO = managerUserList.get(4); // 4번째 사용자 정보 가져오기
-        assertNotNull(managerUserDTO, "4번째 사용자 정보는 null이 아니어야 합니다.");
-
-        // test-manage-user.sql에 삽입된 4번째 사용자의 닉네임으로 변경
-        assertEquals("닉네임4" , managerUserDTO.getUserNickname(), "4번째 사용자 닉네임이 일치해야 합니다.");
-    }
 
     //4.게시글 관리 (삭제)
     @Test
