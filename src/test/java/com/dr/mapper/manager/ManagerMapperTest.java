@@ -96,7 +96,6 @@ class ManagerMapperTest {
     void dashBoard() {
         // given: test-dashboard.sql 파일에 대시보드 정보 계산에 필요한 데이터 삽입 (예: 사용자 수, 게시글 수 등)
 
-        // when
         DashBoardDTO dashBoardDTO = managerMapper.dashBoardInfo();
         List<ManagerDTO> managerList = managerMapper.managerInfo();
 
