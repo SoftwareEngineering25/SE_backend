@@ -15,14 +15,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services: # <--- services 섹션의 올바른 위치! (steps 위, job 바로 아래)
+    services:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          MYSQL_DATABASE: SE
-          MYSQL_USER: ${{ secrets.TEST_DB_USERNAME }}
-          MYSQL_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }} # 이것만 남겨봄
         ports:
           - 3306:3306
         options: >-
@@ -30,7 +27,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
