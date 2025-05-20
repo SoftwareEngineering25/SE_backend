@@ -20,4 +20,5 @@ public class PointShopDTO {
     private Long quantity;
     private String userPhone;
     private Long totalCost;
+    private String pointNote; // 이전 답변에서 추가 제안했던 필드
 }

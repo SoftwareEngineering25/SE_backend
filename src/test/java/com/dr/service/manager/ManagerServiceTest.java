@@ -2,6 +2,8 @@ package com.dr.service.manager;
 
 import com.dr.dto.manager.*;
 import com.dr.mapper.manager.ManagerMapper;
+import com.dr.dto.manager.ManagerUserDTO; // 필요한 DTO import
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,11 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +24,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ManagerServiceTest {
 
-    @InjectMocks
     private ManagerService managerService; // 서비스 클래스
 
     @Mock
@@ -34,7 +31,8 @@ class ManagerServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Mock 객체 초기화
+        MockitoAnnotations.openMocks(this); // @Mock으로 선언된 필드(managerMapper)를 초기화
+        managerService = new ManagerService(managerMapper); // 생성자를 통해 Mock 객체(managerMapper)를 주입하여 managerService 인스턴스 생성
     }
 
     // 1. 관리자 로그인
@@ -80,21 +78,28 @@ class ManagerServiceTest {
         ManagerDTO actualManagerDTO = managerList.get(0); // 0번째 인덱스 가져오기
         assertEquals(expectedManagerDTO.getManagerName(), actualManagerDTO.getManagerName()); // 관리자 이름 비교
     }
-
     // 3. 회원 관리
     @Test
-    public void manageUser(){
+    public void manageUser() {
         ManagerUserDTO managerUserDTO = new ManagerUserDTO();
-        managerUserDTO.setUserEmail("manager1@dr.com");
+        // managerUserDTO.setUserEmail("manager1@dr.com"); // 필요하다면 설정
 
-        doReturn(List.of(managerUserDTO)).when(managerMapper).manageUser();
+        List<ManagerUserDTO> expectedList = List.of(managerUserDTO);
+        // Mocking 설정: managerMapper의 manageUser()가 호출되면 expectedList를 반환하도록
+        doReturn(expectedList).when(managerMapper).manageUser();
 
+        // when: 서비스 메소드 호출
         List<ManagerUserDTO> userLists = managerService.manageUser();
 
-        assertNotNull(userLists);
+        // then
+        // 1. managerMapper의 manageUser() 메소드가 정확히 1번 호출되었는지 검증
+        verify(managerMapper, times(1)).manageUser();
 
-        ManagerUserDTO userList  = userLists.get(0);
-        assertEquals(managerUserDTO.getUserEmail(), userList.getUserEmail());
+        // 2. 반환된 리스트가 null이 아니고, 기대한 내용을 포함하는지 검증
+        assertNotNull(userLists);
+        assertFalse(userLists.isEmpty(), "사용자 목록은 비어있지 않아야 합니다.");
+        assertEquals(1, userLists.size(), "반환된 리스트의 크기는 1이어야 합니다.");
+        assertSame(managerUserDTO, userLists.get(0), "반환된 객체는 Mocking 시 사용한 객체와 동일해야 합니다.");
     }
 
     // 4. 게시글 관리 (삭제)

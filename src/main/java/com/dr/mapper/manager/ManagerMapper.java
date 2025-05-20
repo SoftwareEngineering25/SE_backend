@@ -67,7 +67,8 @@ public interface ManagerMapper {
     void productUpdate(ManagerRegisterDTO managerRegisterDTO);
 
     // 상품 등록
-    void registerProduct(ManagerRegisterDTO managerRegisterDTO);
+    int registerProduct(ManagerRegisterDTO product);
+
 
     // 상품 사진
     void registerPhoto(ManagerPhotoDTO managerPhotoDTO);

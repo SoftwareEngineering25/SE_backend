@@ -23,5 +23,8 @@ public interface PointShopMapper {
     void insertUsePoint(PointShopDTO pointShopDTO);
 
     //유저에게 전송한 상품코드 삭제
-    void deleteCode(PointShopDTO pointShopDTO);
+    int deleteCode(PointShopDTO pointShopDTO);
+
+    int insertUserPoint(PointShopDTO pointShopDTO);
+
 }

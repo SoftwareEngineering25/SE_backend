@@ -2,41 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dr.mapper.main.SearchMapper">
 
-    <!-- 게시판 검색 결과 조회 (MySQL 호환) -->
     <select id="getBoardSearch" parameterType="SearchDTO" resultType="SearchDTO">
         SELECT
         B.BOARD_NUMBER,
         B.BOARD_TYPE,
-        B.BOARD_TITLE,                                  -- 제목
-        U.USER_NICKNAME,                                -- 작성자
+        B.BOARD_TITLE,
+        U.USER_NICKNAME,
         (SELECT COUNT(*)
         FROM DR_GOOD G
-        WHERE G.BOARD_NUMBER = B.BOARD_NUMBER) AS GOOD_COUNT, -- 추천수 (서브쿼리 유지)
-        DATE_FORMAT(B.BOARD_WRITE_DATE, '%Y-%m-%d') AS BOARD_WRITE_DATE -- 작성일 형식 변경
+        WHERE G.BOARD_NUMBER = B.BOARD_NUMBER) AS GOOD_COUNT,
+        DATE_FORMAT(B.BOARD_WRITE_DATE, '%Y-%m-%d') AS BOARD_WRITE_DATE
         FROM
         DR_BOARD B
         JOIN
         DR_USER U ON B.USER_NUMBER = U.USER_NUMBER
         WHERE
-        B.BOARD_TITLE LIKE CONCAT('%', #{searchValue}, '%') -- 문자열 연결 함수 변경
+        B.BOARD_TITLE LIKE CONCAT('%', #{searchValue}, '%')
         AND B.BOARD_TYPE = #{searchType}
-        <!-- 필요시 ORDER BY 추가 -->
         ORDER BY B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 레시피 검색 결과 조회 (MySQL 호환) -->
-    <!-- 참고: ROW_NUMBER() 윈도우 함수는 MySQL 8.0 이상에서 지원됩니다. -->
     <select id="getRecipeSearch" parameterType="SearchDTO" resultType="SearchDTO">
         SELECT
         R.RECIPE_NUMBER,
         R.RECIPE_TYPE,
-        R.RECIPE_TITLE,                                     -- 제목
-        U.USER_NICKNAME,                                    -- 작성자
-        DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS RECIPE_WRITE_DATE, -- 작성일 형식 변경
-        P.PHOTO_LOCAL,                                      -- 썸네일 경로
+        R.RECIPE_TITLE,
+        U.USER_NICKNAME,
+        DATE_FORMAT(R.RECIPE_WRITE_DATE, '%Y-%m-%d') AS RECIPE_WRITE_DATE,
+        P.PHOTO_LOCAL,
         (SELECT COUNT(*)
         FROM DR_GOOD G
-        WHERE G.RECIPE_NUMBER = R.RECIPE_NUMBER) AS GOOD_COUNT -- 추천수 (서브쿼리 유지)
+        WHERE G.RECIPE_NUMBER = R.RECIPE_NUMBER) AS GOOD_COUNT
         FROM
         DR_RECIPE R
         JOIN
@@ -45,15 +41,14 @@
         SELECT
         PHOTO_LOCAL,
         RECIPE_NUMBER,
-        ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN -- MySQL 8.0+ 지원
+        ROW_NUMBER() OVER (PARTITION BY RECIPE_NUMBER ORDER BY PHOTO_NUMBER ASC) AS RN
         FROM
         DR_PHOTO
-        WHERE RECIPE_NUMBER IS NOT NULL -- 레시피 사진만 대상으로 함 (명시적 추가)
-        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1 -- 각 레시피의 첫 번째 사진(썸네일)만 조인
+        WHERE RECIPE_NUMBER IS NOT NULL
+        ) P ON R.RECIPE_NUMBER = P.RECIPE_NUMBER AND P.RN = 1
         WHERE
-        R.RECIPE_TITLE LIKE CONCAT('%', #{searchValue}, '%') -- 문자열 연결 함수 변경
+        R.RECIPE_TITLE LIKE CONCAT('%', #{searchValue}, '%')
         AND R.RECIPE_TYPE = #{searchType}
-        <!-- 필요시 ORDER BY 추가 -->
         ORDER BY R.RECIPE_WRITE_DATE DESC
     </select>
 

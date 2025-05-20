@@ -33,6 +33,7 @@ public class SecurityConfig {
         // --- authorizeHttpRequests 블록 수정 ---
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/board/freeBoardWriteOk").authenticated()
+                .requestMatchers(HttpMethod.POST, "/manager/managerLogin").permitAll() // 관리자 로그인 URL 허용
                 .requestMatchers("/board/freeBoardWrite").authenticated() // 예시: GET 요청으로 폼 페이지 접근 시
                 .anyRequest().permitAll()
         );

@@ -1,0 +1,5 @@
+-- 상품 관리 (등록) 테스트를 위한 데이터 삽입
+-- 이 테스트는 INSERT 자체를 검증하므로, 사전에 필요한 데이터는 없습니다.
+-- 파일이 비어있으면 'script must not be null or empty' 오류가 발생할 수 있으므로 주석만 남깁니다.
+-- No setup data needed for registerProduct test.
+-- The test itself inserts the product.

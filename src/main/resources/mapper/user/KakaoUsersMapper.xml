@@ -2,33 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dr.mapper.user.KakaoUsersMapper">
 
-    <!-- 사용자 정보 조회 (MySQL 호환) -->
     <select id="findByProviderId" resultType="KakaoUsersDTO">
         SELECT USER_NUMBER, USER_EMAIL, USER_NICKNAME, USER_PHONE, PROVIDER, PROVIDER_ID, PROFILE_PIC
         FROM DR_USER
-        WHERE PROVIDER_ID = #{providerId} -- 컬럼명 대소문자 확인 (PROVIDER_ID)
+        WHERE PROVIDER_ID = #{providerId}
     </select>
 
-    <!-- 사용자 정보 저장 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="insertKakaoUser" parameterType="KakaoUsersDTO" useGeneratedKeys="true" keyProperty="userNumber">
-        <!-- <selectKey> 제거 -->
         INSERT INTO DR_USER (
         USER_EMAIL, USER_PW, USER_NICKNAME, USER_PHONE,
-        PROVIDER, PROVIDER_ID, PROFILE_PIC, USER_STATUS -- USER_STATUS 추가 (기본값 또는 '구글회원' 등)
+        PROVIDER, PROVIDER_ID, PROFILE_PIC, USER_STATUS
         )
         VALUES (
         #{accountEmail}, #{userPw}, #{name}, #{phone},
-        #{provider}, #{providerId}, #{profilePic}, '구글회원' -- USER_STATUS 값 설정 (예시)
+        #{provider}, #{providerId}, #{profilePic}, '구글회원'
         )
-        <!-- 참고: USER_PW 컬럼이 NOT NULL이면 임의의 값 또는 해싱된 값 필요 -->
-        <!-- 참고: USER_GENDER, USER_BIRTH 등 NOT NULL 컬럼이 있다면 값 설정 필요 -->
     </insert>
 
-    <!-- 사용자 정보 업데이트 (MySQL 호환) -->
     <update id="updateUser" parameterType="KakaoUsersDTO">
         UPDATE DR_USER
         SET PROFILE_PIC = #{profilePic}
-        WHERE PROVIDER_ID = #{providerId} -- 컬럼명 대소문자 확인 (PROVIDER_ID)
+        WHERE PROVIDER_ID = #{providerId}
     </update>
 
 </mapper>

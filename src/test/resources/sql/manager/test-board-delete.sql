@@ -1,0 +1,15 @@
+
+DELETE FROM DR_USER WHERE USER_NUMBER IN (1); -- 이 스크립트에서 사용할 USER_NUMBER들
+
+INSERT INTO DR_USER (USER_NUMBER, USER_EMAIL, USER_PW, USER_NICKNAME, USER_PHONE, USER_STATUS) VALUES (1, 'user1@example.com', 'pw1', '닉네임1', '010-1111-1111', '일반회원');
+
+-- 삭제 대상 게시글 (boardNumber = 82)
+INSERT INTO DR_BOARD (BOARD_NUMBER, USER_NUMBER, BOARD_TITLE, BOARD_TEXT, BOARD_WRITE_DATE, BOARD_TYPE)
+VALUES (82, 1, '삭제될 게시글 제목', '삭제될 게시글 내용입니다.', NOW(), '자유게시판');
+
+-- 삭제되지 않을 다른 게시글 (showBoard() 결과에 포함될 것)
+INSERT INTO DR_BOARD (BOARD_NUMBER, USER_NUMBER, BOARD_TITLE, BOARD_TEXT, BOARD_WRITE_DATE, BOARD_TYPE)
+VALUES (83, 1, '다른 게시글 제목1', '다른 게시글 내용1입니다.', NOW(), '자유게시판');
+
+INSERT INTO DR_BOARD (BOARD_NUMBER, USER_NUMBER, BOARD_TITLE, BOARD_TEXT, BOARD_WRITE_DATE, BOARD_TYPE)
+VALUES (84, 1, '다른 게시글 제목2', '다른 게시글 내용2입니다.', NOW(), '꿀팁게시판');

@@ -41,7 +41,4 @@ class MyPageControllerTest {
         // 출력
         System.out.println("테스트 결과: " + result);
     }
-
-
-
 }

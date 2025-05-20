@@ -1,7 +1,9 @@
+/* --- 기본 리셋 및 설정 --- */
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans KR', sans-serif;
+    box-sizing: border-box; /* box-sizing 추가 */
+    font-family: 'Noto Sans KR', sans-serif; /* 기본 폰트 유지 */
 }
 
 a {
@@ -9,223 +11,419 @@ a {
     color: inherit;
 }
 
-a:visited {
-    color: inherit;
+/* --- 전체 페이지 레이아웃 --- */
+body {
+    background-color: #FFFFFF; /* 목표 디자인의 Homepage 배경 */
 }
 
-a:hover,
-a:focus,
-a:active {
-    color: inherit;
-    outline: none;
+main {
+    max-width: 1440px; /* 목표 디자인 Homepage 너비 */
+    margin: 0 auto; /* 페이지 가운데 정렬 */
+    padding: 20px;  /* 전체적인 좌우 여백 */
 }
 
-
-/* 메인섹션 */
-.main-section1Container {
+/* --- 공통 섹션 프레임 --- */
+.main-section1Container,
+.section-row, /* 가로 배치를 위한 새로운 래퍼 */
+.main-section3Container, /* 음쓰 계산기 전체 컨테이너 */
+.environmental-impact-container /* 온실가스/에너지 소비량 섹션 */ {
     width: 100%;
-    height: 700px;
+    margin-bottom: 40px; /* 섹션 간의 하단 여백 */
+}
+
+.main-section1Frame,
+.main-section2Frame,
+.main-section3Frame, /* 음쓰 계산기 내부 프레임 */
+.main-section4Frame, /* 음쓰에 대하여 내부 프레임 */
+.calculator-box, /* 음쓰 계산기 좌측 박스 */
+.cost-box /* 예상 처리 비용 우측 박스 */ {
+    padding: 20px; /* 내부 여백 */
+    border-radius: 8px; /* 목표 디자인 카드형 UI */
+    background-color: #FFFFFF; /* 기본 배경색 */
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 카드형 그림자 (선택 사항) */
+}
+
+
+/* --- 섹션 1: 슬로건 --- */
+.main-section1Container {
     display: flex;
     justify-content: center;
+    text-align: center; /* 내부 텍스트 가운데 정렬 */
+    padding-top: 40px; /* 헤더와의 간격 */
 }
 
 .main-section1Frame {
-    width: 1100px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+    /* 기존 스타일 유지 또는 필요시 수정 */
 }
 
 #main-refrigerator {
-    width: 500px;
-    height: 300px;
-    margin-top: 50px;
+    width: 100%; /* 부모 너비에 맞춤 */
+    max-width: 300px; /* 최대 크기 제한 (기존 500px은 너무 클 수 있음) */
+    height: auto;
+    margin-top: 0; /* 상단 여백 조정 */
+    margin-bottom: 20px;
 }
 
 #main-logoFont {
-    width: 250px;
+    width: 100%;
+    max-width: 400px; /* 목표 디자인의 "맛있는 재활용" 텍스트 로고 크기 */
+    height: auto;
+    margin-bottom: 10px;
 }
 
 .main-slogan {
-    font-weight: bold;
-    font-size: 21px;
-    letter-spacing: 1px;
-    line-height: 1.6;
-    color: #424242;
+    font-family: 'Oi', cursive; /* 목표 디자인 폰트 (HTML에 링크 필요) */
+    font-size: 32px; /* 목표 디자인 60px은 너무 큼, 반응형 고려 */
+    line-height: 1.3;
+    color: #D7DD37; /* 목표 디자인 색상 */
+    font-weight: normal; /* Oi 폰트는 기본적으로 두꺼움 */
+    letter-spacing: -0.02em;
+    margin-bottom: 15px;
 }
 
 .main-ourcesFrom {
-    position: relative;
-    left: 100px;
-    margin-top: 20px;
+    font-size: 12px; /* 목표 디자인 폰트 크기 유지 */
+    color: #757575; /* 글자색 약간 어둡게 */
+    line-height: 1.6;
+    margin-top: 10px;
+    /* position, left 제거하고 text-align으로 제어 */
+}
+
+/* --- 가로 배치 레이아웃을 위한 래퍼 --- */
+.section-row {
+    display: flex;
+    gap: 30px; /* 섹션 사이의 간격 */
+    align-items: flex-start; /* 높이가 다른 섹션 상단 정렬 */
+}
+
+.section-column { /* section-row 내부의 각 컬럼 */
+    flex: 1; /* 가능한 공간을 균등하게 분배 */
+    min-width: 0; /* flex item이 내용물보다 작아질 수 있도록 */
+}
+
+
+/* --- 섹션 2: 음쓰 NOW --- */
+.main-section2Container { /* 이 클래스는 section-column 내부에서 사용될 것 */
+    /* background-color: #FFD507; 기존 노란색 배경 제거 (개별 섹션 프레임에 적용) */
+}
+.main-section2Frame { /* 음쓰 NOW 카드 */
+    background-color: #FFFFFF; /* 흰색 배경 */
+    /* padding, border-radius 등은 공통 프레임 스타일 상속 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-sectionTitle {
+    font-size: 28px; /* 목표 디자인 25px 또는 36px 참고 */
+    color: #1E1E1E; /* 목표 디자인 색상 */
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.main-titleText { /* '쓰' 글자 */
+    color: #F44336; /* 기존 스타일 유지 */
+}
+#main-titleNotice {
+    font-size: 13px; /* 목표 디자인 Text Small 참고 */
+    color: #757575;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.main-sectionSubTitle {
+    font-size: 16px; /* 목표 디자인 Text Small 참고 */
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.main-sectionInfo span {
+    font-size: 14px; /* 목표 디자인 Text Strong 참고 */
+    color: #E53935; /* 빨간색 강조 */
+    font-weight: bold;
+}
+#myChart { /* 차트 크기 */
+    margin-bottom: 20px;
+}
+#main-monthSelect { /* 드롭다운 스타일 */
+    width: 100%;
+    max-width: 180px; /* 최대 너비 */
+    height: auto;
+    padding: 10px;
+    font-size: 16px; /* 목표 디자인 16px */
+    border: 1px solid #D9D9D9; /* 목표 디자인 테두리 */
+    border-radius: 8px; /* 목표 디자인 radius */
+    background-color: #FFFFFF;
+    color: #1E1E1E;
+    box-shadow: none; /* 기존 그림자 제거 */
+    margin-bottom: 15px;
+}
+#main-amountText {
+    font-size: 14px; /* 목표 디자인 Text Small 참고 */
+    color: #757575;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.main-section2Frame > p { /* 전국적으로... 텍스트 */
+    font-size: 13px;
+    color: #757575;
+}
+.main-section2Frame > p span { /* 빨간색 강조 */
+    color: #E53935;
+    font-weight: bold;
+}
+/* 음쓰 NOW 섹션의 지역별 범례 스타일 추가 필요 (HTML에 없음) */
+.region-legend-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 20px; /* 행간, 열간 간격 */
+    margin-top: 15px;
     font-size: 13px;
 }
-
-.main-section2Container,
-.main-section3Container,
-.main-section4Container {
-    width: 100%;
-    height: 1462px;
-    background-color: #FFD507;
-    display: flex;
-    justify-content: center;
-}
-
-.main-section2Container {
-    height: 1130px;
-}
-
-.main-section2Frame,
-.main-section3Frame,
-.main-section4Frame {
-    width: 1100px;
-    padding: 54px 9px 0 9px;
+.legend-item {
     display: flex;
     align-items: center;
+}
+.legend-color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+
+/* --- 섹션 4: 음쓰에 대하여 (유튜브) --- */
+.main-section4Container { /* 이 클래스는 section-column 내부에서 사용될 것 */
+    /* background-color: #FFD507; 기존 노란색 배경 제거 */
+}
+.main-section4Frame { /* 음쓰에 대하여 카드 */
+    background-color: rgba(255, 199, 0, 0.65); /* 목표 디자인 노란색 배경 */
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    padding-top: 20px; /* 제목 위 여백 */
+}
+.main-section4Frame .main-sectionTitle { /* 제목 스타일 재정의 */
+    color: #1E1E1E;
+    margin-bottom: 15px;
+}
+#main-player { /* 유튜브 영상 */
+    width: 100%; /* 부모 너비에 맞춤 */
+    aspect-ratio: 16 / 9; /* 영상 비율 유지 */
+    max-height: 400px; /* 최대 높이 (선택 사항) */
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: none; /* 기존 그림자 제거 */
+    margin-top: 0;
+}
+/* "유튜브 영상 예정" 텍스트 (HTML에는 없지만, 디자인에 있음) */
+.youtube-placeholder-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; /* 목표 디자인 25px */
+    color: #000000;
+    margin-top: 10px; /* 영상이 없을 경우를 대비한 여백 */
+    /* 영상이 실제로 들어갈 회색 박스 스타일 */
+    /* width: 100%; height: 300px; background: #D9D9D9; display:flex; align-items:center; justify-content:center; border-radius: 8px; */
 }
 
-.main-sectionTitle,
-.main-sectionSubTitle {
-    letter-spacing: -1.5px;
-    font-size: 36px;
-    margin: 10px 0;
-    color: #404040;
-}
 
-.main-titleText {
-    color: #F44336;
+/* --- 섹션 3: 음쓰 계산기 & 예상 처리 비용 (가로 배치) --- */
+.main-section3Container { /* 이 클래스는 section-row 내부의 각 컬럼에 해당 */
+    background-color: #FFFFFF; /* 흰색 배경 */
 }
-
-#main-titleNotice{
-    margin-top: 60px;
-    color: gray;
+.main-section3Frame { /* 내부 프레임 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-.main-sectionSubTitle {
-    font-size: 30px;
+.calculator-box, .cost-box { /* 음쓰 계산기, 예상 처리 비용 각 박스 */
+    width: 100%; /* 부모 컬럼 너비 전체 사용 */
+    padding: 20px;
+    border: 1px solid #D9D9D9; /* 목표 디자인 테두리 */
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    margin-bottom: 20px; /* 다른 요소와의 간격 */
 }
-
-.main-sectionInfo span {
-    font-weight: lighter;
-    font-size: 45px;
-    color: #222222;
+.calculator-box .main-sectionTitle,
+.cost-box .main-sectionTitle /* 제목 스타일 */ {
+    font-size: 22px; /* 목표 디자인 참고 */
+    margin-bottom: 15px;
+    text-align: left; /* 제목 좌측 정렬 */
 }
-
-#main-monthSelect {
-    width: 200px;
-    height: 60px;
-    border-radius: 5px;
-    font-size: 25px;
-    border: none;
-    outline: none;
-    appearance: none; /* 기본 화살표 제거 */
-    padding: 10px;
-    background-color: lightgray;
-    color: black;
-    text-align: center;
-    cursor: pointer;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+/* 음쓰 계산기 내부 */
+.main-calculator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 요소들 분산 배치 */
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
-
-#main-monthSelect:hover {
-    background-color: gray;
-    color: white
+.main-weightInput {
+    flex-grow: 1; /* 가능한 많은 공간 차지 */
+    height: 50px; /* 목표 디자인 Input 높이 */
+    font-size: 18px; /* 목표 디자인 16px */
+    padding: 0 10px;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
 }
-
-#main-amountText{
-    margin: 60px 0 10px 0;
+.main-calculator > span { /* "kg" 텍스트 */
+    font-size: 16px;
+    margin-left: 5px;
 }
-
-p span {
-    color: red;
+.main-equals {
+    font-size: 24px; /* 목표 디자인 등호 크기 */
     font-weight: bold;
 }
-
-.main-blank {
-    height: 36px;
-}
-
-.main-resultTitleFrame {
-    width: 100%;
-    display: flex;
-}
-
-.main-resultTitle {
-    width: 100%;
-    height: 36px;
-    font-size: 24px;
+.main-calcResult { /* "? 인분" */
+    flex-grow: 1;
+    height: 50px;
+    font-size: 18px;
     font-weight: bold;
-    margin: 10px 0;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    color: #353535;
+    padding: 0 10px;
+    background-color: #f0f0f0; /* 약간의 배경 */
+}
+/* 예상 처리 비용 내부 (기존 topResult 재활용) */
+.cost-box .topResult {
+    display: flex;
+    justify-content: space-between; /* 두 비용 항목을 양옆으로 */
+    gap: 20px; /* 항목 간 간격 */
+}
+.cost-box .main-resultBox {
+    flex: 1; /* 공간 균등 분배 */
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    text-align: center;
+}
+.cost-box .resultName {
+    font-size: 14px; /* 목표 디자인 16px */
+    margin-bottom: 8px;
+}
+.cost-box .main-result {
+    font-size: 18px; /* 목표 디자인 16px */
+    font-weight: bold;
+}
+/* 화살표 이미지 (HTML에 없음, 필요시 추가) */
+.arrow-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: #757575;
+    margin: 0 20px; /* 계산기와 비용 박스 사이 */
 }
 
-.topResult {
-    width: 100%;
+
+/* --- 온실가스 배출량 / 에너지 소비량 섹션 --- */
+.environmental-impact-container {
+    text-align: center; /* 내부 제목들 가운데 정렬 */
+}
+.impact-title-row { /* "온실가스 배출량"과 "에너지 소비량" 제목을 가로로 */
+    display: flex;
+    justify-content: space-around; /* 또는 space-between */
+    margin-bottom: 20px;
+}
+.impact-title-row h2 { /* 각 제목 */
+    font-size: 24px; /* 목표 디자인 Text */
+    color: #1E1E1E;
+    flex-basis: 48%; /* 너비 대략 반씩 */
+}
+.topResult { /* 아이콘 그룹 */
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap; /* 화면 작아지면 줄바꿈 */
+    gap: 20px; /* 아이콘 박스 간격 */
 }
-
-.main-resultBox {
+.main-resultBox { /* 각 아이콘 박스 */
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: calc(25% - 15px); /* 4개 아이템 기준, gap 고려 (반응형 조절 필요) */
+    min-width: 150px; /* 최소 너비 */
+    padding: 15px;
+    /* background-color: #FFFFFF; */ /* 이미 공통 프레임에 있음 */
+    /* border: 1px solid #D9D9D9; */
+    /* border-radius: 8px; */
 }
-
 .main-resultBox img {
-    width: 168px;
-    height: 168px;
-    margin: 10px;
+    width: 80px; /* 목표 디자인 아이콘 크기 */
+    height: 80px;
+    margin-bottom: 10px;
 }
-
 .resultName {
-    font-size: 20px;
-    letter-spacing: -0.5px;
-    margin: 5px 0;
-    color: #353535;
+    font-size: 15px; /* 목표 디자인 Text Small */
+    color: #757575;
+    margin-bottom: 5px;
 }
-
 .main-result {
-    font-size: 30px;
-    letter-spacing: -0.8px;
-    color: #353535;
+    font-size: 20px; /* 목표 디자인 30px, 반응형 고려 */
+    font-weight: bold; /* 목표 디자인 Text Strong */
+    color: #1E1E1E;
 }
 
-.main-section3Container {
-    width: 100%;
-    height: 905px;
-    background-color: white;
+/* --- 기타 공통 스타일 --- */
+.main-blank {
+    height: 20px; /* 간격 일관성 */
 }
 
-.main-calculator {
-    width: 500px;
-    display: flex;
-    justify-content: space-between;
+/* --- 반응형 웹을 위한 미디어 쿼리 (예시) --- */
+@media (max-width: 1200px) {
+    .section-row {
+        flex-direction: column; /* 화면 작아지면 세로로 쌓임 */
+        gap: 30px;
+    }
+    .content-row-1 > .main-section2,
+    .content-row-1 > .main-section4,
+    .content-row-2 > .calculator-part,
+    .content-row-2 > .expected-cost-part {
+        width: 100%; /* 세로로 쌓일 때 전체 너비 사용 */
+        flex: none; /* flex 비율 해제 */
+    }
+    .arrow-separator {
+        transform: rotate(90deg); /* 세로로 쌓일 때 화살표 회전 */
+        margin: 20px 0;
+    }
 }
 
-.main-calculator div {
-    font-size: 40px;
+@media (max-width: 768px) {
+    main {
+        padding: 10px;
+    }
+    .main-slogan {
+        font-size: 24px;
+    }
+    .main-sectionTitle, .impact-title-row h2 {
+        font-size: 20px;
+    }
+    .main-sectionSubTitle {
+        font-size: 14px;
+    }
+    .main-sectionInfo span {
+        font-size: 13px;
+    }
+    #main-monthSelect, .main-weightInput, .main-calcResult {
+        font-size: 14px;
+        height: 40px;
+    }
+    .main-resultBox img {
+        width: 60px;
+        height: 60px;
+    }
+    .resultName {
+        font-size: 13px;
+    }
+    .main-result {
+        font-size: 16px;
+    }
+    .topResult {
+        gap: 10px;
+    }
+    .main-resultBox {
+        width: calc(50% - 10px); /* 모바일에서는 2개씩 */
+    }
 }
-
-.main-weightInput {
-    width: 200px;
-    height: 70px;
-    font-size: 40px;
-}
-
-.main-section4Container {
-    height: 900px;
-}
-
-.main-boxFrame {
-    display: flex;
-}
-
-#main-player{
-    margin-top: 60px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-}
-

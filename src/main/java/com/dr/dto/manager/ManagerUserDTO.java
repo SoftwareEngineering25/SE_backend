@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ManagerUserDTO {
     private int userNumber;
-    private String userNickName;
+    private String userNickname;
     private String userStatus;
     private String userPhone;
     private String userEmail;

@@ -15,13 +15,13 @@
         int checkNickname(@Param("userNickname") String userNickname); // 파라미터 이름 변경
 
         // 닉네임 업데이트
-        void updateNickname(@Param("userNumber") Long userNumber, @Param("nickname") String nickname);
+        int updateNickname(@Param("userNumber") Long userNumber, @Param("nickname") String nickname);
 
         // 프로필 이미지 경로 업데이트
         void updateProfileImage(@Param("userNumber") Long userNumber, @Param("photoLocal") String photoLocal);
 
         // 회원 탈퇴
-        void deleteUser(@Param("userNumber") Long userNumber);
+        int deleteUser(@Param("userNumber") Long userNumber);
 
         // 내 정보 포인트 내역
         List<PointDetailDTO> pointHistory(@Param("userNumber") Long userNumber);

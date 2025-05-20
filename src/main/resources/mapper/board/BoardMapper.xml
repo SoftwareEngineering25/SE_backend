@@ -2,11 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dr.mapper.board.BoardMapper">
 
-    <!-- ================================================= -->
-    <!-- ============= 자유 게시판 (Free Board) ============ -->
-    <!-- ================================================= -->
-
-    <!-- 자유게시판 최신순 리스트 (MySQL 호환) -->
     <select id="freeBoardList" resultType="FreeBoardListDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -23,7 +18,6 @@
         ORDER BY B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 자유게시판 추천순 리스트 (MySQL 호환) -->
     <select id="freeBoardListGood" resultType="FreeBoardListDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -38,10 +32,6 @@
         ORDER BY goodCount DESC, B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 자유게시판 상세 페이지 (MySQL 호환, DR_PHOTO 조인 수정) -->
-    <!-- 참고: 게시글 사진(P.PHOTO_LOCAL)과 작성자 프로필 사진(U.PROFILE_PIC)을 함께 조회합니다. -->
-    <!-- 게시글 사진이 여러 개일 경우 이 쿼리는 첫 번째 또는 임의의 사진만 가져올 수 있습니다. (GROUP BY 때문) -->
-    <!-- 필요시 사진 조회 로직 분리 또는 GROUP_CONCAT 사용 고려 -->
     <select id="freeBoardDetail" resultType="FreeBoardDetailDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -50,12 +40,12 @@
                B.BOARD_WRITE_DATE,
                U.USER_NUMBER,
                U.USER_NICKNAME,
-               P.PHOTO_LOCAL,          -- 게시글 사진 경로
-               COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount, -- 중복 제거 COUNT
-               U.PROFILE_PIC           -- 작성자 프로필 사진 경로
+               P.PHOTO_LOCAL,
+               COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount,
+               U.PROFILE_PIC
         FROM DR_BOARD B
                  JOIN DR_USER U ON B.USER_NUMBER = U.USER_NUMBER
-                 LEFT JOIN DR_PHOTO P ON B.BOARD_NUMBER = P.BOARD_NUMBER -- 게시글 번호로 사진 조인
+                 LEFT JOIN DR_PHOTO P ON B.BOARD_NUMBER = P.BOARD_NUMBER
                  LEFT JOIN DR_GOOD G ON B.BOARD_NUMBER = G.BOARD_NUMBER
         WHERE B.BOARD_NUMBER = #{boardNumber}
           AND B.BOARD_TYPE = '자유게시판'
@@ -66,79 +56,63 @@
                  B.BOARD_WRITE_DATE,
                  U.USER_NUMBER,
                  U.USER_NICKNAME,
-                 P.PHOTO_LOCAL,         -- GROUP BY에 사진 경로 포함
-                 U.PROFILE_PIC          -- GROUP BY에 프로필 사진 경로 포함
+                 P.PHOTO_LOCAL,
+                 U.PROFILE_PIC
     </select>
 
-    <!-- 자유게시판 댓글 목록 조회 (MySQL 호환, DR_PHOTO 조인 제거, U.PROFILE_PIC 사용) -->
     <select id="freeBoardCommentList" parameterType="Long" resultType="FreeBoardCommentDTO">
         SELECT R.REPLY_NUMBER,
                U.USER_NICKNAME,
                R.REPLY_WRITE_DATE,
                R.REPLY_MODIFY_DATE,
                R.REPLY_TEXT,
-               U.PROFILE_PIC -- 사용자 테이블에서 프로필 사진 직접 가져오기
+               U.PROFILE_PIC
         FROM DR_REPLY R
                  JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
-        -- JOIN DR_BOARD B ON R.BOARD_NUMBER = B.BOARD_NUMBER -- 댓글 목록 조회 시 DR_BOARD 조인은 불필요할 수 있음 (WHERE 조건으로 충분)
-        -- JOIN DR_PHOTO P ON U.USER_NUMBER = P.PHOTO_NUMBER -- 잘못된 조인 조건 및 불필요한 조인 제거
         WHERE R.BOARD_NUMBER = #{boardNumber}
         ORDER BY R.REPLY_WRITE_DATE DESC
     </select>
 
-    <!-- 자유게시판 댓글 등록 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="freeBoardInsertReply" parameterType="FreeBoardCommentDTO" useGeneratedKeys="true" keyProperty="replyNumber">
-        <!-- <selectKey> 제거 -->
-        INSERT INTO DR_REPLY(REPLY_TEXT, BOARD_NUMBER, USER_NUMBER, REPLY_WRITE_DATE) -- REPLY_WRITE_DATE 추가 (NOW())
+        INSERT INTO DR_REPLY(REPLY_TEXT, BOARD_NUMBER, USER_NUMBER, REPLY_WRITE_DATE)
         VALUES (#{replyText}, #{boardNumber}, #{userNumber}, NOW())
     </insert>
 
-    <!-- 자유게시판 댓글 수정 (MySQL 호환: SYSDATE -> NOW()) -->
     <update id="freeBoardUpdateReply" parameterType="FreeBoardCommentDTO">
         UPDATE DR_REPLY
         SET REPLY_TEXT        = #{replyText},
-            REPLY_MODIFY_DATE = NOW() -- 현재 시간 (MySQL)
+            REPLY_MODIFY_DATE = NOW()
         WHERE REPLY_NUMBER = #{replyNumber}
     </update>
 
-    <!-- 자유게시판 댓글 삭제 (MySQL 호환) -->
     <delete id="freeBoardDeleteReply" parameterType="Long">
         DELETE
         FROM DR_REPLY
         WHERE REPLY_NUMBER = #{replyNumber}
     </delete>
 
-    <!-- 자유 게시판 추천 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="freeGoodPlus" parameterType="FreeGoodDTO" useGeneratedKeys="true" keyProperty="goodNumber">
-        <!-- <selectKey> 제거 -->
         INSERT INTO DR_GOOD(BOARD_NUMBER, USER_NUMBER)
         VALUES (#{boardNumber}, #{userNumber})
     </insert>
 
-    <!-- 자유 게시판 추천 취소 (MySQL 호환) -->
     <delete id="freeGoodMinus" parameterType="FreeGoodDTO">
         DELETE
         FROM DR_GOOD
         WHERE BOARD_NUMBER = #{boardNumber}
-          AND USER_NUMBER = #{userNumber} -- 컬럼명 확인 (user_number -> USER_NUMBER)
+          AND USER_NUMBER = #{userNumber}
     </delete>
 
-    <!-- 자유게시판 게시글 작성 (MySQL 호환: AUTO_INCREMENT, SYSDATE -> NOW()) -->
     <insert id="freeBoardInsertWrite" parameterType="FreeBoardWriteDTO" useGeneratedKeys="true" keyProperty="boardNumber">
-        <!-- <selectKey> 제거 -->
         INSERT INTO DR_BOARD (
         USER_NUMBER, BOARD_TITLE, BOARD_TEXT,
         BOARD_TYPE, BOARD_WRITE_DATE
         ) VALUES (
         #{userNumber}, #{boardTitle}, #{boardText},
-        '자유게시판', NOW() -- SYSDATE 대신 NOW() 사용, boardType 직접 명시
+        '자유게시판', NOW()
         )
     </insert>
-
-    <!-- 자유게시판 사진 데이터 삽입 (MySQL 호환: AUTO_INCREMENT 사용) -->
-    <!-- 참고: 사진 업로드 시간 등 필요시 컬럼 추가 및 NOW() 사용 고려 -->
     <insert id="freeBoardInsertPhoto" parameterType="FreeBoardPhotoDTO" useGeneratedKeys="true" keyProperty="photoNumber">
-        <!-- <selectKey> 제거 -->
         INSERT INTO DR_PHOTO (
         PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE, BOARD_NUMBER
         ) VALUES (
@@ -146,44 +120,29 @@
         )
     </insert>
 
-    <!-- 자유게시판 게시글 삭제 (MySQL 호환) -->
     <delete id="freeBoardDeleteWrite" parameterType="Long">
         DELETE FROM DR_BOARD WHERE BOARD_NUMBER = #{boardNumber}
     </delete>
 
-    <!-- 자유게시판 게시글 관련 사진 삭제 (MySQL 호환) -->
     <delete id="freeBoardDeletePhoto" parameterType="Long">
         DELETE FROM DR_PHOTO WHERE BOARD_NUMBER = #{boardNumber}
     </delete>
 
-    <!-- 자유게시판 게시글 수정 (MySQL 호환) -->
-    <!-- 참고: 게시글 수정 시간 업데이트 필요시 BOARD_MODIFY_DATE 컬럼 추가 및 NOW() 사용 -->
     <update id="freeBoardUpdateWrite" parameterType="FreeBoardUpdateDTO">
         UPDATE DR_BOARD
         SET BOARD_TITLE = #{boardTitle},
             BOARD_TEXT = #{boardText}
-        -- , BOARD_MODIFY_DATE = NOW() -- 수정 시간 업데이트 예시
         WHERE BOARD_NUMBER = #{boardNumber}
     </update>
 
-    <!-- 자유게시판 게시글 관련 사진 수정 (MySQL 호환) -->
-    <!-- 참고: 보통 사진은 삭제 후 재등록하는 경우가 많음. 업데이트 로직 필요시 사용 -->
     <update id="freeBoardUpdatePhoto" parameterType="FreeBoardUpdateDTO">
         UPDATE DR_PHOTO
         SET PHOTO_ORIGINAL = #{photoOriginal},
         PHOTO_LOCAL = #{photoLocal},
         PHOTO_SIZE = #{photoSize}
         WHERE BOARD_NUMBER = #{boardNumber}
-        <!-- 특정 사진(PHOTO_NUMBER)을 지정해야 할 수도 있음 -->
     </update>
 
-
-    <!-- ================================================= -->
-    <!-- ============= 꿀팁 게시판 (Honey Board) =========== -->
-    <!-- ================================================= -->
-    <!-- (자유게시판과 구조가 동일하므로 동일한 방식으로 수정) -->
-
-    <!-- 꿀팁게시판 최신순 리스트 (MySQL 호환) -->
     <select id="honeyBoardList" resultType="HoneyBoardListDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -200,7 +159,6 @@
         ORDER BY B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 꿀팁게시판 추천순 리스트 (MySQL 호환) -->
     <select id="honeyBoardListGood" resultType="HoneyBoardListDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -215,7 +173,6 @@
         ORDER BY goodCount DESC, B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 꿀팁게시판 상세 페이지 (MySQL 호환, DR_PHOTO 조인 수정) -->
     <select id="honeyBoardDetail" resultType="HoneyBoardDetailDTO">
         SELECT B.BOARD_NUMBER,
                B.BOARD_TITLE,
@@ -224,12 +181,12 @@
                B.BOARD_WRITE_DATE,
                U.USER_NUMBER,
                U.USER_NICKNAME,
-               P.PHOTO_LOCAL,          -- 게시글 사진 경로
-               COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount, -- 중복 제거 COUNT
-               U.PROFILE_PIC           -- 작성자 프로필 사진 경로
+               P.PHOTO_LOCAL,
+               COUNT(DISTINCT G.GOOD_NUMBER) AS goodCount,
+               U.PROFILE_PIC
         FROM DR_BOARD B
                  JOIN DR_USER U ON B.USER_NUMBER = U.USER_NUMBER
-                 LEFT JOIN DR_PHOTO P ON B.BOARD_NUMBER = P.BOARD_NUMBER -- 게시글 번호로 사진 조인
+                 LEFT JOIN DR_PHOTO P ON B.BOARD_NUMBER = P.BOARD_NUMBER
                  LEFT JOIN DR_GOOD G ON B.BOARD_NUMBER = G.BOARD_NUMBER
         WHERE B.BOARD_NUMBER = #{boardNumber}
           AND B.BOARD_TYPE = '꿀팁게시판'
@@ -240,71 +197,63 @@
                  B.BOARD_WRITE_DATE,
                  U.USER_NUMBER,
                  U.USER_NICKNAME,
-                 P.PHOTO_LOCAL,         -- GROUP BY에 사진 경로 포함
-                 U.PROFILE_PIC          -- GROUP BY에 프로필 사진 경로 포함
+                 P.PHOTO_LOCAL,
+                 U.PROFILE_PIC
     </select>
 
-    <!-- 꿀팁게시판 댓글 목록 조회 (MySQL 호환, DR_PHOTO 조인 제거, U.PROFILE_PIC 사용) -->
     <select id="honeyBoardCommentList" parameterType="Long" resultType="HoneyBoardCommentDTO">
         SELECT R.REPLY_NUMBER,
                U.USER_NICKNAME,
                R.REPLY_WRITE_DATE,
                R.REPLY_MODIFY_DATE,
                R.REPLY_TEXT,
-               U.PROFILE_PIC -- 사용자 테이블에서 프로필 사진 직접 가져오기
+               U.PROFILE_PIC
         FROM DR_REPLY R
                  JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
         WHERE R.BOARD_NUMBER = #{boardNumber}
         ORDER BY R.REPLY_WRITE_DATE DESC
     </select>
 
-    <!-- 꿀팁게시판 댓글 등록 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="honeyBoardInsertReply" parameterType="HoneyBoardCommentDTO" useGeneratedKeys="true" keyProperty="replyNumber">
-        INSERT INTO DR_REPLY(REPLY_TEXT, BOARD_NUMBER, USER_NUMBER, REPLY_WRITE_DATE) -- REPLY_WRITE_DATE 추가 (NOW())
+        INSERT INTO DR_REPLY(REPLY_TEXT, BOARD_NUMBER, USER_NUMBER, REPLY_WRITE_DATE)
         VALUES (#{replyText}, #{boardNumber}, #{userNumber}, NOW())
     </insert>
 
-    <!-- 꿀팁게시판 댓글 수정 (MySQL 호환: SYSDATE -> NOW()) -->
     <update id="honeyBoardUpdateReply" parameterType="HoneyBoardCommentDTO">
         UPDATE DR_REPLY
         SET REPLY_TEXT        = #{replyText},
-            REPLY_MODIFY_DATE = NOW() -- 현재 시간 (MySQL)
+            REPLY_MODIFY_DATE = NOW()
         WHERE REPLY_NUMBER = #{replyNumber}
     </update>
 
-    <!-- 꿀팁게시판 댓글 삭제 (MySQL 호환) -->
     <delete id="honeyBoardDeleteReply" parameterType="Long">
         DELETE
         FROM DR_REPLY
         WHERE REPLY_NUMBER = #{replyNumber}
     </delete>
 
-    <!-- 꿀팁 게시판 추천 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="honeyGoodPlus" parameterType="HoneyGoodDTO" useGeneratedKeys="true" keyProperty="goodNumber">
         INSERT INTO DR_GOOD(BOARD_NUMBER, USER_NUMBER)
         VALUES (#{boardNumber}, #{userNumber})
     </insert>
 
-    <!-- 꿀팁 게시판 추천 취소 (MySQL 호환) -->
     <delete id="honeyGoodMinus" parameterType="HoneyGoodDTO">
         DELETE
         FROM DR_GOOD
         WHERE BOARD_NUMBER = #{boardNumber}
-          AND USER_NUMBER = #{userNumber} -- 컬럼명 확인 (user_number -> USER_NUMBER)
+          AND USER_NUMBER = #{userNumber}
     </delete>
 
-    <!-- 꿀팁게시판 게시글 작성 (MySQL 호환: AUTO_INCREMENT, SYSDATE -> NOW()) -->
     <insert id="honeyBoardInsertWrite" parameterType="HoneyBoardWriteDTO" useGeneratedKeys="true" keyProperty="boardNumber">
         INSERT INTO DR_BOARD (
             USER_NUMBER, BOARD_TITLE, BOARD_TEXT,
             BOARD_TYPE, BOARD_WRITE_DATE
         ) VALUES (
                      #{userNumber}, #{boardTitle}, #{boardText},
-                     '꿀팁게시판', NOW() -- SYSDATE 대신 NOW() 사용, boardType 직접 명시
+                     '꿀팁게시판', NOW()
                  )
     </insert>
 
-    <!-- 꿀팁게시판 사진 데이터 삽입 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="honeyBoardInsertPhoto" parameterType="HoneyBoardPhotoDTO" useGeneratedKeys="true" keyProperty="photoNumber">
         INSERT INTO DR_PHOTO (
             PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE, BOARD_NUMBER
@@ -313,45 +262,32 @@
                  )
     </insert>
 
-    <!-- 꿀팁게시판 게시글 삭제 (MySQL 호환) -->
     <delete id="honeyBoardDeleteWrite" parameterType="Long">
         DELETE FROM DR_BOARD WHERE BOARD_NUMBER = #{boardNumber}
     </delete>
 
-    <!-- 꿀팁게시판 게시글 관련 사진 삭제 (MySQL 호환) -->
     <delete id="honeyBoardDeletePhoto" parameterType="Long">
         DELETE FROM DR_PHOTO WHERE BOARD_NUMBER = #{boardNumber}
     </delete>
 
-    <!-- 꿀팁게시판 게시글 수정 (MySQL 호환) -->
     <update id="honeyBoardUpdateWrite" parameterType="HoneyBoardUpdateDTO">
         UPDATE DR_BOARD
         SET BOARD_TITLE = #{boardTitle},
             BOARD_TEXT = #{boardText}
-        -- , BOARD_MODIFY_DATE = NOW() -- 수정 시간 업데이트 예시
         WHERE BOARD_NUMBER = #{boardNumber}
     </update>
 
-    <!-- 꿀팁게시판 게시글 관련 사진 수정 (MySQL 호환) -->
     <update id="honeyBoardUpdatePhoto" parameterType="HoneyBoardUpdateDTO">
         UPDATE DR_PHOTO
         SET PHOTO_ORIGINAL = #{photoOriginal},
         PHOTO_LOCAL = #{photoLocal},
         PHOTO_SIZE = #{photoSize}
         WHERE BOARD_NUMBER = #{boardNumber}
-        <!-- 특정 사진(PHOTO_NUMBER)을 지정해야 할 수도 있음 -->
     </update>
 
 
-    <!-- ================================================= -->
-    <!-- ================ 공통 (Common) ================== -->
-    <!-- ================================================= -->
-
-    <!-- 게시판/댓글 신고 (MySQL 호환: AUTO_INCREMENT 사용) -->
-    <!-- 참고: 신고 시간 등 필요시 컬럼 추가 및 NOW() 사용 고려 -->
     <insert id="report" parameterType="BoardReportDTO" useGeneratedKeys="true" keyProperty="sirenNumber">
-        <!-- <selectKey> 제거 -->
-        INSERT INTO DR_SIREN(SIREN_REASON, SIREN_TYPE, BOARD_NUMBER, REPLY_NUMBER, USER_NUMBER, SIREN_DATE) -- SIREN_DATE 추가 (NOW())
+        INSERT INTO DR_SIREN(SIREN_REASON, SIREN_TYPE, BOARD_NUMBER, REPLY_NUMBER, USER_NUMBER, SIREN_DATE)
         VALUES (#{sirenReason}, #{sirenType}, #{boardNumber}, #{replyNumber}, #{userNumber}, NOW())
     </insert>
 

@@ -2,27 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dr.mapper.manager.ManagerMapper">
 
-    <!-- 1. 관리자 로그인 (MySQL 호환) -->
     <select id="managerLogin" resultType="ManagerSessionDTO">
         SELECT MANAGER_NAME
         FROM DR_MANAGER
         WHERE MANAGER_EMAIL = #{managerEmail} AND MANAGER_PW = #{managerPw}
     </select>
 
-    <!-- 2-1. 대시보드 (MySQL 호환: SYSDATE, TO_CHAR, DUAL 변경) -->
-    <select id="dashBoardInfo" resultType="DashBoardDTO">
+    <select id="dashBoardInfo" resultType="com.dr.dto.manager.DashBoardDTO"> <!-- resultType 경로 확인 -->
         SELECT
-                (SELECT COUNT(*) FROM DR_USER) AS userAll,
-                (SELECT COUNT(*) FROM DR_SIREN) AS numAll,
-                (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '게시글') AS boardNum,
-                (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '레시피') AS recipeNum,
-                (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '댓글') AS replyNum,
-                DATE_FORMAT(NOW(), '%Y-%m-%d') AS today -- SYSDATE, TO_CHAR, DUAL 변경
-        -- FROM DUAL 제거
+        (SELECT COUNT(*) FROM DR_USER) AS userAll,
+        -- numAll을 게시글 수 + 레시피 수로 변경
+        ( (SELECT COUNT(*) FROM DR_BOARD) + (SELECT COUNT(*) FROM DR_RECIPE) ) AS numAll,
+        -- 나머지 신고 관련 카운트는 그대로 유지 (값이 0이어도 쿼리 자체는 문제 없음)
+        (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '게시글') AS boardNum,
+        (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '레시피') AS recipeNum,
+        (SELECT COUNT(*) FROM DR_SIREN WHERE SIREN_TYPE = '댓글') AS replyNum,
+        DATE_FORMAT(NOW(), '%Y-%m-%d') AS today
     </select>
 
-
-    <!-- 2-2. 관리자 정보 (MySQL 호환) -->
     <select id="managerInfo" resultType="ManagerDTO">
         SELECT
         M.MANAGER_NAME AS managerName,
@@ -30,10 +27,8 @@
         M.MANAGER_SORT AS managerSort
         FROM
         DR_MANAGER M
-        <!-- 특정 관리자 정보 조회 시 WHERE 조건 추가 필요 -->
     </select>
 
-    <!-- 3-1. 회원관리 (MySQL 호환) -->
     <select id="manageUser" resultType="ManagerUserDTO">
         SELECT
             U.USER_NUMBER,
@@ -47,22 +42,18 @@
             U.USER_NUMBER ASC
     </select>
 
-    <!-- 3-2. 회원탈퇴 (MySQL 호환) -->
     <delete id="userOut" parameterType="Integer">
         DELETE
         FROM DR_USER
         WHERE USER_NUMBER = #{userNumber}
     </delete>
 
-    <!-- 3-3. 회원정지 (MySQL 호환) -->
-    <!-- 참고: '7일정지'가 USER_STATUS 컬럼에 유효한 값인지 확인 필요 -->
     <update id="userPause" parameterType="Integer">
         UPDATE DR_USER
         SET USER_STATUS = '7일정지'
         WHERE USER_NUMBER = #{userNumber}
     </update>
 
-    <!-- 3-4. 회원검색 (MySQL 호환) -->
     <select id="userSearch" parameterType="int" resultType="ManagerUserDTO">
         SELECT  U.USER_NUMBER,
                 U.USER_NICKNAME,
@@ -73,8 +64,7 @@
         WHERE U.USER_NUMBER = #{userNumber}
     </select>
 
-    <!-- 4-1. 게시판 관리 (MySQL 호환) -->
-    <select id="showBoard" resultType="ManagerBoardDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showBoard" resultType="ManagerBoardDTO">
         SELECT
         B.BOARD_NUMBER,
         B.BOARD_TITLE,
@@ -94,14 +84,12 @@
         B.BOARD_WRITE_DATE DESC
     </select>
 
-    <!-- 4-2. 게시판 삭제 (MySQL 호환) -->
     <delete id="boardDelete" parameterType="Integer">
         DELETE
         FROM DR_BOARD
         WHERE BOARD_NUMBER = #{boardNumber}
     </delete>
 
-    <!-- 4-3. 게시판 검색 (MySQL 호환) -->
     <select id="boardSearch" parameterType="int" resultType="ManagerBoardDTO">
         SELECT
             B.BOARD_NUMBER,
@@ -126,9 +114,7 @@
             B.BOARD_TYPE
     </select>
 
-
-    <!-- 5-1. 레시피 관리 (MySQL 호환) -->
-    <select id="showRecipe" resultType="ManagerRecipeDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showRecipe" resultType="ManagerRecipeDTO">
         SELECT
         R.RECIPE_NUMBER,
         R.RECIPE_TITLE,
@@ -148,14 +134,12 @@
         R.RECIPE_WRITE_DATE DESC
     </select>
 
-    <!-- 5-2. 레시피 삭제 (MySQL 호환) -->
     <delete id="recipeDelete" parameterType="Integer">
         DELETE
         FROM DR_RECIPE
         WHERE RECIPE_NUMBER = #{recipeNumber}
     </delete>
 
-    <!-- 5-3. 레시피 검색 (MySQL 호환) -->
     <select id="recipeSearch" parameterType="int" resultType="ManagerRecipeDTO">
         SELECT
             R.RECIPE_NUMBER,
@@ -176,9 +160,7 @@
             R.RECIPE_NUMBER, R.RECIPE_TITLE, U.USER_NICKNAME, R.RECIPE_WRITE_DATE, R.RECIPE_TYPE
     </select>
 
-    <!-- 6-1. 댓글관리 (MySQL 호환) -->
-    <!-- 컬럼명 확인: REPLY_TEXT, BOARD_TYPE, RECIPE_TYPE 등 -->
-    <select id="showReply" resultType="ManagerCommentDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showReply" resultType="ManagerCommentDTO">
         SELECT R.REPLY_NUMBER , R.REPLY_TEXT , U.USER_NICKNAME , U.USER_PHONE , R.REPLY_WRITE_DATE , B.BOARD_NUMBER , RR.RECIPE_NUMBER , B.BOARD_TYPE , RR.RECIPE_TYPE
         FROM DR_REPLY R
         JOIN DR_USER U ON R.USER_NUMBER = U.USER_NUMBER
@@ -187,14 +169,12 @@
         ORDER BY R.REPLY_WRITE_DATE DESC
     </select>
 
-    <!-- 6-2. 댓글 삭제 (MySQL 호환) -->
     <delete id="replyDelete" parameterType="Integer">
         DELETE
         FROM DR_REPLY
         WHERE REPLY_NUMBER = #{replyNumber}
     </delete>
 
-    <!-- 6-3. 댓글 검색 (MySQL 호환) -->
     <select id="replySearch" parameterType="int" resultType="ManagerCommentDTO">
         SELECT R.REPLY_NUMBER , R.REPLY_TEXT , U.USER_NICKNAME , U.USER_PHONE , R.REPLY_WRITE_DATE ,  B.BOARD_NUMBER , RR.RECIPE_NUMBER , B.BOARD_TYPE , RR.RECIPE_TYPE
         FROM DR_REPLY R
@@ -205,17 +185,15 @@
             R.REPLY_NUMBER = #{replyNumber}
     </select>
 
-    <!-- 7-1. 포인트 관리 (MySQL 8.0+ 호환: Window Function) -->
-    <!-- 컬럼명 확인: POINT_GET, POINT_NOTE 등 -->
-    <select id="showPoint" resultType="ManagerPointDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showPoint" resultType="ManagerPointDTO">
         SELECT
         P.POINT_NUMBER,
         U.USER_NICKNAME,
         U.USER_EMAIL,
         P.POINT_NOTE,
-        P.POINT_GET, -- 또는 POINT_CHANGE
+        P.POINT_CHANGE,
         P.POINT_DATE,
-        SUM(P.POINT_GET) OVER (PARTITION BY U.USER_NUMBER ORDER BY P.POINT_DATE) AS POINT_SUM -- 누적 합계
+        SUM(P.POINT_CHANGE) OVER (PARTITION BY U.USER_NUMBER ORDER BY P.POINT_DATE) AS POINT_SUM
         FROM
         DR_POINT P
         JOIN
@@ -224,31 +202,27 @@
         P.POINT_DATE DESC
     </select>
 
-    <!-- 7-2. 포인트 삭제 (MySQL 호환) -->
     <delete id="pointDelete" parameterType="Integer">
         DELETE
         FROM DR_POINT
         WHERE POINT_NUMBER = #{pointNumber}
     </delete>
 
-    <!-- 7-3. 포인트 회수 (MySQL 호환) -->
-    <!-- 참고: 포인트를 NULL로 만드는 것보다 차감(-) 레코드를 추가하는 것이 일반적 -->
     <update id="takePoint" parameterType="Integer">
         UPDATE DR_POINT
-        SET POINT_GET = 0 -- 또는 다른 값으로 설정 (NULL보다는 0이 나을 수 있음)
+        SET POINT_CHANGE = 0
         WHERE POINT_NUMBER = #{pointNumber}
     </update>
 
-    <!-- 7-4. 포인트 검색 (MySQL 8.0+ 호환: Window Function) -->
     <select id="pointSearch" parameterType="String" resultType="ManagerPointDTO">
         SELECT
             P.POINT_NUMBER,
             U.USER_NICKNAME,
             U.USER_EMAIL,
             P.POINT_NOTE,
-            P.POINT_GET, -- 또는 POINT_CHANGE
+            P.POINT_CHANGE,
             P.POINT_DATE,
-            SUM(P.POINT_GET) OVER (PARTITION BY U.USER_NUMBER ORDER BY P.POINT_DATE) AS POINT_SUM -- 누적 합계
+            SUM(P.POINT_CHANGE) OVER (PARTITION BY U.USER_NUMBER ORDER BY P.POINT_DATE) AS POINT_SUM
         FROM
             DR_POINT P
                 JOIN
@@ -259,36 +233,29 @@
             P.POINT_DATE DESC
     </select>
 
-    <!-- 8-1. 신고 관리 (MySQL 호환: COALESCE 사용) -->
-    <select id="showReport" resultType="ManagerReportDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showReport" resultType="ManagerReportDTO">
         SELECT
         S.SIREN_NUMBER,
-        COALESCE(S.BOARD_NUMBER, S.RECIPE_NUMBER, S.REPLY_NUMBER) AS TARGET_ID, -- 신고 대상 ID
-        U.USER_NICKNAME, -- 신고자 닉네임
-        U.USER_EMAIL,    -- 신고자 이메일
+        COALESCE(S.BOARD_NUMBER, S.RECIPE_NUMBER, S.REPLY_NUMBER) AS TARGET_ID,
+        U.USER_NICKNAME,
+        U.USER_EMAIL,
         S.SIREN_REASON,
         S.SIREN_TYPE,
         S.SIREN_DATE
         FROM
         DR_SIREN S
         JOIN DR_USER U ON S.USER_NUMBER = U.USER_NUMBER
-        -- LEFT JOIN DR_BOARD B ON S.BOARD_NUMBER = B.BOARD_NUMBER -- 대상 정보 필요시 조인 추가
-        -- LEFT JOIN DR_RECIPE R ON S.RECIPE_NUMBER = R.RECIPE_NUMBER
-        -- LEFT JOIN DR_REPLY RE ON S.REPLY_NUMBER = RE.REPLY_NUMBER
         ORDER BY
         S.SIREN_DATE DESC
     </select>
 
-    <!-- 8-2. 신고 삭제 (MySQL 호환) -->
     <delete id="reportDelete" parameterType="Integer">
         DELETE
         FROM DR_SIREN
         WHERE SIREN_NUMBER = #{sirenNumber}
     </delete>
 
-    <!-- 9-1. 상품관리 (MySQL 호환) -->
-    <!-- 참고: 동일 이름/가격 상품 수량 집계로 보임 -->
-    <select id="showProduct" resultType="ManagerProductDTO"> <!-- parameterType 제거 (불필요) -->
+    <select id="showProduct" resultType="ManagerProductDTO">
         SELECT
         P.PRODUCT_NAME,
         P.PRODUCT_PRICE,
@@ -302,58 +269,46 @@
         P.PRODUCT_NAME ASC
     </select>
 
-    <!-- 9-2. 상품삭제 (MySQL 호환) -->
-    <!-- 참고: 상품 이름이 고유하지 않으면 여러 개 삭제될 수 있음. PRODUCT_NUMBER 사용 권장 -->
     <delete id="productDelete" parameterType="String">
         DELETE
         FROM DR_PRODUCT
         WHERE PRODUCT_NAME= #{productName}
     </delete>
 
-    <!-- 9-3. 상품 등록 (MySQL 호환: AUTO_INCREMENT 사용) -->
     <insert id="registerProduct" parameterType="ManagerRegisterDTO" useGeneratedKeys="true" keyProperty="productNumber">
-        <!-- <selectKey> 제거 -->
         INSERT INTO DR_PRODUCT (PRODUCT_NAME, PRODUCT_CODE, PRODUCT_PRICE)
         VALUES (#{productName}, #{productCode}, #{productPrice})
     </insert>
 
-    <!-- 9-3. 상품 사진 등록 (MySQL 호환: AUTO_INCREMENT, 날짜 함수 변경) -->
     <insert id="registerPhoto" parameterType="ManagerPhotoDTO" useGeneratedKeys="true" keyProperty="photoNumber">
-        <!-- <selectKey> 제거 -->
-        INSERT INTO DR_PHOTO (PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE, PHOTO_UPLOAD_DATE, PRODUCT_NUMBER) -- 컬럼명 확인: PHOTO_UPLOAD -> PHOTO_UPLOAD_DATE
+        INSERT INTO DR_PHOTO (PHOTO_ORIGINAL, PHOTO_LOCAL, PHOTO_SIZE, PHOTO_UPLOAD_DATE, PRODUCT_NUMBER)
         VALUES (#{photoOriginal}, #{photoLocal}, #{photoSize},
         <choose>
             <when test="photoUpload != null and photoUpload != ''">
-                STR_TO_DATE(#{photoUpload}, '%Y-%m-%d %H:%i:%s'), -- 문자열일 경우 변환
+                STR_TO_DATE(#{photoUpload}, '%Y-%m-%d %H:%i:%s'),
             </when>
             <otherwise>
-                NOW(), -- 문자열이 아니거나 없으면 현재 시간
+                NOW(),
             </otherwise>
         </choose>
         #{productNumber})
-        <!-- 만약 DTO의 photoUpload 필드가 Date/Timestamp 타입이면 STR_TO_DATE 없이 #{photoUpload} 사용 -->
     </insert>
 
-    <!-- 9-4. 상품 수정 페이징 이동 (MySQL 호환: ROWNUM -> LIMIT) -->
     <select id="updateShow" parameterType="String" resultType="ManagerRegisterDTO">
         SELECT P.PRODUCT_NAME , P.PRODUCT_PRICE , PP.PHOTO_LOCAL
         FROM DR_PRODUCT P
-                 LEFT JOIN DR_PHOTO PP ON P.PRODUCT_NUMBER = PP.PRODUCT_NUMBER -- LEFT JOIN 사용 권장
+                 LEFT JOIN DR_PHOTO PP ON P.PRODUCT_NUMBER = PP.PRODUCT_NUMBER
         WHERE P.PRODUCT_NAME = #{productName}
-        -- AND PP.PHOTO_NUMBER IS NOT NULL -- 사진이 있는 상품만? (선택적)
-        ORDER BY PP.PHOTO_NUMBER ASC -- 어떤 사진을 대표로 보여줄지 정렬 기준 추가
-            LIMIT 1 -- ROWNUM = 1 대신 LIMIT 1 사용
+        ORDER BY PP.PHOTO_NUMBER ASC
+            LIMIT 1
     </select>
 
-    <!-- 9-4. 상품 수정 (MySQL 호환: INSERT -> UPDATE 변경) -->
-    <!-- 참고: 어떤 상품을 수정할지 기준(WHERE 절)이 명확해야 함 (예: productNumber) -->
     <update id="productUpdate" parameterType="ManagerRegisterDTO">
         UPDATE DR_PRODUCT
         SET PRODUCT_NAME = #{productName},
         PRODUCT_CODE = #{productCode},
         PRODUCT_PRICE = #{productPrice}
-        WHERE PRODUCT_NUMBER = #{productNumber} -- WHERE 조건 확인 필수! (DTO에 productNumber 필요)
-        <!-- 또는 WHERE PRODUCT_NAME = #{oldProductName} 등 다른 기준 사용 가능 -->
+        WHERE PRODUCT_NUMBER = #{productNumber}
     </update>
 
 </mapper>
