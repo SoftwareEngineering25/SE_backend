@@ -41,5 +41,5 @@ jobs: # 워크플로우는 하나 이상의 job으로 구성됨
     # - name: Upload build artifacts (선택 사항: 빌드 결과물 저장)
     #   uses: actions/upload-artifact@v4
     #   with:
-    //         name: dr-backend-jar # 아티팩트 이름
+    #         name: dr-backend-jar # 아티팩트 이름
     #         path: build/libs/*.jar # 저장할 파일 경로 (프로젝트 구조에 맞게 수정)
