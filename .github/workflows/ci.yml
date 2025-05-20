@@ -41,10 +41,12 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        env: # <--- 테스트 실행 시 사용할 환경 변수 추가!
+        env:
           SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/SE?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
           SPRING_DATASOURCE_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
-          # SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop # 또는 validate, update (필요에 따라)
-          # 또는 Flyway/Liquibase를 사용한다면 해당 설정
-        run: ./gradlew build
+        run: |
+          echo "DB URL: $SPRING_DATASOURCE_URL"
+          echo "DB User: $SPRING_DATASOURCE_USERNAME"
+          # 비밀번호는 직접 출력하지 않는 것이 좋음
+          ./gradlew build
